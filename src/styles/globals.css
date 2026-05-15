@@ -227,3 +227,126 @@ body {
   0%   { background-position: -400px 0; }
   100% { background-position:  400px 0; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   MOTION TOKENS (expanded)
+   All animation code MUST reference these variables.
+   Never hardcode millisecond values in components.
+════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Durations ───────────────────────────────────────────── */
+  --duration-instant:  0ms;    /* disabled states, instant feedback */
+  --duration-fast:     100ms;  /* hover color, focus ring appear    */
+  --duration-normal:   150ms;  /* ★ DEFAULT: button press, badge    */
+  --duration-moderate: 200ms;  /* dropdown open, tab switch         */
+  --duration-slow:     250ms;  /* card expand, accordion            */
+  --duration-enter:    200ms;  /* elements entering viewport        */
+  --duration-exit:     150ms;  /* elements leaving (always < enter) */
+  --duration-page:     300ms;  /* page-level transitions            */
+
+  /* ── Easings ─────────────────────────────────────────────── */
+  --ease-linear:  linear;
+  --ease-out:     cubic-bezier(0.0,  0.0,  0.2, 1.0); /* enter viewport */
+  --ease-in:      cubic-bezier(0.4,  0.0,  1.0, 1.0); /* leave viewport */
+  --ease-inout:   cubic-bezier(0.4,  0.0,  0.2, 1.0); /* continuous move */
+  --ease-spring:  cubic-bezier(0.34, 1.56, 0.64, 1.0);/* switch, badge pop */
+  --ease-bounce:  cubic-bezier(0.36, 0.07, 0.19, 0.97);/* toast enter */
+  --ease-gentle:  cubic-bezier(0.25, 0.46, 0.45, 0.94);/* dialog open */
+
+  /* ── Semantic motion shortcuts ───────────────────────────── */
+  --transition-micro:    color var(--duration-fast)     var(--ease-out),
+                         background var(--duration-fast) var(--ease-out),
+                         border-color var(--duration-fast) var(--ease-out);
+  --transition-default:  all var(--duration-normal) var(--ease-out);
+  --transition-layout:   all var(--duration-slow)   var(--ease-inout);
+
+  /* ── z-index (complete layer system) ────────────────────── */
+  --z-base:      0;    /* normal document flow                   */
+  --z-raised:    10;   /* active table row, hover card           */
+  --z-dropdown:  100;  /* Select, DropdownMenu options list      */
+  --z-sticky:    200;  /* sticky table header, fixed sidebar     */
+  --z-overlay:   300;  /* modal backdrop                         */
+  --z-modal:     400;  /* Dialog, Drawer content                 */
+  --z-popover:   500;  /* Popover, Combobox panel                */
+  --z-toast:     600;  /* Toast notifications                    */
+  --z-tooltip:   700;  /* Tooltip (pierces modals)               */
+
+  /* ── Responsive sidebar widths ───────────────────────────── */
+  --sidebar-w-full:    232px; /* ≥1440px default                 */
+  --sidebar-w-compact: 200px; /* 1280–1439px                     */
+  --sidebar-w-icon:    64px;  /* 1024–1279px (icon-only)         */
+  --topbar-h:          54px;
+  --content-max-w:     1100px;
+
+  /* ── Accessibility ───────────────────────────────────────── */
+  --focus-ring:        0 0 0 2px var(--gray-4);
+  --focus-ring-error:  0 0 0 2px var(--red-border);
+  --focus-ring-brand:  0 0 0 2px var(--amber-3);
+}
+
+/* ── prefers-reduced-motion: 尊重系统无动画偏好 ──────────────── */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast:     0ms;
+    --duration-normal:   0ms;
+    --duration-moderate: 0ms;
+    --duration-slow:     0ms;
+    --duration-enter:    0ms;
+    --duration-exit:     0ms;
+    --duration-page:     0ms;
+  }
+  /* Skeleton shimmer 降级为静态 */
+  .skeleton-shimmer { animation: none !important; }
+  /* Dialog/Toast 跳过进场动画 */
+  [data-state="open"]  { animation: none !important; }
+  [data-state="closed"]{ animation: none !important; }
+}
+
+/* ── Responsive layout ───────────────────────────────────────── */
+/* 1440px+ : Full layout */
+@media (min-width: 1440px) {
+  .oms-sidebar { width: var(--sidebar-w-full); }
+}
+/* 1280–1439px : Compact sidebar */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .oms-sidebar        { width: var(--sidebar-w-compact); }
+  .nav-item__label    { font-size: 12px; }
+}
+/* 1024–1279px : Icon-only sidebar */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .oms-sidebar        { width: var(--sidebar-w-icon); }
+  .nav-item__label,
+  .nav-group-label,
+  .sidebar-footer-text{ display: none; }
+  .nav-item           { justify-content: center; padding: 0; }
+  .nav-item__icon     { margin: 0; }
+}
+/* <1024px : Horizontal scroll warning */
+@media (max-width: 1023px) {
+  body::before {
+    content: "此系统最小支持 1024px 视口宽度";
+    display: block;
+    background: var(--orange-bg);
+    color: var(--orange-text);
+    text-align: center;
+    padding: 8px;
+    font-size: 13px;
+    font-family: var(--font-sans);
+  }
+}
+
+/* ── Skeleton (uses tokens) ─────────────────────────────────── */
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--gray-3) 25%,
+    var(--gray-2) 50%,
+    var(--gray-3) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: var(--radius-4); /* skeleton blocks use radius-4 by default */
+}
+.skeleton-line   { height: 14px; border-radius: var(--radius-6) !important; }
+.skeleton-circle { border-radius: 50% !important; }

@@ -46,3 +46,7 @@ export type { SwitchProps }              from "./switch";
 
 export { Avatar }                        from "./avatar";
 export type { AvatarProps }              from "./avatar";
+
+// States
+export { EmptyState, LoadingState }        from "./empty-state";
+export type { EmptyStateProps, LoadingStateProps } from "./empty-state";
