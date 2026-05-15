@@ -1,0 +1,229 @@
+/**
+ * NearGo OMS — globals.css
+ * Design System v3.0 · Single Source of Truth
+ *
+ * ⚠️  RULES:
+ *   1. Never use hex values in component CSS — reference var(--*) only
+ *   2. Never add new color variables without registering in this file
+ *   3. Dark mode overrides go in [data-theme="dark"] block
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN TOKENS (Light Mode)
+════════════════════════════════════════════════════════════════ */
+:root {
+  /* ── Amber Scale ── step-9 = #FFA902 = NearGo Brand ────── */
+  --amber-1:  #fdfaf0;  /* page bg tint          */
+  --amber-2:  #fff8d6;  /* subtle bg / brand tint */
+  --amber-3:  #ffeea8;  /* ui element bg          */
+  --amber-4:  #ffe37c;  /* hovered ui bg          */
+  --amber-5:  #ffd652;  /* active/selected bg     */
+  --amber-6:  #f5c42a;  /* subtle border          */
+  --amber-7:  #e8af00;  /* ui border + hover      */
+  --amber-8:  #d49c00;  /* strong border          */
+  --amber-9:  #FFA902;  /* ★ BRAND SOLID          */
+  --amber-10: #f09a00;  /* hovered solid          */
+  --amber-11: #8c5c00;  /* text on white (Lc≥60)  */
+  --amber-12: #3c2500;  /* high-contrast text     */
+
+  /* ── Gray Scale ── step-12 = #1F1D1C = Primary Action ───── */
+  --gray-1:  #fdfdfc;   /* page background        */
+  --gray-2:  #f9f9f8;   /* subtle bg              */
+  --gray-3:  #f2f1ef;   /* ui element bg          */
+  --gray-4:  #eceae7;   /* hovered ui bg          */
+  --gray-5:  #e5e3e0;   /* active/selected ui bg  */
+  --gray-6:  #dddbd8;   /* ★ default border       */
+  --gray-7:  #cac8c4;   /* input default border   */
+  --gray-8:  #b0adaa;   /* strong border / icon   */
+  --gray-9:  #8c8a87;   /* placeholder            */
+  --gray-10: #807e7b;   /* hovered solid          */
+  --gray-11: #4a4846;   /* secondary text         */
+  --gray-12: #1F1D1C;   /* ★ PRIMARY ACTION       */
+
+  /* ── Semantic — Green (Success) ─────────────────────────── */
+  --green-bg:     #edfbf4;
+  --green-border: #cdf4ea;
+  --green-solid:  #29a383;
+  --green-text:   #107060;
+
+  /* ── Semantic — Red (Danger) ────────────────────────────── */
+  --red-bg:     #fff5f5;
+  --red-border: #ffe0e0;
+  --red-solid:  #e5484d;
+  --red-text:   #ce2c31;
+
+  /* ── Semantic — Blue (Info) ─────────────────────────────── */
+  --blue-bg:     #f0f8ff;
+  --blue-border: #d5efff;
+  --blue-solid:  #0090ff;
+  --blue-text:   #0060cf;
+
+  /* ── Semantic — Orange (Warning) ───────────────────────── */
+  --orange-bg:     #fff6f0;
+  --orange-border: #ffe8d7;
+  --orange-solid:  #f76b15;
+  --orange-text:   #bd4b00;
+
+  /* ── Semantic — Purple (Alternate track) ───────────────── */
+  --purple-bg:     #faf5ff;
+  --purple-border: #ecdcfe;
+  --purple-solid:  #8e4ec6;
+  --purple-text:   #793aaf;
+
+  /* ── Semantic Aliases ───────────────────────────────────── */
+  --bg:             var(--gray-1);
+  --bg-subtle:      var(--gray-2);
+  --surface:        #ffffff;
+  --border:         var(--gray-6);
+  --border-strong:  var(--gray-8);
+  --text-hi:        var(--gray-12);
+  --text-mid:       var(--gray-11);
+  --text-low:       var(--gray-9);
+  --text-disabled:  var(--gray-8);
+  --brand:          var(--amber-9);
+  --brand-bg:       var(--amber-2);
+  --brand-text:     var(--amber-11);
+
+  /* ── Spacing ────────────────────────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 48px;
+  --space-9: 64px;
+
+  /* ── Radius ─────────────────────────────────────────────── */
+  --radius-1: 3px;      /* checkbox            */
+  --radius-2: 4px;      /* badge, tag          */
+  --radius-3: 6px;      /* button, input       */
+  --radius-4: 8px;      /* card (default)      */
+  --radius-5: 12px;     /* dialog, modal       */
+  --radius-6: 9999px;   /* pill, avatar        */
+
+  /* ── Shadows ─────────────────────────────────────────────── */
+  --shadow-1: 0 1px 2px rgba(0,0,0,.05);
+  --shadow-2: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-3: 0 4px 8px rgba(0,0,0,.06), 0 2px 4px rgba(0,0,0,.04);
+  --shadow-4: 0 8px 16px rgba(0,0,0,.08), 0 4px 8px rgba(0,0,0,.04);
+  --shadow-5: 0 16px 32px rgba(0,0,0,.10);
+  --shadow-6: 0 24px 48px rgba(0,0,0,.18);
+
+  /* ── Motion ──────────────────────────────────────────────── */
+  --duration-fast:   100ms;
+  --duration-normal: 150ms;
+  --duration-slow:   250ms;
+  --duration-enter:  200ms;
+  --duration-exit:   150ms;
+  --ease-out:    cubic-bezier(0, 0, 0.2, 1);
+  --ease-in:     cubic-bezier(0.4, 0, 1, 1);
+  --ease-inout:  cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── z-index ─────────────────────────────────────────────── */
+  --z-base:     0;
+  --z-raised:   10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-popover:  500;
+  --z-toast:    600;
+  --z-tooltip:  700;
+
+  /* ── Typography ──────────────────────────────────────────── */
+  --font-sans: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Roboto Mono', monospace;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DARK MODE OVERRIDES
+════════════════════════════════════════════════════════════════ */
+[data-theme="dark"] {
+  --gray-1:  #111110;
+  --gray-2:  #191918;
+  --gray-3:  #222221;
+  --gray-4:  #2a2927;
+  --gray-5:  #31302e;
+  --gray-6:  #3b3a37;
+  --gray-7:  #494845;
+  --gray-8:  #62605d;
+  --gray-9:  #6f6d69;
+  --gray-10: #7c7a76;
+  --gray-11: #b5b2ad;
+  --gray-12: #eeeeec;
+
+  --amber-9:  #FF9900;
+  --amber-11: #FFD060;
+  --amber-2:  #2D1D00;
+  --amber-12: #FFEDCC;
+
+  --surface: #1c1b19;
+  --bg:      var(--gray-1);
+
+  --green-bg:     #0d2e22;
+  --green-border: #1a5c40;
+  --red-bg:       #2e1010;
+  --red-border:   #5c1a1a;
+  --blue-bg:      #0d1f30;
+  --blue-border:  #1a3d5c;
+  --orange-bg:    #2e1a0d;
+  --orange-border:#5c3014;
+  --purple-bg:    #1e0d2e;
+  --purple-border:#3d1a5c;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BASE RESETS
+════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text-hi);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Focus visible (global) ─────────────────────────────────── */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--gray-4);
+}
+
+/* ── Scrollbar (subtle) ─────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--gray-6);
+  border-radius: var(--radius-6);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--gray-8); }
+
+/* ── Animations ─────────────────────────────────────────────── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes fade-in {
+  from { opacity: 0; transform: scale(.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}

@@ -1,0 +1,69 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "plugins": ["stylelint-declaration-use-variable"],
+
+  "rules": {
+    // ── 1. 禁止硬编码 Hex 颜色 ──────────────────────────────
+    // 强制所有颜色必须使用 CSS 变量（var(--...)）
+    "sh-waqar/declaration-use-variable": [
+      {
+        "ignoreValues": [
+          "/^transparent$/",
+          "/^currentColor$/",
+          "/^inherit$/",
+          "/^initial$/",
+          "/^white$/",
+          "/^black$/"
+        ],
+        "properties": [
+          "color",
+          "background",
+          "background-color",
+          "border-color",
+          "border-top-color",
+          "border-right-color",
+          "border-bottom-color",
+          "border-left-color",
+          "outline-color",
+          "box-shadow",
+          "text-decoration-color",
+          "fill",
+          "stroke"
+        ]
+      }
+    ],
+
+    // ── 2. 完全禁止命名颜色（如 red, blue, yellow）──────────
+    "color-named": "never",
+
+    // ── 3. 禁止无效 Hex（防止拼写错误）─────────────────────
+    "color-no-invalid-hex": true,
+
+    // ── 4. 禁止未知 CSS 属性 ─────────────────────────────────
+    "property-no-unknown": true,
+
+    // ── 5. 强制使用已定义变量（自定义属性列表白名单）────────
+    // 以下 --custom-property 必须来自 globals.css
+    "custom-property-pattern": "^(amber|gray|green|red|blue|orange|purple|bg|surface|border|text|brand|space|radius|shadow|font|duration|ease|z)(-[a-z0-9]+)*$",
+
+    // ── 6. 其他规范约束 ──────────────────────────────────────
+    "unit-disallowed-list": ["pt", "pc", "cm", "mm", "in"],
+    "number-max-precision": 4,
+    "alpha-value-notation": "percentage",
+    "color-function-notation": "modern",
+
+    // 关闭与 CSS-in-JS / Tailwind 冲突的规则
+    "at-rule-no-unknown": null,
+    "selector-class-pattern": null,
+    "no-descending-specificity": null
+  },
+
+  "overrides": [
+    {
+      "files": ["**/*.css"],
+      "rules": {
+        "import-notation": "string"
+      }
+    }
+  ]
+}
