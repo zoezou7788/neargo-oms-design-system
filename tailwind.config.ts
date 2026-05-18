@@ -99,6 +99,34 @@ const config: Config = {
         display:  ["36px", { lineHeight: "1.0", letterSpacing: "-0.05em" }],
       },
 
+      // ── 24-Column Grid System ─────────────────────────────
+      gridTemplateColumns: {
+        // 24-col system: repeat(24, 1fr)
+        "24": "repeat(24, minmax(0, 1fr))",
+        // Common inner grids
+        "2":  "repeat(2, minmax(0, 1fr))",
+        "3":  "repeat(3, minmax(0, 1fr))",
+        "4":  "repeat(4, minmax(0, 1fr))",
+      },
+      gridColumn: {
+        "span-24": "span 24 / span 24",
+        "span-18": "span 18 / span 18",
+        "span-17": "span 17 / span 17",
+        "span-16": "span 16 / span 16",
+        "span-14": "span 14 / span 14",
+        "span-12": "span 12 / span 12",
+        "span-10": "span 10 / span 10",
+        "span-8":  "span 8 / span 8",
+        "span-7":  "span 7 / span 7",
+        "span-6":  "span 6 / span 6",
+        "span-4":  "span 4 / span 4",
+        "span-3":  "span 3 / span 3",
+      },
+      gap: {
+        gutter:    "var(--gutter)",
+        "gutter-lg": "var(--gutter-lg)",
+      },
+
       // ── Spacing (4px grid) ─────────────────────────────────
       spacing: {
         "1": "4px",

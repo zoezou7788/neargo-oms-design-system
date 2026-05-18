@@ -534,19 +534,43 @@ screens: {
 
 ## 08 页面布局
 
-_同 v2.2 [05 页面布局]，此处精简为 CSS 实现代码。_
+### 布局原则
+
+OMS 后台采用 **24 栅格系统**（对标 Ant Design Pro 规范），内容区**全宽铺开**，不设 `max-width` 居中约束。
+页面宽度由侧边栏宽度 + 内容区宽度组成，内容区通过 24 列栅格划分比例。
+
+**为什么用 24 栅格而非居中布局？**
+- 企业级 B2B 系统信息密度高，全宽布局能展示更多数据列
+- 24 可被 1/2/3/4/6/8/12 整除，支持各类内容比例
+- 不同页面的"主内容+辅助面板"比例通过列数灵活控制
+- 避免超宽屏幕出现大量空白边距
+
+### 核心变量
 
 ```css
-/* 三区布局骨架 */
+:root {
+  --sidebar-w:     220px;   /* 侧边栏宽度 */
+  --topbar-h:      54px;    /* 顶栏高度 */
+  --grid-cols:     24;      /* 栅格列数 */
+  --gutter:        16px;    /* 列间距（默认）*/
+  --gutter-lg:     24px;    /* 宽松页面列间距（仪表板）*/
+  --content-pad:   24px;    /* 内容区左右内边距 */
+}
+```
+
+### 三区布局骨架
+
+```css
+/* 三区布局：顶栏 / 侧栏 / 内容区 */
 .oms-layout {
   display: grid;
-  grid-template-columns: 232px 1fr;
-  grid-template-rows: 54px 1fr;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  grid-template-rows: var(--topbar-h) 1fr;
   min-height: 100vh;
 }
 .oms-topbar {
   grid-column: 1 / -1;
-  height: 54px;
+  height: var(--topbar-h);
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   position: sticky; top: 0;
@@ -554,30 +578,107 @@ _同 v2.2 [05 页面布局]，此处精简为 CSS 实现代码。_
 }
 .oms-sidebar {
   grid-row: 2;
-  width: 232px;
   background: var(--surface);
   border-right: 1px solid var(--border);
-  position: sticky; top: 54px;
-  height: calc(100vh - 54px);
+  position: sticky; top: var(--topbar-h);
+  height: calc(100vh - var(--topbar-h));
   overflow-y: auto;
 }
 .oms-content {
   grid-row: 2;
   background: var(--bg);
-  padding: var(--space-5);
+  padding: var(--content-pad);
   overflow-y: auto;
-}
-.oms-content-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-}
-/* 右侧上下文面板（详情页） */
-.oms-content--with-panel {
-  display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: var(--space-5);
+  /* ⚠️  不设 max-width — 全宽展开，由内部栅格控制比例 */
 }
 ```
+
+### 24 栅格系统
+
+```css
+/* 24栅格容器 */
+.grid-24 {
+  display: grid;
+  grid-template-columns: repeat(24, 1fr);
+  gap: var(--gutter);
+  width: 100%;
+}
+.grid-24-lg {
+  gap: var(--gutter-lg); /* 仪表板宽松间距 */
+}
+
+/* 列跨度（常用组合） */
+.col-24 { grid-column: span 24; } /* 全宽 */
+.col-18 { grid-column: span 18; } /* 3/4 */
+.col-16 { grid-column: span 16; } /* 2/3 主列（配合 col-8）*/
+.col-12 { grid-column: span 12; } /* 1/2 */
+.col-8  { grid-column: span 8;  } /* 1/3 */
+.col-6  { grid-column: span 6;  } /* 1/4 — KPI 卡片 */
+.col-4  { grid-column: span 4;  } /* 1/6 */
+.col-3  { grid-column: span 3;  } /* 1/8 */
+```
+
+### 常用页面栅格模式
+
+| 页面类型 | 栅格分配 | 说明 |
+|---------|---------|------|
+| KPI 横条（4项） | `col-6 × 4` | 每项占 1/4 |
+| KPI 横条（3项） | `col-8 × 3` | 每项占 1/3 |
+| 仪表板双栏 | `col-16 + col-8` | 主图表 2/3，动态流 1/3 |
+| 详情页+面板 | `col-17 + col-7` | 详情主体，右侧操作面板 |
+| 表单 | `col-24`（内部 2列 field grid）| 表单铺满，字段两列排布 |
+| 数据表格 | `col-24` | 表格全宽 |
+| 二等分卡片行 | `col-12 × 2` | 两张等宽卡片 |
+| 三等分卡片行 | `col-8 × 3` | 三张等宽卡片 |
+
+### 典型布局示例
+
+```html
+<!-- 仪表板页 -->
+<div class="oms-content">
+
+  <!-- KPI 横条：4项各占 col-6 -->
+  <div class="grid-24 grid-24-lg mb-5">
+    <div class="col-6"><KPICard /></div>
+    <div class="col-6"><KPICard /></div>
+    <div class="col-6"><KPICard /></div>
+    <div class="col-6"><KPICard /></div>
+  </div>
+
+  <!-- 全宽重点卡 -->
+  <div class="grid-24 mb-5">
+    <div class="col-24"><PriorityCard /></div>
+  </div>
+
+  <!-- 双栏：主图表 col-16 + 动态流 col-8 -->
+  <div class="grid-24 grid-24-lg">
+    <div class="col-16"><ChartCard /></div>
+    <div class="col-8"><ActivityFeed /></div>
+  </div>
+
+</div>
+
+<!-- 详情页（含右侧审批面板）-->
+<div class="oms-content">
+  <div class="grid-24">
+    <div class="col-17">  <!-- 详情主体 -->
+      <DetailCard />
+    </div>
+    <div class="col-7">   <!-- 审批操作面板 -->
+      <ApprovalPanel />
+    </div>
+  </div>
+</div>
+```
+
+### 禁止事项
+
+| ❌ 禁止 | ✅ 正确 |
+|--------|--------|
+| `max-width: 1100px; margin: 0 auto` 居中约束 | 全宽布局，内部用 `grid-24` 控制比例 |
+| 固定像素宽度的内容区 `width: 800px` | 使用 `col-N` 列数定义宽度 |
+| 任意 `width: 45%` 等百分比 | 用 `col-12`（1/2）等语义化列数 |
+| 嵌套超过 2 层 grid-24 | 超过 2 层需评审是否有必要 |
 
 ---
 
