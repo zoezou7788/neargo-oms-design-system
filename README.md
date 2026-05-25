@@ -1,6 +1,6 @@
 # NearGo OMS Design System
 
-**v3.0** · [Radix UI Color Scale](https://www.radix-ui.com/colors) · [shadcn/ui](https://ui.shadcn.com) structure · WCAG AA+
+**v4.0** · [Radix UI Color Scale](https://www.radix-ui.com/colors) · [shadcn/ui](https://ui.shadcn.com) structure · WCAG AA+
 
 NearGo OMS 后台管理系统设计规范 —— 前端可直接落地、工程化约束强制执行的完整设计系统。
 
@@ -174,7 +174,8 @@ Figma → Plugins → Development → Import plugin from manifest…
 
 | 版本 | 主要变更 |
 |------|---------|
-| **v3.0** | 工程化层：tailwind.config + CSS vars + stylelint + 组件库（13个组件）|
+| **v4.0** | 完整 OMS 组件库（51个组件）：data-table composite、sidebar/AppShell、form、date picker、combobox、multi-select、file-upload、timeline、KPI card、filter-bar、loading-overlay、pagination、breadcrumb |
+| v3.0 | 工程化层：tailwind.config + CSS vars + stylelint + 组件库（31个组件）|
 | v2.2 | Soft Dashboard 排版范式，全站语言泛化 |
 | v2.0 | Radix UI 色阶方法论重建 |
 
