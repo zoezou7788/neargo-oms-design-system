@@ -69,3 +69,63 @@ export type { SelectProps, SelectOption } from "./select";
 // Navigation
 export { Tabs }                    from "./tabs";
 export type { Tab, TabsProps }     from "./tabs";
+
+// Data Display
+export {
+  Table, TableHeader, TableBody, TableFooter,
+  TableRow, TableHead, TableCell, TableCaption, TableEmpty,
+} from "./table";
+
+// Menus & Overlays
+export {
+  DropdownMenu, DropdownMenuTrigger, DropdownMenuContent,
+  DropdownMenuGroup, DropdownMenuPortal, DropdownMenuSub,
+  DropdownMenuSubTrigger, DropdownMenuSubContent,
+  DropdownMenuItem, DropdownMenuCheckboxItem,
+  DropdownMenuRadioGroup, DropdownMenuRadioItem,
+  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut,
+} from "./dropdown-menu";
+
+export {
+  AlertDialog, AlertDialogTrigger, AlertDialogPortal, AlertDialogOverlay,
+  AlertDialogContent, AlertDialogHeader, AlertDialogTitle,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogAction,
+  AlertDialogCancel, ConfirmActionDialog,
+} from "./alert-dialog";
+
+export {
+  Sheet, SheetTrigger, SheetClose, SheetContent,
+  SheetHeader, SheetTitle, SheetDescription, SheetBody,
+  SheetFooter, ContextPanel,
+} from "./sheet";
+
+export {
+  Popover, PopoverTrigger, PopoverContent,
+  PopoverAnchor, PopoverClose,
+} from "./popover";
+
+export {
+  Tooltip, TooltipTrigger, TooltipContent,
+  TooltipProvider, SimpleTooltip,
+} from "./tooltip";
+
+// Form Inputs
+export { Checkbox, CheckboxField }    from "./checkbox";
+export {
+  RadioGroup, RadioGroupItem,
+  RadioGroupField, DecisionGroup,
+} from "./radio-group";
+
+// Search & Command
+export {
+  Command, CommandDialog, CommandInput, CommandList,
+  CommandEmpty, CommandGroup, CommandItem,
+  CommandSeparator, CommandShortcut,
+} from "./command";
+
+// Utility
+export { ScrollArea, ScrollBar }      from "./scroll-area";
+export {
+  Collapsible, CollapsibleTrigger,
+  CollapsibleContent, AccordionSection,
+} from "./collapsible";
