@@ -4,7 +4,9 @@ import * as React from "react";
 import { DayPicker, type DayPickerProps } from "react-day-picker";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import "react-day-picker/style.css";
+// Note: react-day-picker/style.css intentionally NOT imported here.
+// All styles are provided via the classNames prop below using NearGo design tokens.
+// If you see unstyled gaps, check that globals.css is loaded in your app root.
 
 export type CalendarProps = DayPickerProps & { className?: string };
 

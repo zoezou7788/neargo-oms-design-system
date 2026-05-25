@@ -98,48 +98,97 @@ npm run lint       # 全量检查
 
 ---
 
-## 🚀 快速开始
+## 🚀 前端接入指南（4 步）
 
-### 安装依赖
+> 采用 **shadcn/ui 复制模式** — 把组件文件直接拷进你的项目，无需发布 npm 包。
+
+### Step 1 — 安装所有依赖
 
 ```bash
-npm install class-variance-authority clsx tailwind-merge
-npm install -D stylelint stylelint-config-standard stylelint-declaration-use-variable
+npm install \
+  class-variance-authority clsx tailwind-merge lucide-react \
+  react-hook-form @hookform/resolvers zod \
+  @tanstack/react-table \
+  react-day-picker date-fns \
+  cmdk \
+  @radix-ui/react-alert-dialog \
+  @radix-ui/react-avatar \
+  @radix-ui/react-checkbox \
+  @radix-ui/react-collapsible \
+  @radix-ui/react-dialog \
+  @radix-ui/react-dropdown-menu \
+  @radix-ui/react-label \
+  @radix-ui/react-popover \
+  @radix-ui/react-progress \
+  @radix-ui/react-radio-group \
+  @radix-ui/react-scroll-area \
+  @radix-ui/react-select \
+  @radix-ui/react-separator \
+  @radix-ui/react-slot \
+  @radix-ui/react-switch \
+  @radix-ui/react-tabs \
+  @radix-ui/react-toast \
+  @radix-ui/react-tooltip
 ```
 
-### 1. 复制 globals.css
+> **按需安装**：如果你只用基础组件（Button/Input/Badge），只需安装前 3 行。
+> `@tanstack/react-table` 仅 `data-table/` 需要，`react-day-picker` 仅日期组件需要。
 
-将 `src/styles/globals.css` 引入项目入口：
+### Step 2 — 复制设计 Token 文件
+
+将以下 2 个文件复制到你的项目：
+
+| 文件 | 复制到 | 作用 |
+|------|--------|------|
+| `src/styles/globals.css` | `src/styles/globals.css` | **必须** — 所有 CSS 变量（颜色/间距/圆角/阴影） |
+| `tailwind.config.ts` | 合并到项目的 `tailwind.config.ts` | Token 映射为 Tailwind 类名 |
+
+在项目入口引入 globals.css：
 
 ```tsx
 // app/layout.tsx 或 pages/_app.tsx
 import "@/styles/globals.css";
 ```
 
-### 2. 配置 Tailwind
+### Step 3 — 复制组件文件
 
-将 `tailwind.config.ts` 合并到你的项目配置。
+将 `src/components/ui/` 目录整个复制到你的项目，同一路径。
+同时复制 `src/lib/utils.ts`（包含 `cn()` 辅助函数）。
 
-### 3. 使用受限组件
+### Step 4 — 开始使用
 
 ```tsx
-import { Button, Badge, StatusIndicator, Skeleton } from "@/components/ui";
+import {
+  Button, Badge, Input, StatusIndicator,
+  DataTable, KpiCard, Timeline, Sidebar,
+  DatePicker, MultiSelect, FileUpload,
+} from "@/components/ui";
 
-// Button — 只接受规范定义的 6 种 variant
-<Button variant="primary" size="md">提交审批</Button>
-<Button variant="brand" size="sm">限时优惠</Button>   // 品牌色 — 每屏 ≤1
+// ── 主操作按钮（gray-12 = #1F1D1C）
+<Button variant="primary">提交审批</Button>
 
-// Badge — 只接受规范定义的 7 种 variant
-<Badge variant="urgent">紧急</Badge>
-<Badge variant="kyc">KYC 个人</Badge>
+// ── 品牌色按钮（amber — 每屏 ≤1 个）
+<Button variant="brand">限时优惠</Button>
 
-// StatusIndicator — 强制 dot + text 双通道（无障碍）
+// ── 状态指示（强制 dot + text 双通道，无障碍合规）
 <StatusIndicator status="approved" />
 <StatusIndicator status="pending-l1" label="待初审" />
 
-// Skeleton — 加载态（任何异步数据区域必须实现）
-<Skeleton variant="line" lines={3} />
-<Skeleton variant="rect" className="h-32 w-full" />
+// ── 仪表板 KPI 卡（26px 数值，语义色图标）
+<KpiCard title="今日订单" value={1284} trend="up" trendValue="+12%" trendLabel="较昨日" icon={ShoppingCart} color="blue" />
+
+// ── 数据表格（带排序 + 筛选 + 分页）
+<DataTable columns={columns} data={orders} toolbar={table => <DataTableToolbar table={table} />} />
+
+// ── 审批时间线
+<Timeline items={[
+  { id: "1", status: "done",        title: "提交申请", time: "09:30", actor: "张三" },
+  { id: "2", status: "in-progress", title: "初审中",   time: "10:15" },
+  { id: "3", status: "pending",     title: "终审" },
+]} />
+
+// ── 日期区间选择
+<DateRangePickerWithPresets value={range} onChange={setRange} showPresets />
 ```
 
 ---

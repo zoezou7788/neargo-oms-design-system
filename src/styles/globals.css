@@ -53,24 +53,34 @@
   --green-text:   #107060;
 
   /* ── Semantic — Red (Danger) ────────────────────────────── */
+  --red-2:      #fff5f5;  /* subtle bg — used in KPI icons   */
+  --red-3:      #ffe8e8;  /* ui element bg                   */
   --red-bg:     #fff5f5;
   --red-border: #ffe0e0;
   --red-solid:  #e5484d;
   --red-text:   #ce2c31;
 
   /* ── Semantic — Blue (Info) ─────────────────────────────── */
+  --blue-2:      #f0f8ff;  /* subtle bg — used in KPI icons  */
   --blue-bg:     #f0f8ff;
   --blue-border: #d5efff;
   --blue-solid:  #0090ff;
   --blue-text:   #0060cf;
 
   /* ── Semantic — Orange (Warning) ───────────────────────── */
+  --orange-2:      #fff6f0;  /* subtle bg — used in KPI icons */
+  --orange-9:      #f76b15;  /* solid orange (in-progress)    */
   --orange-bg:     #fff6f0;
   --orange-border: #ffe8d7;
   --orange-solid:  #f76b15;
   --orange-text:   #bd4b00;
 
+  /* ── Semantic — Green (Success) ─────────────────────────── */
+  --green-2:      #edfbf4;  /* subtle bg — used in KPI icons  */
+
   /* ── Semantic — Purple (Alternate track) ───────────────── */
+  --purple-2:      #faf5ff;  /* subtle bg — used in KPI icons */
+  --purple-9:      #8e4ec6;  /* solid purple                  */
   --purple-bg:     #faf5ff;
   --purple-border: #ecdcfe;
   --purple-solid:  #8e4ec6;
@@ -127,6 +137,8 @@
   --ease-in:     cubic-bezier(0.4, 0, 1, 1);
   --ease-inout:  cubic-bezier(0.4, 0, 0.2, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-gentle: cubic-bezier(0.25, 0.1, 0.25, 1);
 
   /* ── z-index ─────────────────────────────────────────────── */
   --z-base:     0;
