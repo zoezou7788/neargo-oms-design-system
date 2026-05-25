@@ -1,0 +1,86 @@
+{
+  "skill_name": "neargo-oms-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我做一个 NearGo OMS 的订单列表页，需要有订单号、客户名、金额、状态（待处理/处理中/已完成/已拒绝）、创建时间这几列，每行有查看详情和更多操作按钮。用 shadcn/ui + Tailwind CSS 写 React 组件。",
+      "expected_output": "生成完整的 React 组件代码，使用正确的 NearGo OMS 设计 token：主按钮用 gray-12(#1F1D1C)，状态列使用 6px 色点+文字标签，表格卡片用 radius-4(8px)，表头有正确的灰色背景和全大写标签，主键/时间列使用等宽字体",
+      "assertions": [
+        {
+          "text": "主操作按钮使用 bg-[#1F1D1C] 而非 amber/yellow 色",
+          "check": "output contains 'bg-[#1F1D1C]'"
+        },
+        {
+          "text": "状态列包含 6px 色点（w-[6px] h-[6px] rounded-full）",
+          "check": "output contains '6px' and 'rounded-full'"
+        },
+        {
+          "text": "表格容器使用 rounded-[8px]（radius-4）",
+          "check": "output contains 'rounded-[8px]'"
+        },
+        {
+          "text": "订单号列使用等宽字体 font-mono",
+          "check": "output contains 'font-mono'"
+        },
+        {
+          "text": "输入框聚焦时有 gray-4 外发光 ring-[#eceae7]",
+          "check": "output contains 'ring-[#eceae7]'"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "用 NearGo OMS 设计规范给我做一个运营总览仪表板首页，要有早上好问候、4个KPI指标卡（今日GMV/订单量/活跃门店/异常数）、一个全宽的SLA告警卡片，底部左边是图表、右边是最近动态列表。",
+      "expected_output": "仪表板页面代码，问候标题 28px/700，KPI 卡用 radius-4，全宽主角卡用 radius-5(12px)，双栏底区约 1.5fr:1fr 比例，动态流有 32px 圆形头像，颜色全部来自设计 token",
+      "assertions": [
+        {
+          "text": "问候标题使用 28px 字号（text-[28px]）",
+          "check": "output contains 'text-[28px]'"
+        },
+        {
+          "text": "全宽主角卡使用 radius-5（rounded-[12px]）",
+          "check": "output contains 'rounded-[12px]'"
+        },
+        {
+          "text": "KPI 卡片数值使用 26px 字号（size-8）",
+          "check": "output contains 'text-[26px]'"
+        },
+        {
+          "text": "双栏底区有合理的 grid 布局（1.5fr 或 grid-cols）",
+          "check": "output contains '1.5fr' or 'grid'"
+        },
+        {
+          "text": "动态流头像使用 32px 圆形（w-8 h-8 rounded-full）",
+          "check": "output contains 'rounded-full'"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "NearGo OMS 里有一个退款申请详情页，左边是两列只读信息展示（订单号、用户名、金额、原因、时间），中间是处理时间线，右侧固定一个审批面板（可以选通过或拒绝，必须填写备注，然后点提交）。帮我用 React + shadcn/ui 实现这个页面。",
+      "expected_output": "详情页代码，两列只读网格标签为 size-1 全大写 gray-8，右侧面板 320px 宽，互斥选项通过/拒绝选中时高亮对应语义色，备注 textarea 有持久 label，Primary 按钮是面板内唯一主操作",
+      "assertions": [
+        {
+          "text": "只读字段标签使用 uppercase tracking 样式（全大写）",
+          "check": "output contains 'uppercase' and 'tracking'"
+        },
+        {
+          "text": "右侧面板宽度为 320px",
+          "check": "output contains 'w-[320px]' or '320px'"
+        },
+        {
+          "text": "备注输入框有持久 label（不仅靠 placeholder）",
+          "check": "output contains '<label' or 'Label'"
+        },
+        {
+          "text": "通过操作使用绿色语义色（#29a383）",
+          "check": "output contains '#29a383' or 'green'"
+        },
+        {
+          "text": "拒绝操作使用红色语义色（#e5484d）",
+          "check": "output contains '#e5484d' or 'red'"
+        }
+      ]
+    }
+  ]
+}
