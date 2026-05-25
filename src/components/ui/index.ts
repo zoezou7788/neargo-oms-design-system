@@ -129,3 +129,76 @@ export {
   Collapsible, CollapsibleTrigger,
   CollapsibleContent, AccordionSection,
 } from "./collapsible";
+
+// App Shell & Navigation
+export {
+  Sidebar, SidebarHeader, SidebarContent, SidebarFooter,
+  SidebarGroup, SidebarItem, SidebarSubGroup, SidebarSubItem,
+  SidebarProvider, AppShell, useSidebar,
+} from "./sidebar";
+export type { SidebarProps, SidebarGroupProps, SidebarItemProps, SidebarSubGroupProps, SidebarSubItemProps, AppShellProps } from "./sidebar";
+
+export { Breadcrumb, PageBreadcrumb } from "./breadcrumb";
+export type { BreadcrumbItem, BreadcrumbProps, PageBreadcrumbProps } from "./breadcrumb";
+
+// Form (react-hook-form integration)
+export {
+  Form, FormField, FormItem, FormLabel,
+  FormControl, FormDescription, FormMessage,
+  useFormField,
+} from "./form";
+
+// Date & Time Inputs
+export { Calendar }                    from "./calendar";
+export type { CalendarProps }          from "./calendar";
+
+export { DatePicker }                  from "./date-picker";
+export type { DatePickerProps }        from "./date-picker";
+
+export {
+  DateRangePicker, DateRangePickerWithPresets,
+  DATE_RANGE_PRESETS,
+} from "./date-range-picker";
+export type { DateRangePickerProps, DateRange } from "./date-range-picker";
+
+// Advanced Inputs
+export { Combobox, GroupedCombobox }   from "./combobox";
+export type { ComboboxProps, ComboboxOption, GroupedComboboxProps, ComboboxGroupOption } from "./combobox";
+
+export { MultiSelect }                 from "./multi-select";
+export type { MultiSelectProps, MultiSelectOption } from "./multi-select";
+
+export { FileUpload }                  from "./file-upload";
+export type { FileUploadProps, FileUploadItem } from "./file-upload";
+
+// Pagination
+export { Pagination, PageNav }         from "./pagination";
+export type { PaginationProps, PageNavProps } from "./pagination";
+
+// Data Display
+export { Timeline, Steps }             from "./timeline";
+export type { TimelineProps, TimelineItem, TimelineStatus, StepsProps, StepItem } from "./timeline";
+
+export { KpiCard, KpiGrid }            from "./kpi-card";
+export type { KpiCardProps, KpiGridProps, KpiTrend, KpiColor } from "./kpi-card";
+
+// List Page Utilities
+export { FilterBar, ListToolbar }      from "./filter-bar";
+export type { FilterBarProps, FilterChip, ListToolbarProps } from "./filter-bar";
+
+export { LoadingOverlay, Spinner, PageLoader } from "./loading-overlay";
+export type { LoadingOverlayProps, SpinnerProps } from "./loading-overlay";
+
+// Data Table Composite
+export { DataTable }                   from "./data-table";
+export { DataTableColumnHeader }       from "./data-table/column-header";
+export { DataTableFacetedFilter }      from "./data-table/faceted-filter";
+export { DataTablePagination }         from "./data-table/pagination";
+export { DataTableToolbar }            from "./data-table/toolbar";
+export { DataTableBulkActions }        from "./data-table/bulk-actions";
+export type { DataTableProps }         from "./data-table";
+export type { DataTableColumnHeaderProps } from "./data-table/column-header";
+export type { DataTableFacetedFilterProps, FacetedFilterOption } from "./data-table/faceted-filter";
+export type { DataTablePaginationProps } from "./data-table/pagination";
+export type { DataTableToolbarProps }  from "./data-table/toolbar";
+export type { DataTableBulkActionsProps, BulkAction } from "./data-table/bulk-actions";
