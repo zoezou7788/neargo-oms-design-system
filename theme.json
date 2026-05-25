@@ -1,0 +1,569 @@
+{
+  "$schema": "https://design-tokens.org/schema/",
+  "name": "NearGo OMS",
+  "version": "3.0.0",
+  "description": "NearGo OMS Design System tokens — paste into Style Dictionary or Theo",
+  "color": {
+    "amber": {
+      "$description": "Brand scale — step 9 = #FFA902 (NearGo Brand)",
+      "1": {
+        "$value": "#fdfaf0",
+        "$type": "color",
+        "$description": "page bg tint"
+      },
+      "2": {
+        "$value": "#fff8d6",
+        "$type": "color",
+        "$description": "subtle bg / brand tint"
+      },
+      "3": {
+        "$value": "#ffeea8",
+        "$type": "color"
+      },
+      "4": {
+        "$value": "#ffe37c",
+        "$type": "color"
+      },
+      "5": {
+        "$value": "#ffd652",
+        "$type": "color"
+      },
+      "6": {
+        "$value": "#f5c42a",
+        "$type": "color",
+        "$description": "subtle border"
+      },
+      "7": {
+        "$value": "#e8af00",
+        "$type": "color",
+        "$description": "ui border + hover"
+      },
+      "8": {
+        "$value": "#d49c00",
+        "$type": "color",
+        "$description": "strong border"
+      },
+      "9": {
+        "$value": "#FFA902",
+        "$type": "color",
+        "$description": "★ BRAND SOLID"
+      },
+      "10": {
+        "$value": "#f09a00",
+        "$type": "color",
+        "$description": "hovered solid"
+      },
+      "11": {
+        "$value": "#8c5c00",
+        "$type": "color",
+        "$description": "text on white (Lc≥60)"
+      },
+      "12": {
+        "$value": "#3c2500",
+        "$type": "color",
+        "$description": "high-contrast text"
+      }
+    },
+    "gray": {
+      "$description": "Neutral scale — step 12 = #1F1D1C (Primary Action)",
+      "1": {
+        "$value": "#fdfdfc",
+        "$type": "color",
+        "$description": "page background"
+      },
+      "2": {
+        "$value": "#f9f9f8",
+        "$type": "color",
+        "$description": "subtle bg"
+      },
+      "3": {
+        "$value": "#f2f1ef",
+        "$type": "color"
+      },
+      "4": {
+        "$value": "#eceae7",
+        "$type": "color",
+        "$description": "focus ring glow"
+      },
+      "5": {
+        "$value": "#e5e3e0",
+        "$type": "color"
+      },
+      "6": {
+        "$value": "#dddbd8",
+        "$type": "color",
+        "$description": "★ default border"
+      },
+      "7": {
+        "$value": "#cac8c4",
+        "$type": "color",
+        "$description": "input default border"
+      },
+      "8": {
+        "$value": "#b0adaa",
+        "$type": "color",
+        "$description": "strong border / icon"
+      },
+      "9": {
+        "$value": "#8c8a87",
+        "$type": "color",
+        "$description": "placeholder"
+      },
+      "10": {
+        "$value": "#807e7b",
+        "$type": "color"
+      },
+      "11": {
+        "$value": "#4a4846",
+        "$type": "color",
+        "$description": "secondary text"
+      },
+      "12": {
+        "$value": "#1F1D1C",
+        "$type": "color",
+        "$description": "★ PRIMARY ACTION"
+      }
+    },
+    "green": {
+      "bg": {
+        "$value": "#edfbf4",
+        "$type": "color"
+      },
+      "border": {
+        "$value": "#cdf4ea",
+        "$type": "color"
+      },
+      "solid": {
+        "$value": "#29a383",
+        "$type": "color"
+      },
+      "text": {
+        "$value": "#107060",
+        "$type": "color"
+      }
+    },
+    "red": {
+      "bg": {
+        "$value": "#fff5f5",
+        "$type": "color"
+      },
+      "border": {
+        "$value": "#ffe0e0",
+        "$type": "color"
+      },
+      "solid": {
+        "$value": "#e5484d",
+        "$type": "color"
+      },
+      "text": {
+        "$value": "#ce2c31",
+        "$type": "color"
+      }
+    },
+    "blue": {
+      "bg": {
+        "$value": "#f0f8ff",
+        "$type": "color"
+      },
+      "border": {
+        "$value": "#d5efff",
+        "$type": "color"
+      },
+      "solid": {
+        "$value": "#0090ff",
+        "$type": "color"
+      },
+      "text": {
+        "$value": "#0060cf",
+        "$type": "color"
+      }
+    },
+    "orange": {
+      "bg": {
+        "$value": "#fff6f0",
+        "$type": "color"
+      },
+      "border": {
+        "$value": "#ffe8d7",
+        "$type": "color"
+      },
+      "solid": {
+        "$value": "#f76b15",
+        "$type": "color"
+      },
+      "text": {
+        "$value": "#bd4b00",
+        "$type": "color"
+      }
+    },
+    "purple": {
+      "bg": {
+        "$value": "#faf5ff",
+        "$type": "color"
+      },
+      "border": {
+        "$value": "#ecdcfe",
+        "$type": "color"
+      },
+      "solid": {
+        "$value": "#8e4ec6",
+        "$type": "color"
+      },
+      "text": {
+        "$value": "#793aaf",
+        "$type": "color"
+      }
+    },
+    "alias": {
+      "$description": "Semantic aliases — reference these in code, not raw steps",
+      "bg": {
+        "$value": "{color.gray.1}",
+        "$type": "color"
+      },
+      "bg-subtle": {
+        "$value": "{color.gray.2}",
+        "$type": "color"
+      },
+      "surface": {
+        "$value": "#ffffff",
+        "$type": "color"
+      },
+      "border": {
+        "$value": "{color.gray.6}",
+        "$type": "color"
+      },
+      "border-strong": {
+        "$value": "{color.gray.8}",
+        "$type": "color"
+      },
+      "text-hi": {
+        "$value": "{color.gray.12}",
+        "$type": "color"
+      },
+      "text-mid": {
+        "$value": "{color.gray.11}",
+        "$type": "color"
+      },
+      "text-low": {
+        "$value": "{color.gray.9}",
+        "$type": "color"
+      },
+      "text-disabled": {
+        "$value": "{color.gray.8}",
+        "$type": "color"
+      },
+      "brand": {
+        "$value": "{color.amber.9}",
+        "$type": "color"
+      },
+      "brand-bg": {
+        "$value": "{color.amber.2}",
+        "$type": "color"
+      },
+      "brand-text": {
+        "$value": "{color.amber.11}",
+        "$type": "color"
+      }
+    }
+  },
+  "spacing": {
+    "$description": "4px grid — all spacing must be a multiple of 4",
+    "1": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "icon gap, micro padding"
+    },
+    "2": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "badge padding, inline gap"
+    },
+    "3": {
+      "$value": "12px",
+      "$type": "dimension"
+    },
+    "4": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "form field gap, button padding"
+    },
+    "5": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "★ card padding (default)"
+    },
+    "6": {
+      "$value": "32px",
+      "$type": "dimension"
+    },
+    "7": {
+      "$value": "40px",
+      "$type": "dimension"
+    },
+    "8": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "page offset"
+    },
+    "9": {
+      "$value": "64px",
+      "$type": "dimension",
+      "$description": "section separation"
+    }
+  },
+  "borderRadius": {
+    "1": {
+      "$value": "3px",
+      "$type": "dimension",
+      "$description": "checkbox"
+    },
+    "2": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "badge, tag"
+    },
+    "3": {
+      "$value": "6px",
+      "$type": "dimension",
+      "$description": "button, input"
+    },
+    "4": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "★ card (default)"
+    },
+    "5": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "dialog, dashboard hero card"
+    },
+    "full": {
+      "$value": "9999px",
+      "$type": "dimension",
+      "$description": "pill, avatar"
+    }
+  },
+  "shadow": {
+    "1": {
+      "$value": "0 1px 2px rgba(0,0,0,.05)",
+      "$type": "shadow",
+      "$description": "row hover"
+    },
+    "2": {
+      "$value": "0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04)",
+      "$type": "shadow",
+      "$description": "★ card default"
+    },
+    "3": {
+      "$value": "0 4px 8px rgba(0,0,0,.06), 0 2px 4px rgba(0,0,0,.04)",
+      "$type": "shadow",
+      "$description": "right panel"
+    },
+    "4": {
+      "$value": "0 8px 16px rgba(0,0,0,.08), 0 4px 8px rgba(0,0,0,.04)",
+      "$type": "shadow",
+      "$description": "dropdown, popover"
+    },
+    "5": {
+      "$value": "0 16px 32px rgba(0,0,0,.10)",
+      "$type": "shadow",
+      "$description": "floating action"
+    },
+    "6": {
+      "$value": "0 24px 48px rgba(0,0,0,.18)",
+      "$type": "shadow",
+      "$description": "modal dialog"
+    }
+  },
+  "motion": {
+    "duration": {
+      "instant": {
+        "$value": "0ms",
+        "$type": "duration"
+      },
+      "fast": {
+        "$value": "100ms",
+        "$type": "duration",
+        "$description": "hover, focus ring"
+      },
+      "normal": {
+        "$value": "150ms",
+        "$type": "duration",
+        "$description": "★ DEFAULT"
+      },
+      "moderate": {
+        "$value": "200ms",
+        "$type": "duration",
+        "$description": "dropdown open, tab switch"
+      },
+      "slow": {
+        "$value": "250ms",
+        "$type": "duration",
+        "$description": "accordion, card expand"
+      },
+      "enter": {
+        "$value": "200ms",
+        "$type": "duration"
+      },
+      "exit": {
+        "$value": "150ms",
+        "$type": "duration",
+        "$description": "always < enter"
+      },
+      "page": {
+        "$value": "300ms",
+        "$type": "duration"
+      }
+    },
+    "easing": {
+      "out": {
+        "$value": "cubic-bezier(0.0,0.0,0.2,1.0)",
+        "$type": "cubicBezier",
+        "$description": "enter viewport"
+      },
+      "in": {
+        "$value": "cubic-bezier(0.4,0.0,1.0,1.0)",
+        "$type": "cubicBezier",
+        "$description": "leave viewport"
+      },
+      "inout": {
+        "$value": "cubic-bezier(0.4,0.0,0.2,1.0)",
+        "$type": "cubicBezier",
+        "$description": "continuous move"
+      },
+      "spring": {
+        "$value": "cubic-bezier(0.34,1.56,0.64,1.0)",
+        "$type": "cubicBezier",
+        "$description": "switch, badge pop"
+      },
+      "bounce": {
+        "$value": "cubic-bezier(0.36,0.07,0.19,0.97)",
+        "$type": "cubicBezier",
+        "$description": "toast enter"
+      },
+      "gentle": {
+        "$value": "cubic-bezier(0.25,0.46,0.45,0.94)",
+        "$type": "cubicBezier",
+        "$description": "dialog open"
+      }
+    }
+  },
+  "zIndex": {
+    "base": {
+      "$value": 0,
+      "$type": "number",
+      "$description": "normal document flow"
+    },
+    "raised": {
+      "$value": 10,
+      "$type": "number",
+      "$description": "active row, hover card"
+    },
+    "dropdown": {
+      "$value": 100,
+      "$type": "number",
+      "$description": "Select, DropdownMenu"
+    },
+    "sticky": {
+      "$value": 200,
+      "$type": "number",
+      "$description": "sticky header, topbar"
+    },
+    "overlay": {
+      "$value": 300,
+      "$type": "number",
+      "$description": "modal backdrop"
+    },
+    "modal": {
+      "$value": 400,
+      "$type": "number",
+      "$description": "Dialog, Drawer"
+    },
+    "popover": {
+      "$value": 500,
+      "$type": "number",
+      "$description": "Popover, date picker"
+    },
+    "toast": {
+      "$value": 600,
+      "$type": "number",
+      "$description": "Toast notifications"
+    },
+    "tooltip": {
+      "$value": 700,
+      "$type": "number",
+      "$description": "Tooltip (pierces modal)"
+    }
+  },
+  "breakpoint": {
+    "md": {
+      "$value": "1024px",
+      "$type": "dimension",
+      "$description": "Sidebar: icon-only (64px)"
+    },
+    "lg": {
+      "$value": "1280px",
+      "$type": "dimension",
+      "$description": "Sidebar: compact (200px)"
+    },
+    "xl": {
+      "$value": "1440px",
+      "$type": "dimension",
+      "$description": "★ Full design baseline (232px)"
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "sans": {
+        "$value": "'Inter', 'Noto Sans SC', -apple-system, sans-serif",
+        "$type": "fontFamily"
+      },
+      "mono": {
+        "$value": "'JetBrains Mono', 'Roboto Mono', monospace",
+        "$type": "fontFamily"
+      }
+    },
+    "fontSize": {
+      "micro": {
+        "$value": "12px",
+        "$type": "dimension",
+        "$description": "all-caps micro label"
+      },
+      "caption": {
+        "$value": "12px",
+        "$type": "dimension",
+        "$description": "timestamp, meta"
+      },
+      "sm": {
+        "$value": "13px",
+        "$type": "dimension",
+        "$description": "table cell, nav item"
+      },
+      "base": {
+        "$value": "14px",
+        "$type": "dimension",
+        "$description": "★ default body"
+      },
+      "md": {
+        "$value": "16px",
+        "$type": "dimension",
+        "$description": "section heading"
+      },
+      "lg": {
+        "$value": "20px",
+        "$type": "dimension",
+        "$description": "page title"
+      },
+      "xl": {
+        "$value": "26px",
+        "$type": "dimension",
+        "$description": "KPI value"
+      },
+      "display": {
+        "$value": "36px",
+        "$type": "dimension",
+        "$description": "display stat"
+      }
+    }
+  }
+}

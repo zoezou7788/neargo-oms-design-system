@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #fdfdfc; color: #1F1D1C;
+    padding: 20px; font-size: 13px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .header { margin-bottom: 16px; }
+  .header h1 { font-size: 14px; font-weight: 700; letter-spacing: -.01em; }
+  .header p { font-size: 11.5px; color: #8c8a87; margin-top: 4px; line-height: 1.5; }
+  .brand-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #FFA902; margin-right: 5px; }
+
+  .checklist { margin: 14px 0; display: flex; flex-direction: column; gap: 6px; }
+  .check-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11.5px; color: #4a4846; padding: 6px 10px;
+    background: #f9f9f8; border-radius: 5px; border: 1px solid #eceae7;
+    transition: all .2s;
+  }
+  .check-item .ico { font-size: 12px; width: 16px; text-align: center; flex-shrink: 0; }
+  .check-item.done { color: #107060; background: #edfbf4; border-color: #cdf4ea; }
+  .check-item.active { color: #1F1D1C; background: #fff8d6; border-color: #f5c42a; }
+  .check-item.error { color: #ce2c31; background: #fff5f5; border-color: #ffe0e0; }
+
+  .btn {
+    width: 100%; padding: 10px; border: none; border-radius: 6px;
+    font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s;
+    font-family: inherit; letter-spacing: -.01em;
+  }
+  .btn-primary { background: #1F1D1C; color: #fff; }
+  .btn-primary:hover:not(:disabled) { background: #333130; }
+  .btn-primary:disabled { background: #cac8c4; cursor: not-allowed; }
+  .btn-close { background: #f2f1ef; color: #4a4846; margin-top: 8px; }
+  .btn-close:hover { background: #eceae7; }
+
+  .progress-bar { height: 3px; background: #eceae7; border-radius: 2px; margin: 12px 0; overflow: hidden; }
+  .progress-fill { height: 100%; background: #FFA902; border-radius: 2px; width: 0%; transition: width .4s ease; }
+
+  .status { font-size: 11px; color: #8c8a87; text-align: center; margin-bottom: 10px; min-height: 16px; }
+  .status.ok { color: #107060; }
+  .status.err { color: #ce2c31; }
+
+  .tag { display: inline-block; background: #fff8d6; color: #8c5c00; border: 1px solid #f5c42a;
+    font-size: 9.5px; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-left: 4px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><span class="brand-dot"></span>NearGo OMS <span class="tag">v2.0</span></h1>
+  <p>Creates Figma Variables (Design Tokens) + a full Component Library page in the current file.</p>
+</div>
+
+<div class="checklist" id="checklist">
+  <div class="check-item" id="step-vars"><span class="ico">○</span> Design Token Variables <span style="color:#8c5c00;font-size:10px">(requires Professional plan)</span></div>
+  <div class="check-item" id="step-page"><span class="ico">○</span> Component Library page</div>
+  <div class="check-item" id="step-btns"><span class="ico">○</span> Buttons (6 variants × 3 sizes)</div>
+  <div class="check-item" id="step-badges"><span class="ico">○</span> Badges — Type, Priority, Brand</div>
+  <div class="check-item" id="step-status"><span class="ico">○</span> Status Indicators (5 states)</div>
+  <div class="check-item" id="step-inputs"><span class="ico">○</span> Inputs (6 states)</div>
+  <div class="check-item" id="step-nav"><span class="ico">○</span> Navigation Items (3 states)</div>
+  <div class="check-item" id="step-kpi"><span class="ico">○</span> KPI Cards + Stat Bars</div>
+  <div class="check-item" id="step-table"><span class="ico">○</span> Table Rows</div>
+</div>
+
+<div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+<div class="status" id="status">Ready to generate</div>
+
+<button class="btn btn-primary" id="btnGenerate" onclick="start()">Generate Component Library</button>
+<button class="btn btn-close" onclick="parent.postMessage({ pluginMessage: { type: 'close' } }, '*')">Close</button>
+
+<script>
+  let running = false;
+
+  function start() {
+    if (running) return;
+    running = true;
+    document.getElementById('btnGenerate').disabled = true;
+    document.getElementById('status').textContent = 'Starting…';
+    document.getElementById('status').className = 'status';
+    parent.postMessage({ pluginMessage: { type: 'generate' } }, '*');
+  }
+
+  function setStep(id, state) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.className = 'check-item ' + state;
+    const icons = { active: '⟳', done: '✓', error: '✕' };
+    el.querySelector('.ico').textContent = icons[state] || '○';
+  }
+
+  function setProgress(pct, msg, cls) {
+    document.getElementById('progress').style.width = pct + '%';
+    const s = document.getElementById('status');
+    s.textContent = msg || '';
+    s.className = 'status ' + (cls || '');
+  }
+
+  window.onmessage = (e) => {
+    const msg = e.data.pluginMessage;
+    if (!msg) return;
+
+    if (msg.type === 'step') {
+      setStep('step-' + msg.id, msg.state);
+      setProgress(msg.pct, msg.label, msg.state === 'error' ? 'err' : '');
+    }
+    if (msg.type === 'done') {
+      setProgress(100, '✓ Library created — check the "🧩 NearGo Component Library" page', 'ok');
+      document.getElementById('btnGenerate').disabled = false;
+      running = false;
+    }
+    if (msg.type === 'error') {
+      setProgress(0, '✕ Error: ' + msg.message, 'err');
+      document.getElementById('btnGenerate').disabled = false;
+      running = false;
+    }
+  };
+</script>
+</body>
+</html>

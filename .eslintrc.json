@@ -1,0 +1,39 @@
+{
+  "root": true,
+  "env": { "browser": true, "es2020": true },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:tailwindcss/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": ["./tsconfig.json"]
+  },
+  "plugins": ["@typescript-eslint", "tailwindcss"],
+  "settings": {
+    "tailwindcss": {
+      "config": "tailwind.config.ts"
+    }
+  },
+  "rules": {
+    // ── 禁止在 TSX 中直接写 style={{ color: '#xxx' }} ────────
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "JSXAttribute[name.name='style'] > JSXExpressionContainer > ObjectExpression > Property[key.name=/color|background|borderColor|boxShadow|fill|stroke/] > Literal[value=/#[0-9A-Fa-f]{3,8}/]",
+        "message": "禁止在 style prop 中硬编码颜色。请使用 CSS 变量：var(--amber-9) 等，或使用 Tailwind 类名。"
+      }
+    ],
+
+    // ── TypeScript 严格规则 ──────────────────────────────────
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
+
+    // ── Tailwind 规则 ────────────────────────────────────────
+    "tailwindcss/classnames-order": "warn",
+    "tailwindcss/no-custom-classname": "off"
+  }
+}
