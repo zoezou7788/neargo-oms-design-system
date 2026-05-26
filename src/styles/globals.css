@@ -120,12 +120,18 @@
   --radius-6: 9999px;   /* pill, avatar        */
 
   /* ── Shadows ─────────────────────────────────────────────── */
-  --shadow-1: 0 1px 2px rgba(0,0,0,.05);
-  --shadow-2: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
-  --shadow-3: 0 4px 8px rgba(0,0,0,.06), 0 2px 4px rgba(0,0,0,.04);
-  --shadow-4: 0 8px 16px rgba(0,0,0,.08), 0 4px 8px rgba(0,0,0,.04);
-  --shadow-5: 0 16px 32px rgba(0,0,0,.10);
-  --shadow-6: 0 24px 48px rgba(0,0,0,.18);
+  /* shadcn-aligned: featherweight shadows */
+  --shadow-1: 0 1px 2px rgba(0,0,0,.04);
+  --shadow-2: 0 1px 3px rgba(0,0,0,.05), 0 1px 2px rgba(0,0,0,.03);
+  --shadow-3: 0 2px 6px rgba(0,0,0,.05), 0 1px 3px rgba(0,0,0,.03);
+  --shadow-4: 0 4px 12px rgba(0,0,0,.06), 0 2px 4px rgba(0,0,0,.03);
+  --shadow-5: 0 8px 24px rgba(0,0,0,.07), 0 3px 8px rgba(0,0,0,.04);
+  --shadow-6: 0 16px 40px rgba(0,0,0,.10), 0 6px 16px rgba(0,0,0,.05);
+  /* Semantic aliases */
+  --shadow-card:  var(--shadow-1);   /* cards — barely visible */
+  --shadow-popup: var(--shadow-4);   /* dropdowns, popovers */
+  --shadow-modal: var(--shadow-5);   /* dialogs, sheets */
+  --shadow-toast: var(--shadow-3);   /* notifications */
 
   /* ── Motion ──────────────────────────────────────────────── */
   --duration-fast:   100ms;

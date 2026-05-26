@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 // Table — data table primitives following NearGo OMS tokens.
 //
 // Design System Rules:
-//   - Container: border border-[var(--border)], rounded-r4, shadow-sh2
+//   - Container: border border-[var(--border)], rounded-r4 (no shadow)
 //   - Header bg: var(--gray-2), text: 12px uppercase tracking-[0.04em] var(--text-mid)
 //   - Row dividers: border-b border-[var(--gray-3)]
 //   - Row hover: hover:bg-[var(--gray-2)]
@@ -25,7 +25,7 @@ const Table = React.forwardRef<HTMLDivElement, TableProps>(
       ref={ref}
       className={cn(
         !unstyled && [
-          "rounded-r4 border border-[var(--border)] shadow-sh2",
+          "rounded-r4 border border-[var(--border)]",
           "bg-[var(--surface)] overflow-hidden",
         ],
         className

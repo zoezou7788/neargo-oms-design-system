@@ -34,8 +34,10 @@ body {
   --purple-bg:#faf5ff; --purple-border:#ecdcfe; --purple-9:#8e4ec6; --purple-solid:#8e4ec6; --purple-text:#793aaf;
   --surface:#ffffff; --bg:var(--gray-1); --border:var(--gray-6);
   --text-hi:var(--gray-12); --text-mid:var(--gray-11); --text-low:var(--gray-9);
-  --shadow-2:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
-  --shadow-4:0 8px 16px rgba(0,0,0,.08),0 4px 8px rgba(0,0,0,.04);
+  --shadow-1:0 1px 2px rgba(0,0,0,.04);
+  --shadow-2:0 1px 3px rgba(0,0,0,.05),0 1px 2px rgba(0,0,0,.03);
+  --shadow-4:0 4px 12px rgba(0,0,0,.06),0 2px 4px rgba(0,0,0,.03);
+  --shadow-popup:0 8px 24px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.04);
   --topbar-h:54px;
   --sidebar-w:220px;
 }
@@ -44,15 +46,15 @@ body {
 .topbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   height: var(--topbar-h);
-  background: var(--gray-12);
+  background: var(--surface);
   display: flex; align-items: center;
   padding: 0 20px;
   gap: 12px;
-  border-bottom: 1px solid rgba(255,255,255,.08);
+  border-bottom: 1px solid var(--border);
 }
 .topbar-logo {
   font-size: 15px; font-weight: 700;
-  color: #fff; letter-spacing: -0.03em;
+  color: var(--gray-12); letter-spacing: -0.03em;
   display: flex; align-items: center; gap: 8px;
 }
 .topbar-logo-dot {
@@ -62,13 +64,13 @@ body {
   font-size: 11px; font-weight: 800; color: #fff;
 }
 .topbar-badge {
-  font-size: 11px; font-weight: 600; color: var(--amber-9);
-  background: rgba(255,169,2,.15); border: 1px solid rgba(255,169,2,.3);
+  font-size: 11px; font-weight: 600; color: var(--gray-10);
+  background: var(--gray-2); border: 1px solid var(--border);
   border-radius: 20px; padding: 2px 8px; letter-spacing: .02em;
 }
 .topbar-spacer { flex: 1; }
 .topbar-subtitle {
-  font-size: 12px; color: var(--gray-8); letter-spacing: .02em;
+  font-size: 12px; color: var(--gray-9); letter-spacing: .02em;
 }
 
 .sidebar {
@@ -235,8 +237,8 @@ body {
   border-radius: 6px; outline: none; transition: all .12s;
 }
 .input::placeholder { color: var(--gray-8); }
-.input:focus { border-color: var(--gray-7); box-shadow: 0 0 0 3px var(--gray-4); }
-.input-focused { border-color: var(--gray-7); box-shadow: 0 0 0 3px var(--gray-4); }
+.input:focus { border-color: var(--gray-7); box-shadow: 0 0 0 2px #eceae7; }
+.input-focused { border-color: var(--gray-7); box-shadow: 0 0 0 2px #eceae7; }
 .input-error { border-color: var(--red-solid); }
 .input-error:focus { box-shadow: 0 0 0 3px var(--red-border); }
 .input-disabled { background: var(--gray-2); color: var(--gray-8); cursor: not-allowed; border-color: var(--gray-4); }
@@ -293,7 +295,7 @@ body {
 .switch::after {
   content: ''; position: absolute; top: 2px; left: 2px;
   width: 16px; height: 16px; border-radius: 50%; background: #fff;
-  transition: transform .2s; box-shadow: var(--shadow-2);
+  transition: transform .2s;
 }
 .switch.on::after { transform: translateX(16px); }
 .switch-label { font-size: 13px; color: var(--gray-11); }
@@ -312,8 +314,8 @@ body {
 }
 .select-dropdown {
   position: absolute; top: calc(100% + 4px); left: 0; right: 0;
-  background: var(--surface); border: 1px solid var(--gray-5);
-  border-radius: 8px; box-shadow: var(--shadow-4);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; box-shadow: var(--shadow-popup);
   overflow: hidden; z-index: 10;
 }
 .select-option {
@@ -333,10 +335,10 @@ body {
 /* ─── 8. Card ────────────────────────────────────────── */
 .card {
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: 10px; overflow: hidden; box-shadow: var(--shadow-2);
+  border-radius: 8px; overflow: hidden;
 }
 .card-header {
-  padding: 14px 16px 12px; border-bottom: 1px solid var(--gray-3);
+  padding: 14px 16px 12px; border-bottom: 1px solid var(--border);
 }
 .card-title { font-size: 14px; font-weight: 600; color: var(--gray-12); }
 .card-desc { font-size: 12px; color: var(--gray-9); margin-top: 2px; }
@@ -344,7 +346,7 @@ body {
 
 .kpi-mini {
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: 10px; padding: 16px; box-shadow: var(--shadow-2);
+  border-radius: 8px; padding: 16px;
   min-width: 160px;
 }
 .kpi-mini-value { font-size: 24px; font-weight: 700; letter-spacing: -0.04em; color: var(--gray-12); }
@@ -356,7 +358,7 @@ body {
   font-size: 16px; margin-bottom: 10px;
 }
 
-.card-alert { background: var(--orange-bg); border: 1px solid var(--orange-border); border-radius: 10px; padding: 16px; }
+.card-alert { background: var(--orange-bg); border: 1px solid var(--orange-border); border-radius: 8px; padding: 16px; }
 .card-alert-title { font-size: 13px; font-weight: 600; color: var(--orange-text); margin-bottom: 4px; }
 .card-alert-body { font-size: 12px; color: var(--orange-text); opacity: .85; }
 
@@ -373,14 +375,14 @@ body {
 /* ─── 10. Table ──────────────────────────────────────── */
 .table-wrap {
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-2);
+  border-radius: 8px; overflow: hidden;
 }
 table { width: 100%; border-collapse: collapse; }
 th {
   background: var(--gray-2); color: var(--gray-9);
   font-size: 11px; font-weight: 600; letter-spacing: .06em;
   text-transform: uppercase; padding: 10px 14px; text-align: left;
-  border-bottom: 1px solid var(--gray-4);
+  border-bottom: 1px solid var(--border);
 }
 td { padding: 12px 14px; font-size: 13px; color: var(--gray-11); border-bottom: 1px solid var(--gray-3); }
 tr:last-child td { border-bottom: none; }
@@ -406,7 +408,7 @@ tr.hover td { background: var(--gray-2); }
 .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 .kpi-card {
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: 10px; padding: 18px; box-shadow: var(--shadow-2);
+  border-radius: 8px; padding: 18px;
 }
 .kpi-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
 .kpi-icon {
@@ -462,7 +464,7 @@ tr.hover td { background: var(--gray-2); }
 
 /* ─── 14. File Upload ────────────────────────────────── */
 .upload-zone {
-  border: 2px dashed var(--gray-5); border-radius: 10px;
+  border: 2px dashed var(--gray-6); border-radius: 8px;
   padding: 32px 20px; text-align: center; background: var(--gray-1);
   transition: border-color .15s;
 }
@@ -486,25 +488,25 @@ tr.hover td { background: var(--gray-2); }
 /* ─── 15. Layout Diagram ─────────────────────────────── */
 .layout-diagram {
   border-radius: 10px; overflow: hidden;
-  border: 1px solid var(--gray-5); box-shadow: var(--shadow-4);
-  background: var(--gray-3);
+  border: 1px solid var(--border); box-shadow: var(--shadow-popup);
+  background: var(--gray-2);
 }
 .ld-topbar {
-  height: 36px; background: var(--gray-12);
+  height: 36px; background: var(--surface);
   display: flex; align-items: center; gap: 10px; padding: 0 14px;
-  flex-shrink: 0;
+  flex-shrink: 0; border-bottom: 1px solid var(--border);
 }
-.ld-logo { font-size: 11px; font-weight: 700; color: #fff; letter-spacing: -.02em; }
+.ld-logo { font-size: 11px; font-weight: 700; color: var(--gray-12); letter-spacing: -.02em; }
 .ld-topbar-spacer { flex: 1; }
 .ld-topbar-icon {
   width: 20px; height: 20px; border-radius: 4px;
-  background: rgba(255,255,255,.1); display: flex; align-items: center;
-  justify-content: center; font-size: 10px; color: rgba(255,255,255,.7);
+  background: var(--gray-2); display: flex; align-items: center;
+  justify-content: center; font-size: 10px; color: var(--gray-10);
 }
 .ld-body { display: flex; height: 260px; }
 .ld-sidebar {
   width: 130px; background: var(--surface);
-  border-right: 1px solid var(--gray-4); flex-shrink: 0;
+  border-right: 1px solid var(--border); flex-shrink: 0;
   padding: 10px 0; overflow: hidden;
 }
 .ld-nav-item {
@@ -519,13 +521,13 @@ tr.hover td { background: var(--gray-2); }
 .ld-main { flex: 1; background: var(--gray-1); padding: 12px; overflow: hidden; }
 .ld-page-header {
   height: 28px; background: var(--surface); border-radius: 5px;
-  border: 1px solid var(--gray-4); margin-bottom: 10px;
+  border: 1px solid var(--border); margin-bottom: 10px;
   display: flex; align-items: center; padding: 0 10px;
   font-size: 10px; font-weight: 600; color: var(--gray-11);
 }
 .ld-table {
   background: var(--surface); border-radius: 5px;
-  border: 1px solid var(--gray-4); padding: 8px;
+  border: 1px solid var(--border); padding: 8px;
 }
 .ld-table-row {
   height: 20px; background: var(--gray-2); border-radius: 3px;
@@ -537,7 +539,7 @@ tr.hover td { background: var(--gray-2); }
 .ld-cell.sm { max-width: 50px; }
 .ld-panel {
   width: 160px; background: var(--surface); flex-shrink: 0;
-  border-left: 1px solid var(--gray-4); padding: 12px;
+  border-left: 1px solid var(--border); padding: 12px;
   overflow: hidden;
 }
 .ld-panel-label { font-size: 9px; font-weight: 600; color: var(--gray-9); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
@@ -552,7 +554,7 @@ tr.hover td { background: var(--gray-2); }
 }
 .dialog {
   background: var(--surface); border-radius: 12px;
-  box-shadow: var(--shadow-4), 0 0 0 1px rgba(0,0,0,.06);
+  box-shadow: var(--shadow-popup);
   width: 380px; max-width: 100%; overflow: hidden;
 }
 .dialog-header { padding: 20px 20px 0; }
@@ -567,9 +569,9 @@ tr.hover td { background: var(--gray-2); }
 .toast-stack { display: flex; flex-direction: column; gap: 8px; max-width: 360px; }
 .toast {
   display: flex; align-items: flex-start; gap: 10px;
-  background: var(--surface); border: 1px solid var(--gray-4);
+  background: var(--surface); border: 1px solid var(--border);
   border-radius: 8px; padding: 12px 14px;
-  box-shadow: var(--shadow-4);
+  box-shadow: var(--shadow-2);
   border-left-width: 3px;
 }
 .toast-success { border-left-color: var(--green-solid); }
@@ -581,7 +583,7 @@ tr.hover td { background: var(--gray-2); }
 .toast-msg { font-size: 12px; color: var(--gray-9); margin-top: 2px; }
 
 /* ─── 18. Tabs ───────────────────────────────────────── */
-.tabs-bar { border-bottom: 1px solid var(--gray-4); display: flex; gap: 0; }
+.tabs-bar { border-bottom: 1px solid var(--border); display: flex; gap: 0; }
 .tab-item {
   padding: 10px 16px; font-size: 13px; color: var(--gray-9); cursor: pointer;
   border-bottom: 2px solid transparent; margin-bottom: -1px;
@@ -612,7 +614,7 @@ tr.hover td { background: var(--gray-2); }
   font-size: 10px; font-weight: 600; letter-spacing: .04em;
   color: var(--gray-10); font-family: 'JetBrains Mono', monospace;
 }
-.section-divider { height: 1px; background: var(--gray-4); margin: 28px 0; }
+.section-divider { height: 1px; background: var(--border); margin: 28px 0; }
 .text-muted { color: var(--gray-9); font-size: 12px; }
 </style>
 </head>
@@ -1048,7 +1050,7 @@ tr.hover td { background: var(--gray-2); }
       <div>
         <div style="font-size:11px;color:var(--gray-8);margin-bottom:6px;">展开状态</div>
         <div class="select-wrap" style="position:relative;">
-          <div class="select-trigger" style="border-color:var(--gray-7);box-shadow:0 0 0 3px var(--gray-4);">旗舰门店</div>
+          <div class="select-trigger" style="border-color:var(--gray-7);box-shadow:0 0 0 2px #eceae7;">旗舰门店</div>
           <span class="select-arrow">▴</span>
           <div class="select-dropdown" style="position:absolute;">
             <div class="select-option">标准门店</div>
@@ -1427,8 +1429,8 @@ tr.hover td { background: var(--gray-2); }
       <div class="ld-topbar">
         <div class="ld-logo">NearGo OMS</div>
         <div style="flex:1;margin:0 12px;">
-          <div style="height:18px;background:rgba(255,255,255,.1);border-radius:4px;max-width:200px;display:flex;align-items:center;padding:0 8px;">
-            <span style="font-size:9px;color:rgba(255,255,255,.4);">🔍 搜索订单、门店…</span>
+          <div style="height:18px;background:var(--gray-2);border:1px solid var(--border);border-radius:4px;max-width:200px;display:flex;align-items:center;padding:0 8px;">
+            <span style="font-size:9px;color:var(--gray-9);">🔍 搜索订单、门店…</span>
           </div>
         </div>
         <div class="ld-topbar-icon">🔔</div>
@@ -1506,7 +1508,7 @@ tr.hover td { background: var(--gray-2); }
       </div>
     </div>
     <div style="margin-top:12px;display:flex;gap:20px;flex-wrap:wrap;">
-      <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:2px;background:var(--gray-12);"></div><span class="text-muted">Topbar 54px</span></div>
+      <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:2px;background:var(--surface);border:1px solid var(--border);"></div><span class="text-muted">Topbar 54px (white)</span></div>
       <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:2px;background:var(--surface);border:1px solid var(--gray-4);"></div><span class="text-muted">Sidebar 232px</span></div>
       <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:2px;background:var(--gray-1);border:1px solid var(--gray-4);"></div><span class="text-muted">Main Content</span></div>
       <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:2px;background:var(--surface);border:1px solid var(--amber-3);"></div><span class="text-muted">Right Panel 320px</span></div>
