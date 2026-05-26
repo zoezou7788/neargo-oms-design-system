@@ -5,9 +5,9 @@ import { cn } from "@/lib/utils";
 // Table — data table primitives following NearGo OMS tokens.
 //
 // Design System Rules:
-//   - Container: border border-[var(--border)], rounded-r4 (no shadow)
+//   - Container: border border-[var(--border-subtle)], rounded-r4 (no shadow)
 //   - Header bg: var(--gray-2), text: 12px uppercase tracking-[0.04em] var(--text-mid)
-//   - Row dividers: border-b border-[var(--gray-3)]
+//   - Row dividers: border-b border-[var(--border-subtle)] (#F3F4F6)
 //   - Row hover: hover:bg-[var(--gray-2)]
 //   - Cell text: 13px var(--text-hi)
 //   - overflow-x-auto wrapper for horizontal scroll
@@ -25,7 +25,7 @@ const Table = React.forwardRef<HTMLDivElement, TableProps>(
       ref={ref}
       className={cn(
         !unstyled && [
-          "rounded-r4 border border-[var(--border)]",
+          "rounded-r4 border border-[var(--border-subtle)]",
           "bg-[var(--surface)] overflow-hidden",
         ],
         className
@@ -62,7 +62,7 @@ const TableBody = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <tbody
     ref={ref}
-    className={cn("divide-y divide-[var(--gray-3)]", className)}
+    className={cn("divide-y divide-[var(--border-subtle)]", className)}
     {...props}
   />
 ));
@@ -76,7 +76,7 @@ const TableFooter = React.forwardRef<
   <tfoot
     ref={ref}
     className={cn(
-      "bg-[var(--gray-2)] border-t border-[var(--border)]",
+      "bg-[var(--gray-2)] border-t border-[var(--border-subtle)]",
       "text-[var(--text-mid)] text-[13px]",
       className
     )}
@@ -97,7 +97,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
       ref={ref}
       aria-selected={selected || undefined}
       className={cn(
-        "border-b border-[var(--gray-3)] last:border-0",
+        "border-b border-[var(--border-subtle)] last:border-0",
         "transition-colors duration-fast",
         "hover:bg-[var(--gray-2)]",
         selected && "bg-[var(--blue-bg)]",
