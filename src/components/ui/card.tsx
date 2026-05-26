@@ -19,8 +19,8 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     <div
       ref={ref}
       className={cn(
-        "bg-[var(--surface)] border border-[var(--border)]",
-        "shadow-sh2 overflow-hidden",
+        "bg-[var(--surface)] border border-[var(--border-subtle)]",
+        "overflow-hidden",
         variant === "dashboard" ? "rounded-r5" : "rounded-r4",
         paddingMap[padding],
         className
@@ -39,7 +39,7 @@ const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
       ref={ref}
       className={cn(
         "flex items-center justify-between",
-        "px-5 py-3.5 border-b border-[var(--gray-3)]",
+        "px-5 py-3.5 border-b border-[var(--border-subtle)]",
         className
       )}
       {...props}
@@ -71,7 +71,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
     <div
       ref={ref}
       className={cn(
-        "px-5 py-3 border-t border-[var(--gray-3)] bg-[var(--gray-2)]",
+        "px-5 py-3 border-t border-[var(--border-subtle)] bg-[var(--gray-2)]",
         className
       )}
       {...props}
