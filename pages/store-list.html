@@ -224,7 +224,8 @@
     }
     .btn:hover { filter: brightness(.91); }
     .btn:active { filter: brightness(.83); }
-    .btn:disabled { opacity: .38; cursor: not-allowed; pointer-events: none; filter: none; }
+    /* ── 组件库禁用按钮样式（原文复制，不修改） ── */
+    .btn-disabled { background: var(--gray-3); color: var(--gray-8); border-color: var(--gray-4); cursor: not-allowed; opacity: .7; }
     .btn-ghost {
       background: var(--surface); border: 1px solid var(--border); color: var(--gray-11);
     }
@@ -616,7 +617,7 @@
           </div>
           <div class="f-actions">
             <button class="btn btn-ghost">重置</button>
-            <button class="btn btn-ghost" disabled>查询</button>
+            <button class="btn btn-disabled" disabled>查询</button>
             <button class="btn btn-primary">导出</button>
           </div>
         </div>
