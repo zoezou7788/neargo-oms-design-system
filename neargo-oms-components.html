@@ -32,7 +32,7 @@ body {
   --blue-bg:#f0f8ff; --blue-border:#d5efff; --blue-solid:#0090ff; --blue-text:#0060cf;
   --orange-bg:#fff6f0; --orange-border:#ffe8d7; --orange-9:#f76b15; --orange-solid:#f76b15; --orange-text:#bd4b00;
   --purple-bg:#faf5ff; --purple-border:#ecdcfe; --purple-9:#8e4ec6; --purple-solid:#8e4ec6; --purple-text:#793aaf;
-  --surface:#ffffff; --bg:var(--gray-1); --border:var(--gray-6);
+  --surface:#ffffff; --bg:#F4F5F7; --border:var(--gray-6);
   --text-hi:var(--gray-12); --text-mid:var(--gray-11); --text-low:var(--gray-9);
   --shadow-1:0 1px 2px rgba(0,0,0,.04);
   --shadow-2:0 1px 3px rgba(0,0,0,.05),0 1px 2px rgba(0,0,0,.03);
@@ -660,6 +660,7 @@ tr.hover td { background: var(--gray-2); }
 
   <div class="toc-group-label">布局系统</div>
   <a class="toc-link" href="#layout">布局结构</a>
+  <a class="toc-link" href="#sidebar">侧边栏 Sidebar</a>
 </nav>
 
 <!-- ═══ MAIN CONTENT ════════════════════════════════════════════ -->
@@ -1598,6 +1599,494 @@ tr.hover td { background: var(--gray-2); }
       </div>
     </div>
   </section>
+
+  <!-- ─── 20. Sidebar ─── -->
+  <section class="section" id="sidebar">
+    <div class="section-title">侧边栏 Sidebar</div>
+    <p class="section-subtitle">基于 shadcn/ui Sidebar 规范适配 NearGo OMS — 支持展开 / 图标收起 / 浮动三种形态</p>
+
+    <style>
+    /* ─── Sidebar Component Tokens ───────────────────────── */
+    .ns-sidebar {
+      --ns-sb-w:       220px;
+      --ns-sb-w-icon:  52px;
+      --ns-sb-dur:     200ms;
+      --ns-sb-ease:    cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* ─── Sidebar Shell ─────────────────────────────────── */
+    .ns-sidebar-provider {
+      display: flex;
+      width: 100%;
+      border: 1px solid var(--gray-4);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--gray-1);
+      box-shadow: var(--shadow-popup);
+    }
+
+    /* ─── Sidebar Root ──────────────────────────────────── */
+    .ns-sidebar {
+      width: var(--ns-sb-w);
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      height: 420px;
+      transition: width var(--ns-sb-dur) var(--ns-sb-ease);
+      overflow: hidden;
+    }
+    .ns-sidebar[data-state="collapsed"] {
+      width: var(--ns-sb-w-icon);
+    }
+    /* Floating variant */
+    .ns-sidebar[data-variant="floating"] {
+      margin: 8px 0 8px 8px;
+      height: calc(100% - 16px);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-4);
+    }
+    /* Inset variant */
+    .ns-sidebar[data-variant="inset"] {
+      background: var(--gray-2);
+      border-right: none;
+    }
+
+    /* ─── Sidebar Header ────────────────────────────────── */
+    .ns-sb-header {
+      display: flex;
+      align-items: center;
+      height: 54px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--border);
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .ns-sb-logo {
+      width: 26px; height: 26px; border-radius: 6px;
+      background: var(--amber-9);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; color: #fff;
+      flex-shrink: 0;
+    }
+    .ns-sb-brand {
+      font-size: 14px; font-weight: 700;
+      color: var(--gray-12); letter-spacing: -0.03em;
+      white-space: nowrap; overflow: hidden;
+      transition: opacity var(--ns-sb-dur), width var(--ns-sb-dur);
+    }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-brand { opacity: 0; width: 0; }
+    .ns-sb-trigger {
+      margin-left: auto;
+      width: 26px; height: 26px; border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gray-9); cursor: pointer; flex-shrink: 0;
+      background: none; border: none; font-family: inherit;
+      transition: background var(--dur-fast), color var(--dur-fast);
+    }
+    .ns-sb-trigger:hover { background: var(--gray-3); color: var(--gray-12); }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-trigger { margin-left: 0; }
+
+    /* ─── Sidebar Content (scroll area) ────────────────── */
+    .ns-sb-content {
+      flex: 1; overflow-y: auto; padding: 8px 0;
+    }
+    .ns-sb-content::-webkit-scrollbar { width: 3px; }
+    .ns-sb-content::-webkit-scrollbar-thumb { background: var(--gray-4); border-radius: 4px; }
+
+    /* ─── Sidebar Group ─────────────────────────────────── */
+    .ns-sb-group { padding: 0 0 4px; }
+    .ns-sb-group-label {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--gray-8); padding: 12px 16px 5px;
+      white-space: nowrap; overflow: hidden;
+      transition: opacity var(--ns-sb-dur);
+    }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-group-label { opacity: 0; height: 0; padding: 0; }
+
+    /* ─── Sidebar Menu ──────────────────────────────────── */
+    .ns-sb-menu { list-style: none; padding: 0 8px; }
+    .ns-sb-menu-item { position: relative; }
+
+    /* ─── SidebarMenuButton ─────────────────────────────── */
+    .ns-sb-btn {
+      display: flex; align-items: center; gap: 9px;
+      width: 100%; height: 34px; padding: 0 8px;
+      border-radius: 6px; border: none; background: none;
+      font-family: inherit; font-size: 13px;
+      color: var(--gray-10); cursor: pointer;
+      transition: background var(--dur-fast), color var(--dur-fast);
+      text-align: left; white-space: nowrap; overflow: hidden;
+    }
+    .ns-sb-btn:hover { background: var(--gray-2); color: var(--gray-12); }
+    .ns-sb-btn[data-active="true"] {
+      background: var(--amber-2); color: var(--gray-12); font-weight: 600;
+      border-left: 2.5px solid var(--amber-9);
+      padding-left: 5.5px;
+    }
+    .ns-sb-btn svg {
+      width: 15px; height: 15px; flex-shrink: 0; opacity: .7;
+    }
+    .ns-sb-btn[data-active="true"] svg { opacity: 1; }
+    .ns-sb-btn-label {
+      flex: 1; overflow: hidden; text-overflow: ellipsis;
+      transition: opacity var(--ns-sb-dur), width var(--ns-sb-dur);
+    }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-btn-label { opacity: 0; width: 0; overflow: hidden; }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-btn { justify-content: center; padding: 0; border-left: none; }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-btn[data-active="true"] { background: var(--amber-2); }
+
+    /* ─── SidebarMenuBadge ──────────────────────────────── */
+    .ns-sb-badge {
+      margin-left: auto; font-size: 10px; font-weight: 600;
+      padding: 1px 6px; border-radius: 9999px;
+      background: var(--gray-3); color: var(--gray-9);
+      flex-shrink: 0;
+      transition: opacity var(--ns-sb-dur);
+    }
+    .ns-sb-badge.urgent { background: var(--red-bg); color: var(--red-text); }
+    .ns-sb-badge.brand  { background: var(--amber-9); color: #fff; }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-badge { opacity: 0; width: 0; padding: 0; overflow: hidden; }
+
+    /* ─── Collapsible Sub-menu ──────────────────────────── */
+    .ns-sb-sub-trigger .ns-sb-chevron {
+      margin-left: auto; flex-shrink: 0;
+      transition: transform var(--ns-sb-dur) var(--ns-sb-ease), opacity var(--ns-sb-dur);
+      color: var(--gray-8);
+    }
+    .ns-sb-sub-trigger[aria-expanded="true"] .ns-sb-chevron { transform: rotate(90deg); }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-chevron { opacity: 0; }
+
+    .ns-sb-sub {
+      list-style: none;
+      padding: 2px 0 2px 28px;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height var(--ns-sb-dur) var(--ns-sb-ease);
+    }
+    .ns-sb-sub.open { max-height: 200px; }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-sub { max-height: 0 !important; }
+
+    .ns-sb-sub-btn {
+      display: flex; align-items: center; gap: 6px;
+      width: 100%; height: 30px; padding: 0 8px;
+      border-radius: 5px; border: none; background: none;
+      font-family: inherit; font-size: 12px;
+      color: var(--gray-9); cursor: pointer;
+      transition: background var(--dur-fast), color var(--dur-fast);
+      white-space: nowrap;
+    }
+    .ns-sb-sub-btn:hover { background: var(--gray-2); color: var(--gray-12); }
+    .ns-sb-sub-btn[data-active="true"] { color: var(--gray-12); font-weight: 500; }
+    .ns-sb-sub-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--gray-6); flex-shrink: 0;
+    }
+    .ns-sb-sub-btn[data-active="true"] .ns-sb-sub-dot { background: var(--amber-9); }
+
+    /* ─── Sidebar Footer ────────────────────────────────── */
+    .ns-sb-footer {
+      border-top: 1px solid var(--border);
+      padding: 10px 10px;
+      flex-shrink: 0;
+    }
+    .ns-sb-user {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 8px; border-radius: 7px;
+      cursor: pointer; transition: background var(--dur-fast);
+      overflow: hidden;
+    }
+    .ns-sb-user:hover { background: var(--gray-2); }
+    .ns-sb-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--amber-2); border: 1.5px solid var(--amber-6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; color: var(--amber-11);
+      flex-shrink: 0;
+    }
+    .ns-sb-user-info {
+      flex: 1; overflow: hidden;
+      transition: opacity var(--ns-sb-dur), width var(--ns-sb-dur);
+    }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-user-info { opacity: 0; width: 0; }
+    .ns-sb-user-name { font-size: 12px; font-weight: 600; color: var(--gray-12); white-space: nowrap; }
+    .ns-sb-user-role { font-size: 10px; color: var(--gray-9); }
+    .ns-sb-user-action {
+      flex-shrink: 0; color: var(--gray-8);
+      transition: opacity var(--ns-sb-dur);
+    }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-user-action { opacity: 0; }
+
+    /* ─── Main Inset ────────────────────────────────────── */
+    .ns-sb-main {
+      flex: 1; padding: 16px; overflow: hidden;
+      background: var(--gray-1);
+    }
+    .ns-sb-page-hint {
+      height: 100%; border-radius: 8px;
+      background: var(--surface); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 8px;
+      color: var(--gray-8); font-size: 13px;
+    }
+
+    /* ─── Sidebar Rail ──────────────────────────────────── */
+    .ns-sb-rail {
+      position: absolute; top: 0; bottom: 0; right: -4px;
+      width: 8px; cursor: ew-resize; z-index: 10;
+    }
+    .ns-sb-rail::after {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 2px; height: 32px; border-radius: 2px;
+      background: var(--gray-5);
+      transition: background var(--dur-fast);
+    }
+    .ns-sb-rail:hover::after { background: var(--amber-9); }
+    </style>
+
+    <!-- ── Demo 1: Expanded (default) ── -->
+    <div class="sub-label">展开状态（默认）</div>
+    <div class="ns-sidebar-provider" style="height:420px; margin-bottom:24px;">
+      <div class="ns-sidebar ns-sidebar" id="sb-demo-1" data-state="expanded">
+        <!-- Header -->
+        <div class="ns-sb-header">
+          <div class="ns-sb-logo">N</div>
+          <span class="ns-sb-brand">NearGo OMS</span>
+          <button class="ns-sb-trigger" onclick="toggleSidebar('sb-demo-1')" title="收起">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+        <!-- Content -->
+        <div class="ns-sb-content">
+          <!-- Group: 主菜单 -->
+          <div class="ns-sb-group">
+            <div class="ns-sb-group-label">主菜单</div>
+            <ul class="ns-sb-menu">
+              <li class="ns-sb-menu-item">
+                <button class="ns-sb-btn" data-active="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                  <span class="ns-sb-btn-label">数据总览</span>
+                </button>
+              </li>
+              <li class="ns-sb-menu-item">
+                <button class="ns-sb-btn ns-sb-sub-trigger" aria-expanded="true" onclick="toggleSub(this)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                  <span class="ns-sb-btn-label">订单管理</span>
+                  <span class="ns-sb-badge urgent">24</span>
+                  <svg class="ns-sb-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+                <ul class="ns-sb-sub open">
+                  <li><button class="ns-sb-sub-btn" data-active="true"><span class="ns-sb-sub-dot"></span>全部订单</button></li>
+                  <li><button class="ns-sb-sub-btn"><span class="ns-sb-sub-dot"></span>待确认</button></li>
+                  <li><button class="ns-sb-sub-btn"><span class="ns-sb-sub-dot"></span>退款管理</button></li>
+                </ul>
+              </li>
+              <li class="ns-sb-menu-item">
+                <button class="ns-sb-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  <span class="ns-sb-btn-label">门店管理</span>
+                  <span class="ns-sb-badge">86</span>
+                </button>
+              </li>
+              <li class="ns-sb-menu-item">
+                <button class="ns-sb-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                  <span class="ns-sb-btn-label">商品管理</span>
+                </button>
+              </li>
+              <li class="ns-sb-menu-item">
+                <button class="ns-sb-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <span class="ns-sb-btn-label">活动管理</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+          <!-- Group: 分析 -->
+          <div class="ns-sb-group">
+            <div class="ns-sb-group-label">数据分析</div>
+            <ul class="ns-sb-menu">
+              <li class="ns-sb-menu-item">
+                <button class="ns-sb-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                  <span class="ns-sb-btn-label">经营报表</span>
+                </button>
+              </li>
+              <li class="ns-sb-menu-item">
+                <button class="ns-sb-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                  <span class="ns-sb-btn-label">用户分析</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+          <!-- Group: 系统 -->
+          <div class="ns-sb-group">
+            <div class="ns-sb-group-label">系统</div>
+            <ul class="ns-sb-menu">
+              <li class="ns-sb-menu-item">
+                <button class="ns-sb-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+                  <span class="ns-sb-btn-label">系统设置</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- Footer -->
+        <div class="ns-sb-footer">
+          <div class="ns-sb-user">
+            <div class="ns-sb-avatar">ZX</div>
+            <div class="ns-sb-user-info">
+              <div class="ns-sb-user-name">Xuewan Zou</div>
+              <div class="ns-sb-user-role">超级管理员</div>
+            </div>
+            <svg class="ns-sb-user-action" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+          </div>
+        </div>
+      </div>
+      <!-- Page Inset -->
+      <div class="ns-sb-main">
+        <div class="ns-sb-page-hint">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gray-6)" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          主内容区域
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Demo 2: Variants row ── -->
+    <div class="sub-label" style="margin-bottom:10px;">三种形态对比</div>
+    <div class="row" style="align-items:stretch;gap:16px;margin-bottom:28px;">
+
+      <!-- Collapsed icon-only -->
+      <div style="flex:0 0 auto;">
+        <div style="font-size:11px;color:var(--gray-9);margin-bottom:6px;text-align:center;">图标收起 <span class="chip">collapsible="icon"</span></div>
+        <div class="ns-sidebar-provider" style="height:360px;width:fit-content;">
+          <div class="ns-sidebar" data-state="collapsed" style="height:360px;">
+            <div class="ns-sb-header" style="justify-content:center;">
+              <div class="ns-sb-logo">N</div>
+            </div>
+            <div class="ns-sb-content">
+              <ul class="ns-sb-menu" style="padding:4px 6px;">
+                <li><button class="ns-sb-btn" data-active="true" style="justify-content:center;padding:0;border-left:none;background:var(--amber-2);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button></li>
+                <li><button class="ns-sb-btn" style="justify-content:center;padding:0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></button></li>
+                <li><button class="ns-sb-btn" style="justify-content:center;padding:0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></button></li>
+                <li><button class="ns-sb-btn" style="justify-content:center;padding:0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></button></li>
+                <li><button class="ns-sb-btn" style="justify-content:center;padding:0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></button></li>
+                <li><button class="ns-sb-btn" style="justify-content:center;padding:0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg></button></li>
+              </ul>
+            </div>
+            <div class="ns-sb-footer">
+              <div class="ns-sb-user" style="justify-content:center;padding:6px 4px;">
+                <div class="ns-sb-avatar">ZX</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating variant -->
+      <div style="flex:1;">
+        <div style="font-size:11px;color:var(--gray-9);margin-bottom:6px;text-align:center;">浮动形态 <span class="chip">variant="floating"</span></div>
+        <div class="ns-sidebar-provider" style="height:360px;background:var(--gray-2);">
+          <div class="ns-sidebar" data-variant="floating" style="height:calc(360px - 16px);">
+            <div class="ns-sb-header">
+              <div class="ns-sb-logo">N</div>
+              <span class="ns-sb-brand">NearGo OMS</span>
+            </div>
+            <div class="ns-sb-content">
+              <ul class="ns-sb-menu">
+                <li><button class="ns-sb-btn" data-active="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="ns-sb-btn-label">数据总览</span></button></li>
+                <li><button class="ns-sb-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/></svg><span class="ns-sb-btn-label">订单管理</span></button></li>
+                <li><button class="ns-sb-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg><span class="ns-sb-btn-label">门店管理</span></button></li>
+                <li><button class="ns-sb-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span class="ns-sb-btn-label">经营报表</span></button></li>
+              </ul>
+            </div>
+          </div>
+          <div class="ns-sb-main" style="background:var(--gray-2);">
+            <div class="ns-sb-page-hint" style="background:var(--surface);">主内容区域</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inset variant -->
+      <div style="flex:1;">
+        <div style="font-size:11px;color:var(--gray-9);margin-bottom:6px;text-align:center;">内嵌形态 <span class="chip">variant="inset"</span></div>
+        <div class="ns-sidebar-provider" style="height:360px;">
+          <div class="ns-sidebar" data-variant="inset" style="height:360px;">
+            <div class="ns-sb-header" style="background:var(--gray-2);">
+              <div class="ns-sb-logo">N</div>
+              <span class="ns-sb-brand">NearGo OMS</span>
+            </div>
+            <div class="ns-sb-content" style="background:var(--gray-2);">
+              <ul class="ns-sb-menu">
+                <li><button class="ns-sb-btn" data-active="true" style="background:var(--surface);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="ns-sb-btn-label">数据总览</span></button></li>
+                <li><button class="ns-sb-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/></svg><span class="ns-sb-btn-label">订单管理</span></button></li>
+                <li><button class="ns-sb-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg><span class="ns-sb-btn-label">门店管理</span></button></li>
+                <li><button class="ns-sb-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span class="ns-sb-btn-label">经营报表</span></button></li>
+              </ul>
+            </div>
+            <div class="ns-sb-footer" style="background:var(--gray-2);border-top:1px solid var(--gray-4);">
+              <div class="ns-sb-user">
+                <div class="ns-sb-avatar">ZX</div>
+                <div class="ns-sb-user-info">
+                  <div class="ns-sb-user-name">Xuewan Zou</div>
+                  <div class="ns-sb-user-role">超级管理员</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ns-sb-main" style="padding:12px;background:var(--gray-1);">
+            <div class="ns-sb-page-hint">主内容区域</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Token 参考 ── -->
+    <div class="sub-label">CSS 变量 / 尺寸规范</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:0;">
+      <div style="background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;padding:16px;">
+        <div style="font-size:11px;font-weight:600;color:var(--gray-9);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">尺寸 Token</div>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <tr style="border-bottom:1px solid #f2f1ef;"><td style="padding:6px 0;color:var(--gray-9);">展开宽度</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">--ns-sb-w: 220px</td></tr>
+          <tr style="border-bottom:1px solid #f2f1ef;"><td style="padding:6px 0;color:var(--gray-9);">图标收起宽度</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">--ns-sb-w-icon: 52px</td></tr>
+          <tr style="border-bottom:1px solid #f2f1ef;"><td style="padding:6px 0;color:var(--gray-9);">展开/收起时长</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">--ns-sb-dur: 200ms</td></tr>
+          <tr style="border-bottom:1px solid #f2f1ef;"><td style="padding:6px 0;color:var(--gray-9);">菜单项高度</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">34px</td></tr>
+          <tr><td style="padding:6px 0;color:var(--gray-9);">子菜单项高度</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">30px</td></tr>
+        </table>
+      </div>
+      <div style="background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;padding:16px;">
+        <div style="font-size:11px;font-weight:600;color:var(--gray-9);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">data-* 属性</div>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <tr style="border-bottom:1px solid #f2f1ef;"><td style="padding:6px 0;color:var(--gray-9);">展开/收起</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">data-state="expanded|collapsed"</td></tr>
+          <tr style="border-bottom:1px solid #f2f1ef;"><td style="padding:6px 0;color:var(--gray-9);">形态变体</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">data-variant="sidebar|floating|inset"</td></tr>
+          <tr style="border-bottom:1px solid #f2f1ef;"><td style="padding:6px 0;color:var(--gray-9);">侧边</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">data-side="left|right"</td></tr>
+          <tr style="border-bottom:1px solid #f2f1ef;"><td style="padding:6px 0;color:var(--gray-9);">激活菜单项</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">data-active="true"</td></tr>
+          <tr><td style="padding:6px 0;color:var(--gray-9);">子菜单展开</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">aria-expanded="true|false"</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+  <script>
+  function toggleSidebar(id) {
+    const sb = document.getElementById(id);
+    if (!sb) return;
+    sb.dataset.state = sb.dataset.state === 'expanded' ? 'collapsed' : 'expanded';
+  }
+  function toggleSub(btn) {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', !expanded);
+    const sub = btn.parentElement.querySelector('.ns-sb-sub');
+    if (sub) sub.classList.toggle('open', !expanded);
+  }
+  </script>
 
 </main>
 
