@@ -1,3 +1,47 @@
+/**
+ * @component DropdownMenu
+ * @description 下拉菜单 — 通过触发器展开操作列表，适合行操作、导航菜单等场景。
+ *
+ * @when-to-use
+ *   ✅ 表格行操作（查看/编辑/删除，3+ 个操作用下拉）
+ *   ✅ Topbar 用户菜单
+ *   ✅ 导出格式选择
+ *   ❌ 只有 1-2 个操作 → 直接用 Button 组合
+ *   ❌ 复杂表单选择 → 用 Combobox / Select
+ *
+ * @composition
+ *   DropdownMenu             — 根组件（控制 open 状态）
+ *   ├── DropdownMenuTrigger  — 触发元素（asChild 传入 Button）
+ *   └── DropdownMenuContent  — 菜单容器
+ *       ├── DropdownMenuLabel      — 分组标题（uppercase 11px）
+ *       ├── DropdownMenuItem       — 普通菜单项（variant="destructive" 为红色）
+ *       ├── DropdownMenuSeparator  — 分隔线
+ *       ├── DropdownMenuCheckboxItem — 可勾选项
+ *       └── DropdownMenuSub        — 子菜单
+ *
+ * @example 表格行操作（常见用法）
+ * ```tsx
+ * import {
+ *   DropdownMenu, DropdownMenuTrigger, DropdownMenuContent,
+ *   DropdownMenuItem, DropdownMenuSeparator,
+ * } from "@/components/ui/dropdown-menu"
+ * import { MoreHorizontal } from "lucide-react"
+ *
+ * <DropdownMenu>
+ *   <DropdownMenuTrigger asChild>
+ *     <Button variant="ghost" size="sm" icon={<MoreHorizontal size={14} />} />
+ *   </DropdownMenuTrigger>
+ *   <DropdownMenuContent align="end">
+ *     <DropdownMenuItem onClick={() => openDetail(row)}>查看详情</DropdownMenuItem>
+ *     <DropdownMenuItem onClick={() => openEdit(row)}>编辑</DropdownMenuItem>
+ *     <DropdownMenuSeparator />
+ *     <DropdownMenuItem variant="destructive" onClick={() => confirmDelete(row)}>
+ *       删除
+ *     </DropdownMenuItem>
+ *   </DropdownMenuContent>
+ * </DropdownMenu>
+ * ```
+ */
 import * as React from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { Check, ChevronRight, Circle } from "lucide-react";

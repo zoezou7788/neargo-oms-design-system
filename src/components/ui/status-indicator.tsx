@@ -1,3 +1,37 @@
+/**
+ * @component StatusIndicator
+ * @description 状态指示器 — 始终以"圆点 + 文字"组合展示状态，不允许单独使用颜色。
+ *
+ * @accessibility-rule
+ *   ❗ WCAG 1.4.1：不得仅靠颜色传达状态信息。
+ *   StatusIndicator 自动满足此要求（dot + text 双重编码）。
+ *
+ * @status-types（来自 tokens.ts，不可随意扩展）
+ *   pending      → 灰色，待处理
+ *   in-review    → 蓝色，审核中
+ *   approved     → 绿色，已审批
+ *   rejected     → 红色，已拒绝
+ *   cancelled    → 浅灰，已取消
+ *   on-hold      → 橙色，搁置中
+ *
+ * @sizes
+ *   sm → 11px 字号，表格密集行
+ *   md → 12.5px 字号（默认）
+ *
+ * @example
+ * ```tsx
+ * import { StatusIndicator } from "@/components/ui/status-indicator"
+ *
+ * // 基础用法（使用 tokens 默认标签）
+ * <StatusIndicator status="approved" />
+ *
+ * // 覆盖默认文字
+ * <StatusIndicator status="in-review" label="终审中" />
+ *
+ * // 表格紧凑模式
+ * <StatusIndicator status="pending" size="sm" />
+ * ```
+ */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { STATUS_COLORS, STATUS_LABELS } from "@/lib/tokens";

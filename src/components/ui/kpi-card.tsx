@@ -1,3 +1,46 @@
+/**
+ * @component KpiCard
+ * @description KPI 指标卡 — Dashboard 顶部的数据洞察卡，展示核心业务指标。
+ *
+ * @when-to-use
+ *   ✅ Dashboard 页顶部 4 列指标网格
+ *   ✅ 审批列表页顶部的待审批数、今日通过数等统计
+ *   ❌ 表格内行数据展示 → 用普通 Cell
+ *   ❌ 需要图表的趋势展示 → 在 KpiCard 下方补充 Chart
+ *
+ * @colors
+ *   blue / green / orange / red / purple / gray（影响图标背景色）
+ *
+ * @props
+ *   title       string          指标名称（简短，≤8 字）
+ *   value       string|number   核心数值（自动处理数字格式）
+ *   unit        string          单位（如"元"、"单"，附在数值后）
+ *   trend       KpiTrend        趋势方向（"up" | "down" | "flat"）
+ *   trendValue  string          趋势幅度（如"↑ 12%"）
+ *   trendLabel  string          对比说明（如"vs 昨日"）
+ *   icon        ElementType     Lucide 图标组件
+ *   color       KpiColor        图标背景色系
+ *   loading     boolean         骨架屏加载态
+ *   onClick     () => void      点击跳转（添加 hover 样式）
+ *
+ * @example
+ * ```tsx
+ * import { KpiCard } from "@/components/ui/kpi-card"
+ * import { ShoppingCart } from "lucide-react"
+ *
+ * <div className="grid grid-cols-4 gap-4">
+ *   <KpiCard
+ *     title="今日订单"
+ *     value={1284}
+ *     trend="up"
+ *     trendValue="12%"
+ *     trendLabel="vs 昨日"
+ *     icon={ShoppingCart}
+ *     color="blue"
+ *   />
+ * </div>
+ * ```
+ */
 import * as React from "react";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";

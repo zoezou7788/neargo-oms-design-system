@@ -1,3 +1,33 @@
+/**
+ * @component Input
+ * @description 单行文本输入框 — 通用文本、数字、搜索输入。
+ *
+ * @states
+ *   默认 / Hover（边框加深）/ Focus（黑色边框 + 2px ring）/ Error（红色边框）
+ *   ReadOnly（浅灰背景）/ Disabled（浅灰背景 + 60% 透明度）
+ *
+ * @props
+ *   prefix   ReactNode  左侧图标/前缀（自动增加 padding-left）
+ *   suffix   ReactNode  右侧图标/后缀（自动增加 padding-right）
+ *   error    boolean    错误状态（红色边框）
+ *
+ * @example
+ * ```tsx
+ * import { Input } from "@/components/ui/input"
+ * import { Search } from "lucide-react"
+ *
+ * // 带前缀图标的搜索框
+ * <Input
+ *   prefix={<Search size={14} />}
+ *   placeholder="搜索订单号、门店名…"
+ *   value={query}
+ *   onChange={(e) => setQuery(e.target.value)}
+ * />
+ *
+ * // 错误状态（配合 FormField 展示错误文字）
+ * <Input error={!!errors.phone} placeholder="请输入手机号" />
+ * ```
+ */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 

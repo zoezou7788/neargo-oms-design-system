@@ -1,3 +1,57 @@
+/**
+ * @component Sheet / ContextPanel
+ * @description 滑动面板 — 从屏幕边缘滑入的上下文操作区，不完全打断用户的当前视图。
+ *
+ * @when-to-use（Sheet vs Dialog）
+ *   ✅ Sheet：查看详情时保留列表上下文（点击表格行展开右侧详情）
+ *   ✅ Sheet：快速审批（在面板内完成通过/拒绝，无需跳转）
+ *   ✅ Sheet：字段较多（>8 个字段）的编辑，不适合 Dialog
+ *   ❌ 需要强制用户决策 → 用 Dialog / AlertDialog
+ *   ❌ 表单字段 > 15 个 → 用独立页面
+ *
+ * @sides
+ *   right  → 订单详情、审批面板（默认，最常用）
+ *   left   → 移动端导航抽屉
+ *   bottom → 移动端操作菜单
+ *
+ * @pre-composed ContextPanel（OMS 专属预组合版本）
+ *   封装了 right side + SheetHeader + SheetBody + SheetFooter，
+ *   适合所有"列表行点击展开详情+操作"场景。
+ *
+ * @example ContextPanel（推荐）
+ * ```tsx
+ * import { ContextPanel } from "@/components/ui/sheet"
+ * import { Button } from "@/components/ui/button"
+ *
+ * <ContextPanel
+ *   open={panelOpen}
+ *   onOpenChange={setPanelOpen}
+ *   title="订单详情"
+ *   description="ORD-20240115-002 · 待审批"
+ *   footer={
+ *     <>
+ *       <Button variant="secondary" onClick={() => setPanelOpen(false)}>关闭</Button>
+ *       <Button variant="danger" onClick={handleReject}>拒绝</Button>
+ *       <Button variant="positive" onClick={handleApprove}>审批通过</Button>
+ *     </>
+ *   }
+ * >
+ *   <OrderDetailContent order={selectedOrder} />
+ * </ContextPanel>
+ * ```
+ *
+ * @example Sheet 原语（自定义场景）
+ * ```tsx
+ * import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetBody } from "@/components/ui/sheet"
+ *
+ * <Sheet open={open} onOpenChange={setOpen}>
+ *   <SheetContent side="right">
+ *     <SheetHeader><SheetTitle>编辑门店信息</SheetTitle></SheetHeader>
+ *     <SheetBody><StoreEditForm /></SheetBody>
+ *   </SheetContent>
+ * </Sheet>
+ * ```
+ */
 "use client";
 
 import * as React from "react";

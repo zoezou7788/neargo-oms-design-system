@@ -1,3 +1,34 @@
+/**
+ * @component LoadingOverlay
+ * @description 加载遮罩 — 在异步操作期间遮盖内容区域，防止用户重复操作。
+ *
+ * @when-to-use
+ *   ✅ 表格/列表首次加载（全区域遮盖）→ 优先考虑 Skeleton（更好的感知体验）
+ *   ✅ 提交表单时遮盖整个表单（防重复提交）
+ *   ✅ 页面级全屏加载（fullscreen=true）
+ *   ❌ Button 自身的加载态 → 用 Button loading prop
+ *   ❌ 数据刷新（非首次加载）→ 用局部 Skeleton 或 spinner 角标
+ *
+ * @props
+ *   visible    boolean  是否显示（默认 true）
+ *   message    string   加载文案（如"提交中，请稍候…"）
+ *   fullscreen boolean  全屏模式（fixed inset-0，默认 false）
+ *   blur       boolean  背景模糊（默认 false）
+ *
+ * @example
+ * ```tsx
+ * import { LoadingOverlay } from "@/components/ui/loading-overlay"
+ *
+ * // 表单提交遮罩（相对定位父容器）
+ * <div className="relative">
+ *   <FormContent />
+ *   <LoadingOverlay visible={isSubmitting} message="提交中，请稍候…" />
+ * </div>
+ *
+ * // 全屏加载
+ * <LoadingOverlay visible={pageLoading} fullscreen message="数据加载中…" />
+ * ```
+ */
 import * as React from "react";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";

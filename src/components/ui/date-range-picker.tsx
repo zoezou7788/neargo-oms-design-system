@@ -1,3 +1,33 @@
+/**
+ * @component DateRangePicker
+ * @description 日期区间选择器 — 弹出双月历面板选择开始和结束日期。
+ *
+ * @when-to-use
+ *   ✅ FilterBar 中的"创建时间范围"筛选
+ *   ✅ 报表页的统计周期选择
+ *   ❌ 只需单个日期 → 用 DatePicker
+ *
+ * @props
+ *   value          DateRange | undefined    { from?: Date, to?: Date }（受控）
+ *   onChange       (r?: DateRange) => void  变更回调
+ *   placeholder    string                   占位（默认"选择日期区间"）
+ *   numberOfMonths number                   同时显示月历数（默认 2）
+ *   formatStr      string                   日期格式（默认"yyyy-MM-dd"）
+ *   disabled       boolean
+ *
+ * @example
+ * ```tsx
+ * import { DateRangePicker, type DateRange } from "@/components/ui/date-range-picker"
+ *
+ * const [range, setRange] = React.useState<DateRange>()
+ *
+ * <DateRangePicker
+ *   value={range}
+ *   onChange={setRange}
+ *   placeholder="创建时间范围"
+ * />
+ * ```
+ */
 "use client";
 
 import * as React from "react";

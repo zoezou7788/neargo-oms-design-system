@@ -1,3 +1,37 @@
+/**
+ * @component Toast / useToast
+ * @description 轻量级通知 — 短暂出现后自动消失的操作反馈，不打断用户流程。
+ *
+ * @when-to-use（Toast vs Alert）
+ *   ✅ Toast：操作后的即时反馈（保存成功、审批已提交、导出完成）
+ *   ✅ Toast：系统级通知（新消息、后台任务完成）
+ *   ❌ 需要用户主动关闭 → 用 Alert（inline）
+ *   ❌ 需要用户操作 → 用 Dialog
+ *
+ * @variants（对应语义色系）
+ *   success → 绿色，操作成功
+ *   warning → 橙色，需要注意
+ *   danger  → 红色，操作失败
+ *   info    → 蓝色，一般通知
+ *
+ * @design-rules
+ *   - 自动消失：success/info 3s，warning 5s，danger 不自动消失（需用户关闭）
+ *   - 最多同时展示 3 条，新消息入栈，旧消息上移
+ *   - 位置：右下角（桌面端）/ 顶部居中（移动端）
+ *
+ * @example
+ * ```tsx
+ * import { useToast } from "@/components/ui/toast"
+ *
+ * const { toast } = useToast()
+ *
+ * // 成功通知
+ * toast({ variant: "success", title: "审批已通过", message: "放款流程已启动，预计 1 个工作日到账。" })
+ *
+ * // 失败通知（不自动消失）
+ * toast({ variant: "danger", title: "提交失败", message: "网络异常，请重试。" })
+ * ```
+ */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import type { AlertVariant } from "@/lib/tokens";

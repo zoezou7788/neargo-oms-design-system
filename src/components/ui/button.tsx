@@ -1,3 +1,46 @@
+/**
+ * @component Button
+ * @description 按钮 — 触发操作的核心交互元素。
+ *
+ * @design-rules（严格遵守，不可随意使用）
+ *   primary   → gray-12 黑色。每个操作区的主要动作（提交、确认、新建）
+ *   secondary → 白底+边框。取消、返回、重置等次要动作
+ *   positive  → 绿色。审批通过、启用等肯定性操作
+ *   danger    → 红色。拒绝、删除等破坏性操作（须配合 ConfirmDialog）
+ *   ghost     → 透明蓝字。"查看详情"等链接型操作
+ *   brand     → 品牌橙（#FFA902）。每屏最多 1 个，仅用于营销 CTA
+ *
+ * @sizes
+ *   sm → h-30px，筛选栏、表格行内操作
+ *   md → h-38px，通用（默认）
+ *   lg → h-44px，表单主提交按钮、空状态 CTA
+ *
+ * @props
+ *   variant      ButtonVariant           按钮变体（默认 "primary"）
+ *   size         ButtonSize              尺寸（默认 "md"）
+ *   loading      boolean                 加载态，自动禁用并显示 spinner
+ *   icon         ReactNode               图标（配合 iconPosition）
+ *   iconPosition "left" | "right"        图标位置（默认 "left"）
+ *   fullWidth    boolean                 撑满父容器宽度
+ *
+ * @example
+ * ```tsx
+ * import { Button } from "@/components/ui/button"
+ * import { Plus, Check } from "lucide-react"
+ *
+ * // 主操作
+ * <Button variant="primary" icon={<Plus size={14} />}>新建订单</Button>
+ *
+ * // 审批通过
+ * <Button variant="positive" icon={<Check size={14} />}>审批通过</Button>
+ *
+ * // 加载态
+ * <Button variant="primary" loading={isSubmitting}>提交审批</Button>
+ *
+ * // 危险操作（配合 ConfirmDialog 使用）
+ * <Button variant="danger" size="sm">删除</Button>
+ * ```
+ */
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";

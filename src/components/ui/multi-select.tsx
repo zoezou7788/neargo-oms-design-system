@@ -1,3 +1,38 @@
+/**
+ * @component MultiSelect
+ * @description 多选选择器 — 带搜索的多选下拉，以标签形式展示已选项。
+ *
+ * @when-to-use
+ *   ✅ 筛选多个门店
+ *   ✅ 为审批单指派多个审批人
+ *   ✅ 商品多分类标签
+ *   ❌ 单选 → 用 Select 或 Combobox
+ *   ❌ 选项 ≤ 5 个 → 用 CheckboxGroup 更直观
+ *
+ * @props
+ *   options       MultiSelectOption[]  选项列表
+ *   value         string[]             已选值数组（受控）
+ *   onChange      (v: string[]) => void 变更回调
+ *   maxDisplay    number               标签最多显示个数，超出折叠（默认 3）
+ *   placeholder   string               未选中时占位（默认"请选择"）
+ *   disabled      boolean
+ *
+ * @example
+ * ```tsx
+ * import { MultiSelect } from "@/components/ui/multi-select"
+ *
+ * <MultiSelect
+ *   options={[
+ *     { value: "store-001", label: "朝阳旗舰店" },
+ *     { value: "store-002", label: "海淀科技店" },
+ *   ]}
+ *   value={selectedStores}
+ *   onChange={setSelectedStores}
+ *   placeholder="选择门店（可多选）"
+ *   maxDisplay={2}
+ * />
+ * ```
+ */
 "use client";
 
 import * as React from "react";

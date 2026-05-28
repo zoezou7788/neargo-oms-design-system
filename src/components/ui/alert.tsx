@@ -1,3 +1,42 @@
+/**
+ * @component Alert
+ * @description 内联警告横幅 — 在页面内容区展示系统级提示、警告或错误信息。
+ *
+ * @when-to-use
+ *   ✅ 表单提交后的错误汇总（variant="danger"）
+ *   ✅ 页面级操作提示，如"审批即将超时"（variant="warning"）
+ *   ✅ 成功反馈（不需要打断流程时用 Alert，需要打断用 Toast）
+ *   ❌ 需要用户确认的操作 → 用 Dialog / ConfirmDialog
+ *   ❌ 短暂的操作反馈（3s 自动消失）→ 用 Toast
+ *
+ * @variants
+ *   info    → 蓝色，信息提示
+ *   success → 绿色，操作成功
+ *   warning → 橙色，需要注意
+ *   danger  → 红色，错误或危险操作
+ *
+ * @props
+ *   variant   AlertVariant      外观变体（默认 "info"）
+ *   title     string            加粗标题（可选）
+ *   icon      ReactNode         左侧图标（可选）
+ *   closable  boolean           是否显示关闭按钮（默认 false）
+ *   onClose   () => void        关闭回调（closable=true 时必传）
+ *   children  ReactNode         正文内容
+ *
+ * @example
+ * ```tsx
+ * import { Alert } from "@/components/ui/alert"
+ * import { AlertTriangle } from "lucide-react"
+ *
+ * // 带标题和图标
+ * <Alert variant="warning" title="审批超时提醒" icon={<AlertTriangle size={16} />} closable onClose={() => {}}>
+ *   订单 ORD-20240115-002 已超过 48 小时未处理，请尽快完成审批。
+ * </Alert>
+ *
+ * // 简洁版（无标题）
+ * <Alert variant="danger">请检查表单中的必填项后重新提交。</Alert>
+ * ```
+ */
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";

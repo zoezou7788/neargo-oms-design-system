@@ -1,3 +1,33 @@
+/**
+ * @component Switch
+ * @description 开关切换 — 表达布尔型配置项的开启/关闭，效果即时生效。
+ *
+ * @when-to-use（Switch vs Checkbox）
+ *   ✅ Switch：有"开/关"语义，状态变更即时生效（无需点提交）
+ *              如：邮件通知开关、功能启用/禁用
+ *   ✅ Checkbox：列表多选、表单中的勾选确认（需提交后生效）
+ *
+ * @props
+ *   checked    boolean                  当前状态（受控，必填）
+ *   onChange   (checked: boolean) => void  变更回调（必填）
+ *   disabled   boolean                  禁用
+ *   label      string                   右侧文字标签（可选）
+ *   size       "sm" | "md"              sm:32×18px  md:40×22px（默认）
+ *
+ * @example
+ * ```tsx
+ * import { Switch } from "@/components/ui/switch"
+ *
+ * <Switch
+ *   checked={emailEnabled}
+ *   onChange={setEmailEnabled}
+ *   label="邮件通知"
+ * />
+ *
+ * // 禁用态
+ * <Switch checked={false} onChange={() => {}} disabled label="短信通知（不可用）" />
+ * ```
+ */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 

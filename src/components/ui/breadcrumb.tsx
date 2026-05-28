@@ -1,3 +1,66 @@
+/**
+ * @component Breadcrumb / PageBreadcrumb
+ * @description 面包屑导航 — 显示用户在应用层级中的当前位置。
+ *
+ * @when-to-use
+ *   ✅ 页面层级 ≥ 2 层时（如：首页 > 订单管理 > 订单详情）
+ *   ✅ 所有详情页、编辑页的顶部
+ *   ❌ Dashboard 首页（无上级页面可回）
+ *   ❌ 只有一层的列表页
+ *
+ * @composition
+ *   Breadcrumb            — 根组件，渲染 <nav aria-label="breadcrumb">
+ *   └── items[]           — 数组形式传入，无需手动组合子组件
+ *
+ *   PageBreadcrumb        — 预组合版本，含 showHomeIcon + 右侧 action slot
+ *
+ * @props
+ *   items        BreadcrumbItem[]  必填。每项包含 label / href（可选）/ icon（可选）
+ *   showHomeIcon boolean           是否显示首页 Home 图标（默认 false）
+ *   className    string            自定义样式
+ *
+ * @example 基础用法
+ * ```tsx
+ * import { Breadcrumb } from "@/components/ui/breadcrumb"
+ *
+ * <Breadcrumb
+ *   items={[
+ *     { label: "订单管理", href: "/orders" },
+ *     { label: "ORD-20240115-001" },          // 最后一项不传 href，自动加粗
+ *   ]}
+ * />
+ * ```
+ *
+ * @example 带首页图标 + 右侧操作按钮（PageBreadcrumb）
+ * ```tsx
+ * import { PageBreadcrumb } from "@/components/ui/breadcrumb"
+ *
+ * <PageBreadcrumb
+ *   items={[
+ *     { label: "订单管理", href: "/orders" },
+ *     { label: "订单详情" },
+ *   ]}
+ *   action={<Button variant="primary">审批通过</Button>}
+ * />
+ * ```
+ *
+ * @example 带图标的层级项
+ * ```tsx
+ * import { Store } from "lucide-react"
+ *
+ * <Breadcrumb
+ *   items={[
+ *     { label: "门店管理", href: "/stores", icon: Store },
+ *     { label: "海淀科技店" },
+ *   ]}
+ * />
+ * ```
+ *
+ * @accessibility
+ *   - 根元素自动添加 aria-label="breadcrumb"
+ *   - 当前页项自动添加 aria-current="page"
+ *   - 分隔符 ChevronRight 添加 aria-hidden="true"
+ */
 import * as React from "react";
 import { ChevronRight, Home } from "lucide-react";
 import { cn } from "@/lib/utils";

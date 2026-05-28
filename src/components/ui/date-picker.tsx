@@ -1,3 +1,31 @@
+/**
+ * @component DatePicker
+ * @description 日期选择器 — 弹出日历面板选择单个日期。
+ *
+ * @when-to-use
+ *   ✅ 表单中的单日期字段（生效日期、截止日期）
+ *   ❌ 需要选择日期区间 → 用 DateRangePicker
+ *   ❌ FilterBar 中的快速日期筛选 → 用 DateRangePicker
+ *
+ * @props
+ *   value       Date | undefined       当前选中日期（受控）
+ *   onChange    (d?: Date) => void      变更回调
+ *   placeholder string                 占位文字（默认"选择日期"）
+ *   formatStr   string                 显示格式（默认"yyyy-MM-dd"）
+ *   clearable   boolean                是否可清除（默认 true）
+ *   disabled    boolean
+ *
+ * @example
+ * ```tsx
+ * import { DatePicker } from "@/components/ui/date-picker"
+ *
+ * <DatePicker
+ *   value={effectiveDate}
+ *   onChange={setEffectiveDate}
+ *   placeholder="选择生效日期"
+ * />
+ * ```
+ */
 "use client";
 
 import * as React from "react";

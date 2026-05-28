@@ -1,3 +1,38 @@
+/**
+ * @component Timeline
+ * @description 时间线 — 展示审批流程、操作历史等有序事件序列。
+ *
+ * @when-to-use
+ *   ✅ 订单/审批详情页的流程追踪（Sheet / ContextPanel 内）
+ *   ✅ 操作日志（谁在什么时间做了什么）
+ *   ❌ 步骤引导（用户需要操作的流程）→ 用 Steps 组件
+ *
+ * @statuses
+ *   done        → 绿色 CheckCircle，已完成
+ *   in-progress → 橙色 Clock，进行中（当前步骤）
+ *   pending     → 灰色 Circle，待处理
+ *   error       → 红色 AlertCircle，异常
+ *   cancelled   → 灰色 XCircle，已取消
+ *
+ * @props
+ *   items    TimelineItem[]   事件列表
+ *            每项：{ id, status, title, description?, time?, actor?, actorAvatar? }
+ *
+ * @example
+ * ```tsx
+ * import { Timeline } from "@/components/ui/timeline"
+ *
+ * <Timeline
+ *   items={[
+ *     { id: "1", status: "done",        title: "提交申请",  actor: "张三", time: "2024-01-15 09:30" },
+ *     { id: "2", status: "done",        title: "初审通过",  actor: "李四", time: "2024-01-15 11:20",
+ *                description: "符合补货标准" },
+ *     { id: "3", status: "in-progress", title: "终审处理中", time: "等待终审负责人…" },
+ *     { id: "4", status: "pending",     title: "财务放款" },
+ *   ]}
+ * />
+ * ```
+ */
 import * as React from "react";
 import { CheckCircle2, Clock, AlertCircle, XCircle, Circle } from "lucide-react";
 import { cn } from "@/lib/utils";

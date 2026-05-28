@@ -1,3 +1,46 @@
+/**
+ * @component AlertDialog / ConfirmDialog（via alert-dialog.tsx）
+ * @description 强制确认弹窗 — 用于危险操作或不可逆操作前的二次确认，不可通过点击遮罩关闭。
+ *
+ * @when-to-use
+ *   ✅ 删除操作（批量删除、永久删除）
+ *   ✅ 拒绝审批等不可撤销操作
+ *   ✅ 系统级危险操作（清空数据、重置配置）
+ *   ❌ 普通确认（如提交审批）→ 用 Dialog / ConfirmDialog
+ *   ❌ 信息展示 → 用 Dialog
+ *
+ * @design-rules
+ *   - 确认按钮用 variant="danger"（红色），取消按钮用 variant="secondary"
+ *   - 不允许点击遮罩关闭（强制用户主动选择）
+ *   - 标题直接说明后果，如"确认删除此订单？"，不要问"你确定吗？"
+ *
+ * @example
+ * ```tsx
+ * import {
+ *   AlertDialog, AlertDialogTrigger, AlertDialogContent,
+ *   AlertDialogHeader, AlertDialogTitle, AlertDialogDescription,
+ *   AlertDialogFooter, AlertDialogCancel, AlertDialogAction,
+ * } from "@/components/ui/alert-dialog"
+ *
+ * <AlertDialog>
+ *   <AlertDialogTrigger asChild>
+ *     <Button variant="danger">删除订单</Button>
+ *   </AlertDialogTrigger>
+ *   <AlertDialogContent>
+ *     <AlertDialogHeader>
+ *       <AlertDialogTitle>确认删除此订单？</AlertDialogTitle>
+ *       <AlertDialogDescription>
+ *         订单 ORD-20240115-002 的所有数据将被永久删除，此操作不可撤销。
+ *       </AlertDialogDescription>
+ *     </AlertDialogHeader>
+ *     <AlertDialogFooter>
+ *       <AlertDialogCancel>取消</AlertDialogCancel>
+ *       <AlertDialogAction onClick={handleDelete}>确认删除</AlertDialogAction>
+ *     </AlertDialogFooter>
+ *   </AlertDialogContent>
+ * </AlertDialog>
+ * ```
+ */
 "use client";
 
 import * as React from "react";

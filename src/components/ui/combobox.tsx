@@ -1,3 +1,42 @@
+/**
+ * @component Combobox
+ * @description 带搜索的单选下拉 — 适合选项较多（>10 条）、需要模糊搜索的场景。
+ *
+ * @when-to-use
+ *   ✅ 门店选择（86+ 门店，需搜索）
+ *   ✅ 用户/审批人选择
+ *   ✅ 商品类目选择
+ *   ❌ 选项 ≤ 10 条 → 用 Select（原生下拉，性能更好）
+ *   ❌ 需要多选 → 用 MultiSelect
+ *
+ * @props
+ *   options           ComboboxOption[]   选项列表 { value, label, description?, disabled? }
+ *   value             string             当前选中值（受控）
+ *   onChange          (v) => void        选中回调
+ *   placeholder       string             未选中时的占位文字（默认"请选择"）
+ *   searchPlaceholder string             搜索框占位（默认"搜索..."）
+ *   emptyText         string             无匹配时的提示（默认"无匹配项"）
+ *   clearable         boolean            是否可清除（默认 true）
+ *   disabled          boolean            禁用
+ *
+ * @example
+ * ```tsx
+ * import { Combobox } from "@/components/ui/combobox"
+ *
+ * const storeOptions = [
+ *   { value: "store-001", label: "朝阳旗舰店", description: "北京 · 旗舰" },
+ *   { value: "store-002", label: "海淀科技店", description: "北京 · 旗舰" },
+ * ]
+ *
+ * <Combobox
+ *   options={storeOptions}
+ *   value={selectedStore}
+ *   onChange={setSelectedStore}
+ *   placeholder="选择所属门店"
+ *   searchPlaceholder="搜索门店名称…"
+ * />
+ * ```
+ */
 "use client";
 
 import * as React from "react";

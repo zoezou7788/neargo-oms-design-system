@@ -1,3 +1,26 @@
+/**
+ * @component Avatar
+ * @description 用户头像 — 展示用户图片或姓名首字母缩写。
+ *
+ * @sizes
+ *   xs  (20px) → 密集列表行内
+ *   sm  (28px) → Topbar、评论列表
+ *   md  (36px) → 卡片、Drawer 用户信息（默认）
+ *   lg  (48px) → 个人资料页
+ *   xl  (64px) → 详情页头部
+ *
+ * @example
+ * ```tsx
+ * import { Avatar } from "@/components/ui/avatar"
+ *
+ * // 有图片时
+ * <Avatar src="/avatars/user.jpg" alt="张三" size="md" />
+ *
+ * // 无图片时自动显示 fallback（姓名首字母）
+ * <Avatar fallback="张三" size="sm" />
+ * <Avatar fallback="ZX" size="md" />   // 英文缩写
+ * ```
+ */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import type { AvatarSize } from "@/lib/tokens";

@@ -1,3 +1,49 @@
+/**
+ * @component Select
+ * @description 原生下拉选择器 — 适合选项固定、数量 ≤ 20 条的场景。
+ *
+ * @when-to-use
+ *   ✅ 门店类型（旗舰 / 标准 / 加盟 / 合作）
+ *   ✅ 优先级（紧急 / 普通 / 低）
+ *   ✅ 状态筛选（FilterBar 内的快速筛选）
+ *   ❌ 选项 > 20 条或需要搜索 → 用 Combobox
+ *   ❌ 需要多选 → 用 MultiSelect
+ *
+ * @props
+ *   options     SelectOption[]        选项数组（value/label/disabled?/group?）
+ *   value       string                当前值（受控）
+ *   onChange    (v: string) => void   变更回调
+ *   placeholder string                占位文字（默认"请选择…"）
+ *   error       boolean               错误状态（红色边框）
+ *   disabled    boolean
+ *
+ * @example
+ * ```tsx
+ * import { Select } from "@/components/ui/select"
+ *
+ * <Select
+ *   options={[
+ *     { value: "flagship", label: "旗舰门店" },
+ *     { value: "standard", label: "标准门店" },
+ *     { value: "franchise", label: "加盟门店" },
+ *   ]}
+ *   value={storeType}
+ *   onChange={setStoreType}
+ *   placeholder="全部门店类型"
+ * />
+ *
+ * // 分组选项
+ * <Select
+ *   options={[
+ *     { value: "pending", label: "待审批", group: "进行中" },
+ *     { value: "processing", label: "审批中", group: "进行中" },
+ *     { value: "approved", label: "已通过", group: "已完成" },
+ *   ]}
+ *   value={status}
+ *   onChange={setStatus}
+ * />
+ * ```
+ */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 

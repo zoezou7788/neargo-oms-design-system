@@ -1,3 +1,32 @@
+/**
+ * @component Badge
+ * @description 标签/徽章 — 用于标注对象的类型、状态或优先级。
+ *
+ * @when-to-use
+ *   ✅ 表格行的状态列（订单状态、审批状态）
+ *   ✅ 标注对象类型（KYC / KYB / 门店类型）
+ *   ✅ 优先级标注（紧急 / 普通 / 低）
+ *   ❌ 需要带圆点指示器的状态 → 用 StatusIndicator
+ *   ❌ Sidebar 菜单未读数字 → 用数字角标
+ *
+ * @variants
+ *   kyc     → 青蓝色，KYC 认证状态
+ *   kyb     → 蓝色，KYB 企业认证
+ *   store   → 紫色，门店类型
+ *   urgent  → 红色，紧急优先级
+ *   normal  → 灰色，普通优先级（默认）
+ *   low     → 琥珀黄，低优先级
+ *   brand   → 品牌橙，促销/品牌标签
+ *
+ * @example
+ * ```tsx
+ * import { Badge } from "@/components/ui/badge"
+ *
+ * <Badge variant="urgent">紧急</Badge>
+ * <Badge variant="kyc">KYC 已认证</Badge>
+ * <Badge variant="store">旗舰门店</Badge>
+ * ```
+ */
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";

@@ -1,3 +1,33 @@
+/**
+ * @component Checkbox
+ * @description 复选框 — 用于单个布尔值选择，或多选列表中的行选择。
+ *
+ * @when-to-use
+ *   ✅ 表格行多选（配合 Table 的 selectable 模式）
+ *   ✅ 表单中的"我同意条款"等单项确认
+ *   ✅ 设置页的功能开关（布尔型，无"开/关"语义时）→ 有"开/关"语义用 Switch
+ *   ❌ 互斥选项 → 用 RadioGroup
+ *
+ * @states
+ *   未选中 / 选中 / 半选（indeterminate，用于表格全选）/ 禁用
+ *
+ * @example
+ * ```tsx
+ * import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
+ * import { Checkbox } from "@/components/ui/checkbox"
+ *
+ * // 基础用法
+ * <Checkbox
+ *   id="agree"
+ *   checked={agreed}
+ *   onCheckedChange={(v) => setAgreed(!!v)}
+ * />
+ * <label htmlFor="agree">我已阅读并同意服务条款</label>
+ *
+ * // 半选状态（表格全选按钮）
+ * <Checkbox checked="indeterminate" onCheckedChange={handleSelectAll} />
+ * ```
+ */
 import * as React from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { Check } from "lucide-react";

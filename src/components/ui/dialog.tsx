@@ -1,3 +1,62 @@
+/**
+ * @component Dialog / ConfirmDialog
+ * @description 模态弹窗 — 需要用户在继续操作前完成一个任务时使用。
+ *
+ * @when-to-use
+ *   ✅ 需要填写附加信息（添加备注、填写拒绝原因）
+ *   ✅ 非破坏性操作的二次确认（提交审批）
+ *   ✅ 小型表单（≤6 个字段）不需要独立页面时
+ *   ❌ 破坏性操作 → 用 AlertDialog（不可点击遮罩关闭）
+ *   ❌ 字段 > 8 个 → 用独立表单页
+ *   ❌ 上下文联动查看详情 → 用 Sheet / ContextPanel（不打断列表上下文）
+ *
+ * @sizes
+ *   sm → max-w-400px（确认型）
+ *   md → max-w-560px（表单型，默认）
+ *   lg → max-w-720px（大表单）
+ *   xl → max-w-960px（复杂内容）
+ *
+ * @design-rules
+ *   - Footer 左侧：取消（secondary），右侧：确认（primary / danger）
+ *   - 同一 Footer 不允许出现两个 primary 按钮
+ *   - Danger variant：标题变红色，确认按钮用 variant="danger"
+ *
+ * @example Dialog（自定义内容）
+ * ```tsx
+ * import { Dialog } from "@/components/ui/dialog"
+ * import { Button } from "@/components/ui/button"
+ *
+ * <Dialog
+ *   open={open}
+ *   onClose={() => setOpen(false)}
+ *   title="添加审批备注"
+ *   description="请填写本次审批的处理说明"
+ *   footer={
+ *     <>
+ *       <Button variant="secondary" onClick={() => setOpen(false)}>取消</Button>
+ *       <Button variant="primary" loading={saving} onClick={handleSave}>保存</Button>
+ *     </>
+ *   }
+ * >
+ *   <Textarea placeholder="请填写备注内容…" rows={4} />
+ * </Dialog>
+ * ```
+ *
+ * @example ConfirmDialog（预组合确认框）
+ * ```tsx
+ * import { ConfirmDialog } from "@/components/ui/dialog"
+ *
+ * <ConfirmDialog
+ *   open={confirmOpen}
+ *   onClose={() => setConfirmOpen(false)}
+ *   onConfirm={handleSubmit}
+ *   title="确认提交审批？"
+ *   description="提交后将进入审批流程，期间无法修改申请内容。"
+ *   confirmLabel="确认提交"
+ *   loading={isSubmitting}
+ * />
+ * ```
+ */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";

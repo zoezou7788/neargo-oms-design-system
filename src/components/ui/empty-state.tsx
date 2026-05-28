@@ -1,3 +1,49 @@
+/**
+ * @component EmptyState
+ * @description 空状态 — 当列表/页面无内容时展示的引导型占位组件。
+ *
+ * @variants（选择最符合当前场景的类型）
+ *   no-data       → 列表为空，从未有过数据（首次使用）
+ *   no-results    → 搜索/筛选后无匹配结果
+ *   no-permission → 无访问权限（403）
+ *   not-found     → 资源不存在或已删除（404）
+ *   server-error  → 后端异常（500）
+ *
+ * @props
+ *   variant     EmptyVariant    空状态类型（影响图标、标题、描述）
+ *   title       string          覆盖默认标题
+ *   description string          覆盖默认描述
+ *   action      ReactNode       操作按钮（如"新建订单"、"清除筛选"）
+ *   size        "sm" | "md"     sm 用于表格内内联，md 用于整页（默认 md）
+ *   className   string
+ *
+ * @example 搜索无结果（表格内）
+ * ```tsx
+ * import { EmptyState } from "@/components/ui/empty-state"
+ *
+ * <EmptyState
+ *   variant="no-results"
+ *   size="sm"
+ *   action={
+ *     <Button variant="secondary" size="sm" onClick={clearFilters}>
+ *       清除筛选条件
+ *     </Button>
+ *   }
+ * />
+ * ```
+ *
+ * @example 首次使用引导
+ * ```tsx
+ * <EmptyState
+ *   variant="no-data"
+ *   title="还没有任何订单"
+ *   description="创建第一条订单，开始管理您的门店业务。"
+ *   action={
+ *     <Button variant="primary" icon={<Plus size={14} />}>新建订单</Button>
+ *   }
+ * />
+ * ```
+ */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";

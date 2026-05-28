@@ -1,3 +1,38 @@
+/**
+ * @component Pagination
+ * @description 分页控件 — 用于数据表格的翻页导航，含每页条数选择。
+ *
+ * @when-to-use
+ *   ✅ 数据量 > 20 条的所有列表页
+ *   ✅ 配合 DataTable / Table 使用
+ *   ❌ 数据量固定 ≤ 20 条 → 直接展示全部
+ *
+ * @design-rule
+ *   分页栏固定在 Table Card 底部，含：
+ *   左侧「共 N 条记录」+ 每页条数 Select + 页码按钮
+ *
+ * @props
+ *   page               number      当前页码（1-based）
+ *   pageSize           number      每页条数
+ *   total              number      总条数
+ *   onPageChange       (p) => void 翻页回调
+ *   onPageSizeChange   (s) => void 每页条数变更回调（可选）
+ *   pageSizeOptions    number[]    每页条数选项（默认 [10,20,50,100]）
+ *   showTotal          boolean     是否显示"共 N 条"（默认 true）
+ *
+ * @example
+ * ```tsx
+ * import { Pagination } from "@/components/ui/pagination"
+ *
+ * <Pagination
+ *   page={currentPage}
+ *   pageSize={pageSize}
+ *   total={totalCount}
+ *   onPageChange={setCurrentPage}
+ *   onPageSizeChange={setPageSize}
+ * />
+ * ```
+ */
 import * as React from "react";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";

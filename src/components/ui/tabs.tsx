@@ -1,3 +1,45 @@
+/**
+ * @component Tabs
+ * @description 标签页 — 在同一区域内切换多个相关视图/内容。
+ *
+ * @variants
+ *   underline → 下划线激活指示器（默认），用于页面级内容切换（如订单状态分组）
+ *   card      → 卡片胶囊样式，用于次级内容区域内的切换（如详情页内的 Tab 组）
+ *
+ * @design-rules
+ *   - Tab 数量建议 2-6 个，超过 6 个用 Select 或 Sidebar 分组
+ *   - badge 超出 99 显示"99+"
+ *   - 键盘：← → 切换，Enter/Space 激活
+ *
+ * @props
+ *   tabs            Tab[]                    Tab 配置数组（key/label/badge?/disabled?）
+ *   activeKey       string                   当前激活的 key（受控）
+ *   onChange        (key: string) => void    切换回调
+ *   variant         "underline" | "card"     样式变体（默认 "underline"）
+ *   children        ReactNode                Tab 面板内容（与 activeKey 联动展示）
+ *
+ * @example
+ * ```tsx
+ * import { Tabs } from "@/components/ui/tabs"
+ *
+ * const tabs = [
+ *   { key: "all",       label: "全部",   badge: 234 },
+ *   { key: "pending",   label: "待审批", badge: 28 },
+ *   { key: "approved",  label: "已通过" },
+ *   { key: "rejected",  label: "已拒绝", disabled: true },
+ * ]
+ *
+ * <Tabs
+ *   tabs={tabs}
+ *   activeKey={activeTab}
+ *   onChange={setActiveTab}
+ *   variant="underline"
+ * >
+ *   {activeTab === "pending" && <PendingList />}
+ *   {activeTab === "approved" && <ApprovedList />}
+ * </Tabs>
+ * ```
+ */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 

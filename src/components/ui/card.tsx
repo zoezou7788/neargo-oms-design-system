@@ -1,3 +1,50 @@
+/**
+ * @component Card / CardHeader / CardTitle / CardBody / CardFooter
+ * @description 卡片容器 — 对相关内容进行视觉分组的基础布局单元。
+ *
+ * @variants
+ *   default   → border-radius 8px (r4)，通用卡片（表格容器、表单分区等）
+ *   dashboard → border-radius 12px (r5)，Dashboard 大卡片（KPI 区、图表区）
+ *
+ * @padding
+ *   none → 无内边距（子组件自行控制，如 Table 紧贴边缘）
+ *   sm   → 16px
+ *   md   → 24px（默认正文卡片）
+ *   lg   → 32px（宽松展示型卡片）
+ *
+ * @composition
+ *   Card
+ *   ├── CardHeader    → 标题行，含左侧标题 + 右侧操作区（flex justify-between）
+ *   │   └── CardTitle
+ *   ├── CardBody      → 内容区，padding 24px
+ *   └── CardFooter    → 底部操作栏，灰色背景
+ *
+ * @example
+ * ```tsx
+ * import { Card, CardHeader, CardTitle, CardBody, CardFooter } from "@/components/ui/card"
+ *
+ * // 标准信息卡片
+ * <Card>
+ *   <CardHeader>
+ *     <CardTitle>订单信息</CardTitle>
+ *     <Button variant="ghost" size="sm">编辑</Button>
+ *   </CardHeader>
+ *   <CardBody>
+ *     <p>订单号：ORD-20240115-001</p>
+ *   </CardBody>
+ * </Card>
+ *
+ * // 表格容器（padding="none"）
+ * <Card padding="none">
+ *   <DataTable columns={columns} data={data} />
+ * </Card>
+ *
+ * // Dashboard 大卡片
+ * <Card variant="dashboard" padding="md">
+ *   <KpiCard ... />
+ * </Card>
+ * ```
+ */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
