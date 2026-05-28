@@ -1,3 +1,33 @@
+/**
+ * @component OrgSwitcher
+ * @description Sidebar 顶部组织切换器 — 展示当前组织，支持多组织切换和新增。
+ *
+ * @note
+ *   通常不直接使用，由 AppSidebar 自动渲染在顶部（与 Topbar 等高）。
+ *
+ * @props
+ *   orgs        NavOrg[]     组织列表（name / logo? / tier?）
+ *   activeOrg   NavOrg       当前激活组织
+ *   onOrgChange (org)=>void  切换组织回调
+ *   onAddOrg    ()=>void     添加组织回调（不传则不显示"添加"按钮）
+ *   collapsed   boolean      图标收起模式（只显示 logo）
+ *
+ * @example
+ * ```tsx
+ * import { OrgSwitcher } from "@/components/layout/org-switcher"
+ * import { Building2 } from "lucide-react"
+ *
+ * <OrgSwitcher
+ *   orgs={[
+ *     { name: "NearGo 总部", logo: Building2, tier: "企业版" },
+ *     { name: "NearGo 中东", tier: "标准版" },
+ *   ]}
+ *   activeOrg={currentOrg}
+ *   onOrgChange={switchOrg}
+ *   onAddOrg={() => router.push("/orgs/new")}
+ * />
+ * ```
+ */
 "use client";
 
 import * as React from "react";

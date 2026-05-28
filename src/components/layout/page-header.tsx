@@ -1,3 +1,58 @@
+/**
+ * @component PageHeader / DashboardHeader / SectionHeader
+ * @description 页面级标题区 — 面包屑 + 标题 + 副标题 + 右侧操作按钮的标准组合。
+ *
+ * @components
+ *
+ * PageHeader — 通用列表页/详情页标题（20px bold）
+ *   breadcrumb → BreadcrumbItem[] 面包屑路径
+ *   title      → 页面标题（必填）
+ *   subtitle   → 灰色副标题（总条数、状态描述等）
+ *   actions    → 右侧操作区（新建按钮、导出按钮等）
+ *   bordered   → 标题区下方加 1px border（用于与内容区分隔）
+ *   children   → 标题下方额外内容（通常放 SectionTabs）
+ *
+ * DashboardHeader — 仪表板专用标题（28px bold，含问候语）
+ *   用于 Dashboard 首页，字号比 PageHeader 大
+ *
+ * SectionHeader — 页面内内容分区标题（15px semibold）
+ *   用于 Card 内部或页面内多个子模块的分区标题
+ *
+ * @design-rule
+ *   每个页面只有一个 PageHeader（或 DashboardHeader），放在 Main 的最顶部
+ *   Section 内的小标题用 SectionHeader，不要用 PageHeader
+ *
+ * @example PageHeader（列表页标准用法）
+ * ```tsx
+ * import { PageHeader } from "@/components/layout/page-header"
+ * import { Button } from "@/components/ui/button"
+ * import { Plus, Download } from "lucide-react"
+ *
+ * <PageHeader
+ *   breadcrumb={[{ label: "首页", href: "/" }, { label: "订单管理" }]}
+ *   title="订单管理"
+ *   subtitle="共 234 条待审批记录"
+ *   actions={
+ *     <>
+ *       <Button variant="secondary" icon={<Download size={14} />}>导出</Button>
+ *       <Button variant="primary"   icon={<Plus size={14} />}>新建订单</Button>
+ *     </>
+ *   }
+ *   bordered
+ * >
+ *   <SectionTabs tabs={statusTabs} activeKey={activeTab} onTabChange={setActiveTab} />
+ * </PageHeader>
+ * ```
+ *
+ * @example DashboardHeader
+ * ```tsx
+ * <DashboardHeader
+ *   greeting="早上好，张三 👋"
+ *   subtitle="今天是周一，这是你的工作概览"
+ *   actions={<Button variant="secondary">下载报告</Button>}
+ * />
+ * ```
+ */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Breadcrumb } from "@/components/ui/breadcrumb";

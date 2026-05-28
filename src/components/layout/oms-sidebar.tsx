@@ -1,3 +1,26 @@
+/**
+ * @component OmsSidebar / OmsTopbar
+ * @description Legacy 侧边栏和顶栏组件 — 已被 AppSidebar / AppHeader 取代。
+ *
+ * @deprecated
+ *   ⚠️  OmsSidebar 和 OmsTopbar 是 v2 的遗留组件，新页面请使用：
+ *   - OmsSidebar → AppSidebar（数据驱动，支持折叠、子菜单、OrgSwitcher）
+ *   - OmsTopbar  → AppHeader（滚动毛玻璃、通知铃、搜索触发）
+ *
+ * @migration
+ * ```tsx
+ * // ❌ Old (v2)
+ * import { OmsSidebar, OmsTopbar } from "@/components/layout/oms-sidebar"
+ * <OmsSidebar items={navItems} activeKey="orders" />
+ *
+ * // ✅ New (v4)
+ * import { AppSidebar } from "@/components/layout/app-sidebar"
+ * import { AppHeader }  from "@/components/layout/app-header"
+ * import { sidebarData } from "@/components/layout/data/sidebar-data"
+ * <AppSidebar data={sidebarData} pathname={pathname} />
+ * <AppHeader userSlot={<NavUser user={currentUser} />} />
+ * ```
+ */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 

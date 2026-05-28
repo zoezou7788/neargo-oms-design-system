@@ -1,3 +1,53 @@
+/**
+ * @component AuthenticatedLayout
+ * @description OMS 全局页面壳 — 所有登录后页面的根容器，管理 Topbar / Sidebar / Content / Panel 四区布局。
+ *
+ * @dimensions（硬编码常量，不可覆盖）
+ *   TOPBAR_HEIGHT = 54px    Topbar 固定高度
+ *   SIDEBAR_FULL  = 232px   侧边栏展开宽度
+ *   SIDEBAR_ICON  = 56px    侧边栏收起（图标）宽度
+ *   PANEL_WIDTH   = 360px   右侧上下文面板宽度
+ *
+ * @layout-zones
+ *   ┌──────────────────────── Topbar 54px ─────────────────────────┐
+ *   │ Sidebar 232px │        Main Content (flex-1)       │ Panel?  │
+ *   │               │                                    │  360px  │
+ *   └───────────────┴────────────────────────────────────┴─────────┘
+ *
+ * @sidebar-collapsible（由 LayoutProvider 控制，持久化到 localStorage）
+ *   "none"   — 始终展开，无收起按钮（设置页、表单页）
+ *   "icon"   — 可收起为 56px 图标模式（默认）
+ *   "offcanvas" — 移动端抽屉模式
+ *
+ * @panel-slot
+ *   传入 panel prop 后右侧出现固定 360px 面板（detail/context panel）
+ *   不传则 Main Content 占满全宽
+ *   适用场景：列表页点击行后显示详情面板（无需跳转页面）
+ *
+ * @example 标准用法（React Router）
+ * ```tsx
+ * import { AuthenticatedLayout } from "@/components/layout"
+ * import { AppHeader } from "@/components/layout/app-header"
+ * import { AppSidebar } from "@/components/layout/app-sidebar"
+ * import { sidebarData } from "@/components/layout/data/sidebar-data"
+ * import { useLocation, Outlet } from "react-router-dom"
+ *
+ * export function AppShell() {
+ *   const { pathname } = useLocation()
+ *   const [detailOpen, setDetailOpen] = useState(false)
+ *
+ *   return (
+ *     <AuthenticatedLayout
+ *       header={<AppHeader />}
+ *       sidebar={<AppSidebar data={sidebarData} pathname={pathname} />}
+ *       panel={detailOpen ? <OrderDetailPanel onClose={() => setDetailOpen(false)} /> : undefined}
+ *     >
+ *       <Outlet context={{ openDetail: setDetailOpen }} />
+ *     </AuthenticatedLayout>
+ *   )
+ * }
+ * ```
+ */
 "use client";
 
 import * as React from "react";

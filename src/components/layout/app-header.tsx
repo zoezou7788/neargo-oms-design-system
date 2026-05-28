@@ -1,3 +1,43 @@
+/**
+ * @component AppHeader
+ * @description OMS 顶部导航栏 — 54px 固定高度，含侧边栏开关、面包屑区、全局搜索、通知铃、用户区。
+ *
+ * @behavior
+ *   - 滚动超过 10px 后：白底 → 半透明毛玻璃 + 底部阴影（frosted glass）
+ *   - AuthenticatedLayout 自动注入 onToggleSidebar 和 sidebarOpen，无需手动传入
+ *
+ * @slots
+ *   left      左侧内容区（Breadcrumb / 页面标题摘要）
+ *   right     右侧标准图标区前的自定义操作
+ *   userSlot  用户头像区（传入 <NavUser /> 或简单 Avatar）
+ *
+ * @props
+ *   left               ReactNode    面包屑或页面名（放在侧边栏开关旁）
+ *   right              ReactNode    标准操作图标前的自定义内容
+ *   notificationCount  number       通知铃红点计数（默认 0，= 0 时不显示红点）
+ *   onSearchClick      () => void   搜索框点击回调（通常打开 CommandDialog）
+ *   userSlot           ReactNode    用户区域（传 <NavUser />）
+ *   fixed              boolean      是否启用滚动毛玻璃效果（默认 true）
+ *
+ * @example
+ * ```tsx
+ * import { AppHeader } from "@/components/layout/app-header"
+ * import { NavUser } from "@/components/layout/nav-user"
+ * import { Breadcrumb } from "@/components/ui/breadcrumb"
+ *
+ * <AppHeader
+ *   left={
+ *     <Breadcrumb items={[
+ *       { label: "订单管理", href: "/orders" },
+ *       { label: "ORD-20240115-001" },
+ *     ]} />
+ *   }
+ *   notificationCount={3}
+ *   onSearchClick={() => setCommandOpen(true)}
+ *   userSlot={<NavUser user={currentUser} onSignOut={signOut} />}
+ * />
+ * ```
+ */
 "use client";
 
 import * as React from "react";

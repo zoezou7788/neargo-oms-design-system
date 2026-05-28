@@ -1,3 +1,51 @@
+/**
+ * @component SectionTabs / TabHeader
+ * @description 页面状态分类 Tab 导航 — 带数字角标的下划线 Tab，嵌入 PageHeader 或页面顶部。
+ *
+ * @variants
+ *   "header" → 54px 高度，内嵌在 Topbar 高度区域（无底部 border）
+ *   "page"   → 40px 高度，独立一行，带底部 border（位于 PageHeader 之下）
+ *
+ * @when-to-use vs Tabs（ui/tabs.tsx）
+ *   ✅ SectionTabs：页面级状态筛选（全部/待审批/已通过/已拒绝），通常配合服务端数据过滤
+ *   ✅ Tabs（ui/tabs.tsx）：页面内容区的本地视图切换（如详情页内的「基本信息/操作日志」）
+ *
+ * @props
+ *   tabs       SectionTab[]                 Tab 配置（key/label/count?/disabled?）
+ *   activeKey  string                       当前激活 key（受控）
+ *   onTabChange (key) => void               切换回调
+ *   variant    "header" | "page"            样式变体（默认 "header"）
+ *
+ * TabHeader — 预组合：SectionTabs + 右侧操作区（放 Button 等）
+ *
+ * @example 嵌入 PageHeader
+ * ```tsx
+ * import { SectionTabs } from "@/components/layout/section-tabs"
+ *
+ * const tabs = [
+ *   { key: "all",      label: "全部",   count: 234 },
+ *   { key: "pending",  label: "待审批", count: 28 },
+ *   { key: "approved", label: "已通过", count: 186 },
+ *   { key: "rejected", label: "已拒绝", count: 20 },
+ * ]
+ *
+ * <PageHeader title="订单管理" bordered>
+ *   <SectionTabs tabs={tabs} activeKey={tab} onTabChange={setTab} />
+ * </PageHeader>
+ * ```
+ *
+ * @example TabHeader（带右侧操作）
+ * ```tsx
+ * import { TabHeader } from "@/components/layout/section-tabs"
+ *
+ * <TabHeader
+ *   tabs={tabs}
+ *   activeKey={tab}
+ *   onTabChange={setTab}
+ *   right={<Button variant="primary" size="sm">新建订单</Button>}
+ * />
+ * ```
+ */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 

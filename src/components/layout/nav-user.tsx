@@ -1,3 +1,30 @@
+/**
+ * @component NavUser
+ * @description Sidebar 底部用户区 — 显示当前用户信息，点击展开菜单（个人资料/设置/退出）。
+ *
+ * @note
+ *   通常不直接使用，由 AppSidebar 自动渲染在底部。
+ *   退出登录有二次确认（防误触）。
+ *
+ * @props
+ *   user        NavUser     用户信息（name / email / avatar? / role?）
+ *   onProfile   () => void  点击"个人资料"回调
+ *   onSettings  () => void  点击"系统设置"回调
+ *   onSignOut   () => void  确认退出回调
+ *   collapsed   boolean     图标收起模式（只显示头像）
+ *
+ * @example
+ * ```tsx
+ * import { NavUser } from "@/components/layout/nav-user"
+ *
+ * <NavUser
+ *   user={{ name: "张三", email: "zhang@neargo.com", role: "超级管理员" }}
+ *   onProfile={() => router.push("/profile")}
+ *   onSettings={() => router.push("/settings")}
+ *   onSignOut={async () => { await logout(); router.push("/login") }}
+ * />
+ * ```
+ */
 "use client";
 
 import * as React from "react";

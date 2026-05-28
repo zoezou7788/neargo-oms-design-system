@@ -1,3 +1,52 @@
+/**
+ * @component NavGroup / NavLinkItem / NavCollapsibleItem
+ * @description Sidebar 导航分组 — 渲染一组导航项，支持平铺链接和可折叠子菜单。
+ *
+ * @note
+ *   通常不直接使用，由 AppSidebar 根据 SidebarData.navGroups 自动渲染。
+ *
+ * @active-state-rules（严格遵守，不可手动覆盖）
+ *   激活项：amber-2 背景 + gray-12 文字 + 2px amber-9 左边框
+ *   非激活 hover：gray-2 背景 + gray-12 文字
+ *   图标：激活态 gray-12，非激活 gray-9
+ *
+ * @url-matching-logic
+ *   精确匹配 pathname === url
+ *   忽略查询参数：pathname.split("?")[0] === url
+ *   路径段匹配："/orders/123" 激活 "/orders"（首段相同）
+ *
+ * @props（NavGroup）
+ *   title      string     分组标签（图标收起时隐藏）
+ *   items      NavItem[]  导航项列表（NavLink | NavCollapsible）
+ *   pathname   string     当前路由路径
+ *   collapsed  boolean    图标收起模式
+ *   onNavigate (url)=>void 路由跳转拦截
+ *
+ * @example 直接使用（自定义 Sidebar 时）
+ * ```tsx
+ * import { NavGroup } from "@/components/layout/nav-group"
+ * import { LayoutDashboard, ClipboardList } from "lucide-react"
+ *
+ * <NavGroup
+ *   title="主菜单"
+ *   pathname={pathname}
+ *   collapsed={isCollapsed}
+ *   onNavigate={router.push}
+ *   items={[
+ *     { title: "数据总览", url: "/dashboard", icon: LayoutDashboard },
+ *     {
+ *       title: "订单管理",
+ *       icon: ClipboardList,
+ *       badge: 24,
+ *       items: [
+ *         { title: "全部订单", url: "/orders" },
+ *         { title: "待审批",   url: "/orders/pending" },
+ *       ],
+ *     },
+ *   ]}
+ * />
+ * ```
+ */
 "use client";
 
 import * as React from "react";
