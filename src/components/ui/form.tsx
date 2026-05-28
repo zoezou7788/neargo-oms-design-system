@@ -1,3 +1,57 @@
+/**
+ * @component Form（react-hook-form 绑定版）
+ * @description RHF 表单系统 — 与 react-hook-form 深度绑定的表单组件集。
+ *
+ * @when-to-use
+ *   ✅ 所有需要提交的正式表单（有验证规则、错误处理、提交状态）
+ *   ✅ 字段 ≥ 3 个的表单
+ *   ❌ 简单的无验证受控表单 → 用独立的 FormField + Input
+ *
+ * @composition
+ *   Form              — FormProvider 根（传入 useForm() 返回值）
+ *   └── FormField     — 注册单个字段（name 绑定 RHF Controller）
+ *       ├── FormLabel     — 字段标签（自动关联 id）
+ *       ├── FormControl   — 控件容器（自动传 aria-invalid/aria-describedby）
+ *       ├── FormDescription — 帮助说明
+ *       └── FormMessage   — 错误信息（自动从 RHF errors 读取）
+ *
+ * @example
+ * ```tsx
+ * import { useForm } from "react-hook-form"
+ * import { zodResolver } from "@hookform/resolvers/zod"
+ * import { Form, FormField, FormLabel, FormControl, FormMessage } from "@/components/ui/form"
+ * import { Input } from "@/components/ui/input"
+ * import { Button } from "@/components/ui/button"
+ * import { z } from "zod"
+ *
+ * const schema = z.object({ name: z.string().min(2, "门店名称至少 2 个字符") })
+ *
+ * function StoreForm() {
+ *   const form = useForm({ resolver: zodResolver(schema) })
+ *
+ *   return (
+ *     <Form {...form}>
+ *       <form onSubmit={form.handleSubmit(onSubmit)}>
+ *         <FormField
+ *           control={form.control}
+ *           name="name"
+ *           render={({ field }) => (
+ *             <>
+ *               <FormLabel required>门店名称</FormLabel>
+ *               <FormControl>
+ *                 <Input placeholder="请输入门店名称" {...field} />
+ *               </FormControl>
+ *               <FormMessage />
+ *             </>
+ *           )}
+ *         />
+ *         <Button type="submit" loading={form.formState.isSubmitting}>提交</Button>
+ *       </form>
+ *     </Form>
+ *   )
+ * }
+ * ```
+ */
 "use client";
 
 import * as React from "react";

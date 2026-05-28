@@ -1,3 +1,42 @@
+/**
+ * @component Textarea
+ * @description 多行文本输入框 — 适合长文本输入，如备注、描述、审批意见。
+ *
+ * @when-to-use
+ *   ✅ 审批意见、拒绝原因（建议 rows=3-4）
+ *   ✅ 备注/描述字段
+ *   ✅ 需要字数统计的输入（showCount + maxLength）
+ *   ❌ 单行输入 → 用 Input
+ *   ❌ 富文本编辑 → 需引入专用富文本编辑器
+ *
+ * @states
+ *   默认 / Focus（黑色边框）/ Error（红色边框）/ Disabled（灰色背景）/ ReadOnly
+ *
+ * @props
+ *   error      boolean   错误状态（红色边框）
+ *   showCount  boolean   显示字数统计（需配合 maxLength 使用）
+ *   maxLength  number    最大字符数（超出时计数变红）
+ *   rows       number    初始可见行数（默认 3）
+ *   （继承所有 textarea 原生属性）
+ *
+ * @example
+ * ```tsx
+ * import { Textarea } from "@/components/ui/textarea"
+ *
+ * // 审批意见（带字数限制）
+ * <Textarea
+ *   placeholder="请填写审批意见（选填）…"
+ *   rows={4}
+ *   maxLength={500}
+ *   showCount
+ *   value={remark}
+ *   onChange={(e) => setRemark(e.target.value)}
+ * />
+ *
+ * // 错误状态
+ * <Textarea error={!!errors.reason} placeholder="请填写拒绝原因" />
+ * ```
+ */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 

@@ -1,3 +1,46 @@
+/**
+ * @component Collapsible / SectionCollapsible
+ * @description 折叠展开容器 — 切换内容区域的显示/隐藏，带动画过渡。
+ *
+ * @when-to-use
+ *   ✅ 长表单的可选分区（高级选项、附加信息）
+ *   ✅ FAQ / 帮助文档的问答折叠
+ *   ✅ Sidebar 子菜单展开（已集成到 Sidebar 组件）
+ *   ❌ 标签页切换 → 用 Tabs
+ *   ❌ 需要手风琴效果（多个互斥展开）→ 用 Accordion
+ *
+ * @composition（Radix UI Collapsible 原语）
+ *   Collapsible            — 根组件（控制 open 状态）
+ *   ├── CollapsibleTrigger — 触发按钮（asChild 可传任意元素）
+ *   └── CollapsibleContent — 折叠内容（含 fade + slide 动画）
+ *
+ *   SectionCollapsible     — 预组合版本，适合表单分区折叠
+ *
+ * @example SectionCollapsible（推荐）
+ * ```tsx
+ * import { SectionCollapsible } from "@/components/ui/collapsible"
+ *
+ * <SectionCollapsible title="高级配置" defaultOpen={false}>
+ *   <FormField label="备注">
+ *     <Textarea placeholder="可选填写备注…" />
+ *   </FormField>
+ * </SectionCollapsible>
+ * ```
+ *
+ * @example Collapsible 原语
+ * ```tsx
+ * import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible"
+ *
+ * <Collapsible open={open} onOpenChange={setOpen}>
+ *   <CollapsibleTrigger asChild>
+ *     <Button variant="ghost" size="sm">查看更多 {open ? "▲" : "▼"}</Button>
+ *   </CollapsibleTrigger>
+ *   <CollapsibleContent>
+ *     <DetailContent />
+ *   </CollapsibleContent>
+ * </Collapsible>
+ * ```
+ */
 "use client";
 
 import * as React from "react";

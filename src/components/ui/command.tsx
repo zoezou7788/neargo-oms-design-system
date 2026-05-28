@@ -1,3 +1,42 @@
+/**
+ * @component Command
+ * @description 命令面板 / 搜索面板 — 带实时搜索过滤的列表选择器，是 Combobox 的底层原语。
+ *
+ * @when-to-use
+ *   ✅ 作为 Combobox / MultiSelect 的内嵌搜索列表（通常不直接使用）
+ *   ✅ 全局命令面板（⌘K 快捷键触发的搜索）
+ *   ✅ 需要自定义分组、带图标、带描述的复杂选择器
+ *   ❌ 简单下拉选择 → 用 Select 或 Combobox
+ *
+ * @composition
+ *   Command              — 根容器（cmdk 原语）
+ *   ├── CommandInput     — 搜索输入框（自动过滤 CommandItem）
+ *   ├── CommandList      — 可滚动列表容器
+ *   │   ├── CommandEmpty     — 无匹配时展示
+ *   │   ├── CommandGroup     — 分组容器（可选 heading）
+ *   │   │   └── CommandItem  — 单个选项（含 onSelect 回调）
+ *   │   └── CommandSeparator — 分组分隔线
+ *   └── CommandDialog    — 全屏命令面板变体（含 Dialog 遮罩）
+ *
+ * @example 全局命令面板（⌘K）
+ * ```tsx
+ * import {
+ *   Command, CommandDialog, CommandInput, CommandList,
+ *   CommandEmpty, CommandGroup, CommandItem,
+ * } from "@/components/ui/command"
+ *
+ * <CommandDialog open={open} onOpenChange={setOpen}>
+ *   <CommandInput placeholder="搜索功能、页面、操作…" />
+ *   <CommandList>
+ *     <CommandEmpty>未找到相关结果</CommandEmpty>
+ *     <CommandGroup heading="导航">
+ *       <CommandItem onSelect={() => router.push("/orders")}>订单管理</CommandItem>
+ *       <CommandItem onSelect={() => router.push("/stores")}>门店管理</CommandItem>
+ *     </CommandGroup>
+ *   </CommandList>
+ * </CommandDialog>
+ * ```
+ */
 "use client";
 
 import * as React from "react";

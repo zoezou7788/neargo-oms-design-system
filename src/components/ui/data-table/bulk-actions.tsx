@@ -1,3 +1,30 @@
+/**
+ * @component DataTableBulkActions
+ * @description DataTable 批量操作栏 — 多选行后在 Toolbar 区浮出的操作按钮组。
+ *
+ * @when-to-use
+ *   ✅ 表格开启 selectable=true 后，需要批量通过/拒绝/导出/删除时
+ *   通常由 DataTableToolbar 内部条件渲染，不需要手动控制显示
+ *
+ * @props
+ *   table    Table<TData>         TanStack Table 实例
+ *   actions  BulkAction[]         操作按钮配置
+ *            每项：{ label, icon?, variant?, onClick(selectedRows), loading? }
+ *
+ * @example
+ * ```tsx
+ * import { DataTableBulkActions } from "@/components/ui/data-table/bulk-actions"
+ * import { Check, X } from "lucide-react"
+ *
+ * <DataTableBulkActions
+ *   table={table}
+ *   actions={[
+ *     { label: "批量通过", icon: Check, variant: "default",      onClick: (rows) => batchApprove(rows) },
+ *     { label: "批量拒绝", icon: X,     variant: "danger",       onClick: (rows) => batchReject(rows), loading: isProcessing },
+ *   ]}
+ * />
+ * ```
+ */
 import * as React from "react";
 import { type Table } from "@tanstack/react-table";
 import { X } from "lucide-react";

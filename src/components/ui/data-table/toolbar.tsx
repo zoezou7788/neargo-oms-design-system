@@ -1,3 +1,44 @@
+/**
+ * @component DataTableToolbar
+ * @description DataTable 工具栏 — 搜索框 + 筛选器 + 列显示控制 + 自定义操作按钮。
+ *
+ * @when-to-use
+ *   ✅ DataTable 的 toolbar prop 插槽中使用（几乎所有列表页都需要）
+ *
+ * @props
+ *   table             Table<TData>    TanStack Table 实例
+ *   searchColumn      string          启用搜索的列 key（如 "storeName"）
+ *   searchPlaceholder string          搜索框占位（默认"搜索..."）
+ *   filters           ReactNode       筛选器插槽（放置 DataTableFacetedFilter）
+ *   actions           ReactNode       右侧操作区（新建按钮、导出按钮等）
+ *
+ * @example
+ * ```tsx
+ * import { DataTableToolbar } from "@/components/ui/data-table/toolbar"
+ *
+ * <DataTable
+ *   columns={columns}
+ *   data={data}
+ *   toolbar={(table) => (
+ *     <DataTableToolbar
+ *       table={table}
+ *       searchColumn="storeName"
+ *       searchPlaceholder="搜索门店名称…"
+ *       filters={
+ *         <DataTableFacetedFilter
+ *           column={table.getColumn("status")}
+ *           title="状态"
+ *           options={statusOptions}
+ *         />
+ *       }
+ *       actions={
+ *         <Button variant="primary" size="sm" icon={<Plus size={13} />}>新建订单</Button>
+ *       }
+ *     />
+ *   )}
+ * />
+ * ```
+ */
 "use client";
 
 import * as React from "react";

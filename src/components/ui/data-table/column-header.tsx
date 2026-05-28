@@ -1,3 +1,28 @@
+/**
+ * @component DataTableColumnHeader
+ * @description 可排序列标题 — 带升序/降序/取消排序的列头按钮，含隐藏列选项。
+ *
+ * @when-to-use
+ *   ✅ 在 ColumnDef 的 header 中使用，替代普通字符串，让该列支持排序
+ *   ❌ 不需要排序的列 → 直接 header: "列名" 即可
+ *
+ * @props
+ *   column   Column<TData, TValue>   TanStack Table 列实例
+ *   title    string                  列显示标题
+ *
+ * @example
+ * ```tsx
+ * import { DataTableColumnHeader } from "@/components/ui/data-table/column-header"
+ *
+ * const columns: ColumnDef<Order>[] = [
+ *   {
+ *     accessorKey: "amount",
+ *     enableSorting: true,
+ *     header: ({ column }) => <DataTableColumnHeader column={column} title="申请金额" />,
+ *   },
+ * ]
+ * ```
+ */
 import * as React from "react";
 import { type Column } from "@tanstack/react-table";
 import { ArrowUp, ArrowDown, ChevronsUpDown, EyeOff } from "lucide-react";

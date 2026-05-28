@@ -1,3 +1,46 @@
+/**
+ * @component RadioGroup / RadioGroupItem / ApprovalDecision
+ * @description 单选组 — 从互斥选项中选择一项，用于审批决定、状态选择等。
+ *
+ * @when-to-use（RadioGroup vs Switch vs Select）
+ *   ✅ RadioGroup：≤5 个互斥选项，需要全部可见（如审批通过/拒绝/待定）
+ *   ✅ RadioGroup：选项含描述文字，需要可视化对比
+ *   ❌ Switch：布尔开关（开/关两态）→ 用 Switch
+ *   ❌ 选项 >5 个 → 用 Select（节省空间）
+ *
+ * @composition
+ *   RadioGroup       — 根组件（value + onValueChange 受控）
+ *   └── RadioGroupItem — 单个选项（value 唯一标识）
+ *
+ *   ApprovalDecision — 预组合版本，专为审批场景设计（通过/拒绝/待定三选一）
+ *
+ * @example RadioGroup
+ * ```tsx
+ * import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+ *
+ * <RadioGroup value={decision} onValueChange={setDecision}>
+ *   <div className="flex items-center gap-2">
+ *     <RadioGroupItem value="approve" id="approve" />
+ *     <label htmlFor="approve" className="text-green-text font-medium">✓ 审批通过</label>
+ *   </div>
+ *   <div className="flex items-center gap-2">
+ *     <RadioGroupItem value="reject" id="reject" />
+ *     <label htmlFor="reject">✗ 拒绝</label>
+ *   </div>
+ * </RadioGroup>
+ * ```
+ *
+ * @example ApprovalDecision（Drawer 内审批操作推荐）
+ * ```tsx
+ * import { ApprovalDecision } from "@/components/ui/radio-group"
+ *
+ * <ApprovalDecision
+ *   value={decision}
+ *   onChange={setDecision}
+ *   showPending       // 显示"待定"选项（默认不显示）
+ * />
+ * ```
+ */
 "use client";
 
 import * as React from "react";

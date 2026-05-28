@@ -1,3 +1,66 @@
+/**
+ * @component DataTable
+ * @description OMS 数据表格 — 集成 TanStack Table v8，支持排序、多选、分页、骨架屏、空状态。
+ *
+ * @when-to-use
+ *   ✅ 所有列表页的数据展示（订单列表、门店列表、审批列表）
+ *   ✅ 需要排序、多选批量操作、前端/服务端分页
+ *   ❌ 简单静态只读表格（< 5 列、无交互）→ 用 Table 原语
+ *
+ * @props
+ *   columns              ColumnDef[]         列定义（TanStack Table 格式）
+ *   data                 TData[]             数据数组
+ *   loading              boolean             加载态（显示骨架屏）
+ *   emptyText            string              空状态文字（默认"暂无数据"）
+ *   selectable           boolean             开启行多选（默认 false）
+ *   defaultPageSize      number              初始每页条数（默认 20）
+ *   manualPagination     boolean             服务端分页模式（默认 false）
+ *   pageCount            number              服务端分页时的总页数
+ *   onPaginationChange   (state) => void     分页变更回调（服务端模式）
+ *   manualSorting        boolean             服务端排序模式（默认 false）
+ *   onSortingChange      (state) => void     排序变更回调（服务端模式）
+ *   toolbar              (table) => ReactNode 工具栏插槽（搜索、操作按钮）
+ *
+ * @example 前端分页（小数据量）
+ * ```tsx
+ * import { DataTable } from "@/components/ui/data-table"
+ * import { type ColumnDef } from "@tanstack/react-table"
+ *
+ * const columns: ColumnDef<Order>[] = [
+ *   { accessorKey: "id",     header: "订单号",  cell: ({ row }) => <span className="font-mono">{row.original.id}</span> },
+ *   { accessorKey: "store",  header: "门店" },
+ *   { accessorKey: "amount", header: "金额",    enableSorting: true },
+ *   { accessorKey: "status", header: "状态",    cell: ({ row }) => <StatusIndicator status={row.original.status} /> },
+ * ]
+ *
+ * <DataTable
+ *   columns={columns}
+ *   data={orders}
+ *   loading={isLoading}
+ *   selectable
+ *   toolbar={(table) => (
+ *     <DataTableToolbar table={table} searchColumn="store" actions={<NewOrderButton />} />
+ *   )}
+ * />
+ * ```
+ *
+ * @example 服务端分页（大数据量，推荐）
+ * ```tsx
+ * <DataTable
+ *   columns={columns}
+ *   data={pageData}
+ *   loading={isFetching}
+ *   manualPagination
+ *   pageCount={totalPages}
+ *   onPaginationChange={({ pageIndex, pageSize }) => {
+ *     setPage(pageIndex + 1)
+ *     setPageSize(pageSize)
+ *   }}
+ *   manualSorting
+ *   onSortingChange={setSortState}
+ * />
+ * ```
+ */
 "use client";
 
 import * as React from "react";

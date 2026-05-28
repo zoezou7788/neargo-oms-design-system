@@ -1,3 +1,55 @@
+/**
+ * @component Sidebar / SidebarProvider / SidebarNav / SidebarItem
+ * @description 侧边栏导航 — OMS 全局左侧导航，支持展开/收起，含子菜单。
+ *
+ * @when-to-use
+ *   ✅ 应用级全局导航（每个页面共享）
+ *   ✅ 需要折叠为图标模式节省空间
+ *   ❌ 页面内二级导航 → 用 Tabs
+ *   ❌ 临时导航菜单 → 用 DropdownMenu
+ *
+ * @composition
+ *   SidebarProvider   — Context Provider，在 App 根节点包裹
+ *   useSidebar()      — 读取 collapsed 状态的 hook
+ *   Sidebar           — 侧边栏容器（fixed 定位，220px 展开 / 52px 收起）
+ *   ├── SidebarHeader     — Logo + 品牌名 + 收起按钮
+ *   ├── SidebarNav        — 菜单组列表容器
+ *   │   └── SidebarItem   — 单个菜单项（支持子菜单）
+ *   └── SidebarFooter     — 用户信息区
+ *
+ * @router-note
+ *   默认使用 react-router-dom 的 Link 和 useLocation。
+ *   Next.js 项目需将第 1 行改为：
+ *   import Link from "next/link"; import { usePathname as useLocation } from "next/navigation";
+ *
+ * @example
+ * ```tsx
+ * import { SidebarProvider, Sidebar, SidebarItem } from "@/components/ui/sidebar"
+ * import { LayoutDashboard, ClipboardList, Store } from "lucide-react"
+ *
+ * // App 根节点
+ * <SidebarProvider>
+ *   <div className="flex">
+ *     <Sidebar>
+ *       <SidebarItem href="/dashboard" icon={LayoutDashboard} label="数据总览" />
+ *       <SidebarItem
+ *         href="/orders"
+ *         icon={ClipboardList}
+ *         label="订单管理"
+ *         badge={24}
+ *         badgeVariant="urgent"
+ *         children={[
+ *           { href: "/orders/all",     label: "全部订单" },
+ *           { href: "/orders/pending", label: "待审批" },
+ *         ]}
+ *       />
+ *       <SidebarItem href="/stores" icon={Store} label="门店管理" badge={86} />
+ *     </Sidebar>
+ *     <main className="flex-1 ml-[220px]"><Outlet /></main>
+ *   </div>
+ * </SidebarProvider>
+ * ```
+ */
 "use client";
 
 import * as React from "react";

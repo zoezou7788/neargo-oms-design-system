@@ -1,3 +1,36 @@
+/**
+ * @component FileUpload
+ * @description 文件上传区 — 拖拽或点击上传文件，展示上传列表和进度。
+ *
+ * @when-to-use
+ *   ✅ 审批单附件上传（合同、凭证、图片）
+ *   ✅ 表单中的证明文件上传
+ *   ❌ 头像裁剪上传 → 需要额外的图片裁剪库
+ *   ❌ 大文件分片上传（>100MB）→ 需要自定义上传逻辑
+ *
+ * @props
+ *   accept          string          允许的文件类型（如 "image/*,.pdf"）
+ *   multiple        boolean         允许多文件（默认 false）
+ *   maxSize         number          单文件最大字节数（默认 20MB）
+ *   maxFiles        number          最多文件数（multiple=true 时）
+ *   onFilesChange   (files) => void 文件列表变更回调
+ *   hint            string          上传区提示文字（覆盖默认）
+ *   disabled        boolean
+ *
+ * @example
+ * ```tsx
+ * import { FileUpload } from "@/components/ui/file-upload"
+ *
+ * <FileUpload
+ *   accept=".pdf,.jpg,.png"
+ *   multiple
+ *   maxFiles={5}
+ *   maxSize={10 * 1024 * 1024}   // 10MB
+ *   onFilesChange={(files) => setAttachments(files)}
+ *   hint="支持 PDF / JPG / PNG，单文件最大 10MB"
+ * />
+ * ```
+ */
 "use client";
 
 import * as React from "react";

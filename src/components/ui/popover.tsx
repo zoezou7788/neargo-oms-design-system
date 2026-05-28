@@ -1,3 +1,39 @@
+/**
+ * @component Popover
+ * @description 浮层面板 — 点击触发器后出现的非模态浮动内容，可包含交互元素。
+ *
+ * @when-to-use（Popover vs Tooltip）
+ *   ✅ Popover：内容含交互元素（按钮、输入框、链接）
+ *   ✅ Popover：内容超过 2 行文字
+ *   ✅ Popover：DatePicker / Combobox 的下拉容器（内部实现）
+ *   ❌ Tooltip：纯文字说明，无交互，hover 触发 → 用 Tooltip
+ *
+ * @composition（Radix UI Popover 原语）
+ *   Popover              — 根组件（控制 open 状态）
+ *   ├── PopoverTrigger   — 触发元素（asChild 传入任意元素）
+ *   ├── PopoverContent   — 浮层内容（side/align 控制位置）
+ *   └── PopoverClose     — 关闭按钮
+ *
+ * @props（PopoverContent）
+ *   side      "top"|"right"|"bottom"|"left"   弹出方向（默认 "bottom"）
+ *   align     "start"|"center"|"end"           对齐方式（默认 "center"）
+ *   sideOffset number                          与触发元素的间距（默认 6）
+ *   showClose boolean                          是否显示右上角关闭按钮（默认 false）
+ *
+ * @example 自定义内容浮层
+ * ```tsx
+ * import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
+ *
+ * <Popover>
+ *   <PopoverTrigger asChild>
+ *     <Button variant="outline" size="sm">筛选列</Button>
+ *   </PopoverTrigger>
+ *   <PopoverContent align="end" className="w-48">
+ *     <ColumnVisibilityList table={table} />
+ *   </PopoverContent>
+ * </Popover>
+ * ```
+ */
 "use client";
 
 import * as React from "react";

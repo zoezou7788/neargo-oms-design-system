@@ -1,3 +1,27 @@
+/**
+ * @component DataTablePagination
+ * @description DataTable 分页栏 — 每页条数选择 + 页码导航 + 已选行计数。
+ *
+ * @when-to-use
+ *   已集成在 DataTable 组件内部，通常不需要单独使用。
+ *   如需在 DataTable 外自定义分页布局时可单独引入。
+ *
+ * @props
+ *   table            Table<TData>   TanStack Table 实例
+ *   pageSizeOptions  number[]       每页条数选项（默认 [10,20,50,100]）
+ *   showRowSelection boolean        显示已选行数统计（默认 false）
+ *
+ * @example（单独使用）
+ * ```tsx
+ * import { DataTablePagination } from "@/components/ui/data-table/pagination"
+ *
+ * <DataTablePagination
+ *   table={table}
+ *   pageSizeOptions={[20, 50, 100]}
+ *   showRowSelection
+ * />
+ * ```
+ */
 import * as React from "react";
 import { type Table } from "@tanstack/react-table";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";

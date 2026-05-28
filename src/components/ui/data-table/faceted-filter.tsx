@@ -1,3 +1,39 @@
+/**
+ * @component DataTableFacetedFilter
+ * @description 多值筛选下拉 — 支持勾选多个值过滤表格列，显示当前该值的数量。
+ *
+ * @when-to-use
+ *   ✅ 表格工具栏中对枚举字段（状态、类型、门店）进行多值过滤
+ *   ✅ 在 DataTableToolbar 的 filters 插槽中使用
+ *
+ * @props
+ *   column   Column<TData, TValue>      TanStack Table 列实例（用于读写过滤值）
+ *   title    string                     筛选器标签（如"状态"、"类型"）
+ *   options  FacetedFilterOption[]      选项列表（value/label/icon?/count?）
+ *
+ * @example
+ * ```tsx
+ * import { DataTableFacetedFilter } from "@/components/ui/data-table/faceted-filter"
+ *
+ * // 在 DataTableToolbar 的 filters 插槽中
+ * <DataTableToolbar
+ *   table={table}
+ *   filters={
+ *     <>
+ *       <DataTableFacetedFilter
+ *         column={table.getColumn("status")}
+ *         title="状态"
+ *         options={[
+ *           { value: "pending",   label: "待审批", icon: Clock },
+ *           { value: "approved",  label: "已通过", icon: Check },
+ *           { value: "rejected",  label: "已拒绝", icon: X },
+ *         ]}
+ *       />
+ *     </>
+ *   }
+ * />
+ * ```
+ */
 "use client";
 
 import * as React from "react";

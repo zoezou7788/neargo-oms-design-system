@@ -1,3 +1,44 @@
+/**
+ * @component Progress
+ * @description 进度条 — 展示任务完成百分比，支持语义颜色。
+ *
+ * @when-to-use
+ *   ✅ 文件上传进度
+ *   ✅ 审批完成率、任务完成率
+ *   ✅ 配额使用量（如存储空间）
+ *   ❌ 步骤流程进度 → 用 Steps 组件
+ *   ❌ 页面加载进度条（顶部细条）→ 用 nprogress 或框架内置
+ *
+ * @colors
+ *   default → gray-12（黑色，通用）
+ *   success → green-solid（完成率 100%）
+ *   warning → orange-solid（接近阈值）
+ *   danger  → red-solid（超额/异常）
+ *   brand   → amber-9（品牌色，营销类指标）
+ *
+ * @sizes
+ *   sm → 3px 高（顶部细进度条）
+ *   md → 6px 高（默认，通用卡片内）
+ *
+ * @props
+ *   value     number         当前值（0–max，必填）
+ *   max       number         最大值（默认 100）
+ *   size      "sm" | "md"    尺寸（默认 "md"）
+ *   color     ProgressColor  颜色（默认 "default"）
+ *   showLabel boolean        在进度条右侧显示百分比数字
+ *   label     string         自定义标签文字（覆盖百分比）
+ *
+ * @example
+ * ```tsx
+ * import { Progress } from "@/components/ui/progress"
+ *
+ * // 文件上传进度
+ * <Progress value={uploadProgress} color="brand" showLabel />
+ *
+ * // 审批完成率（带自定义标签）
+ * <Progress value={24} max={30} color="success" label="24/30 已处理" showLabel />
+ * ```
+ */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 

@@ -1,3 +1,56 @@
+/**
+ * @component Table / TableHeader / TableBody / TableRow / TableHead / TableCell / TableEmpty
+ * @description 数据表格原语 — 提供 Table 结构的基础 HTML 语义组件，通常与 DataTable 配合使用。
+ *
+ * @when-to-use
+ *   ✅ 搭配 DataTable（index.tsx）使用 — DataTable 已将这些原语组合好
+ *   ✅ 需要自定义特殊表格布局时直接使用原语
+ *   ❌ 有排序/多选/分页需求 → 直接用 DataTable，不要手动组合
+ *
+ * @composition
+ *   Table         — 外层容器（border + rounded，overflow-hidden）
+ *   ├── TableHeader  — <thead>
+ *   │   └── TableRow → TableHead（列标题，uppercase 12px，gray-2 背景）
+ *   ├── TableBody    — <tbody>
+ *   │   └── TableRow → TableCell（数据行，hover:bg-gray-2）
+ *   └── TableEmpty   — 空状态占位（colspan 撑满）
+ *
+ * @props（Table）
+ *   unstyled  boolean  移除外层 border+shadow（嵌套在 Card 内时使用，默认 false）
+ *
+ * @example 直接使用原语（简单静态表格）
+ * ```tsx
+ * import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table"
+ *
+ * <Table>
+ *   <TableHeader>
+ *     <TableRow>
+ *       <TableHead>订单号</TableHead>
+ *       <TableHead>金额</TableHead>
+ *       <TableHead>状态</TableHead>
+ *     </TableRow>
+ *   </TableHeader>
+ *   <TableBody>
+ *     {orders.map(order => (
+ *       <TableRow key={order.id}>
+ *         <TableCell className="font-mono">{order.id}</TableCell>
+ *         <TableCell>¥{order.amount}</TableCell>
+ *         <TableCell><StatusIndicator status={order.status} /></TableCell>
+ *       </TableRow>
+ *     ))}
+ *   </TableBody>
+ * </Table>
+ * ```
+ *
+ * @example 嵌套在 Card 内（去除双重边框）
+ * ```tsx
+ * <Card padding="none">
+ *   <Table unstyled>
+ *     ...
+ *   </Table>
+ * </Card>
+ * ```
+ */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 

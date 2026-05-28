@@ -1,3 +1,46 @@
+/**
+ * @component Calendar
+ * @description 日历面板 — 独立的日期选择面板，通常作为 DatePicker / DateRangePicker 的内嵌视图。
+ *
+ * @when-to-use
+ *   ✅ 作为 DatePicker 或 DateRangePicker 的底层视图组件（通常不直接使用）
+ *   ✅ 需要将日历面板内嵌在页面中（不弹出 Popover），如日程视图
+ *   ❌ 表单中的日期输入 → 用 DatePicker（含触发按钮 + Popover 容器）
+ *   ❌ 日期区间筛选 → 用 DateRangePicker
+ *
+ * @note
+ *   基于 react-day-picker，样式完全通过 classNames prop 注入 NearGo token，
+ *   不依赖 react-day-picker/style.css，需确保 globals.css 在应用根节点加载。
+ *
+ * @props
+ *   完整继承 DayPickerProps（react-day-picker v9）
+ *   mode              "single" | "range" | "multiple"  日期选择模式
+ *   selected          Date | DateRange | Date[]         当前选中值（受控）
+ *   onSelect          回调                               选中变更
+ *   showOutsideDays   boolean                           显示当月以外的日期（默认 true）
+ *   numberOfMonths    number                            同时显示月历数（range 模式默认 2）
+ *
+ * @example 内嵌单选日历
+ * ```tsx
+ * import { Calendar } from "@/components/ui/calendar"
+ *
+ * <Calendar
+ *   mode="single"
+ *   selected={selectedDate}
+ *   onSelect={setSelectedDate}
+ * />
+ * ```
+ *
+ * @example 内嵌区间日历
+ * ```tsx
+ * <Calendar
+ *   mode="range"
+ *   selected={range}
+ *   onSelect={setRange}
+ *   numberOfMonths={2}
+ * />
+ * ```
+ */
 "use client";
 
 import * as React from "react";
