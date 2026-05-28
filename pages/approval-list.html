@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>审批管理 — NearGo OMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--gray-12);line-height:1.5;min-height:100vh}
+:root{
+  --amber-2:#fff8d6;--amber-3:#ffeea8;--amber-9:#FFA902;--amber-10:#f09a00;--amber-11:#8c5c00;
+  --gray-1:#fdfdfc;--gray-2:#f9f9f8;--gray-3:#f2f1ef;--gray-4:#eceae7;--gray-5:#e5e3e0;
+  --gray-6:#dddbd8;--gray-7:#cac8c4;--gray-8:#b0adaa;--gray-9:#8c8a87;--gray-10:#807e7b;
+  --gray-11:#4a4846;--gray-12:#1F1D1C;
+  --green-bg:#edfbf4;--green-border:#cdf4ea;--green-solid:#29a383;--green-text:#107060;
+  --red-bg:#fff5f5;--red-border:#ffe0e0;--red-solid:#e5484d;--red-text:#ce2c31;
+  --blue-bg:#f0f8ff;--blue-border:#d5efff;--blue-solid:#0090ff;--blue-text:#0060cf;
+  --orange-bg:#fff6f0;--orange-border:#ffe8d7;--orange-solid:#f76b15;--orange-text:#bd4b00;
+  --purple-bg:#faf5ff;--purple-border:#ecdcfe;--purple-solid:#8e4ec6;--purple-text:#793aaf;
+  --surface:#ffffff;--bg:#F4F5F7;--border:#dddbd8;
+  --shadow-popup:0 8px 24px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.04);
+  --dur-fast:120ms;--dur-normal:200ms;--ease:cubic-bezier(0.4,0,0.2,1);
+  --topbar-h:54px;--sidebar-w:220px;
+}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--topbar-h);background:var(--surface);display:flex;align-items:center;padding:0 20px;gap:12px;border-bottom:1px solid var(--border);}
+.tl{font-size:15px;font-weight:700;color:var(--gray-12);letter-spacing:-0.03em;display:flex;align-items:center;gap:8px;}
+.tld{width:22px;height:22px;border-radius:6px;background:var(--amber-9);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;}
+.tdiv{width:1px;height:18px;background:var(--border);}
+.tp{font-size:13px;color:var(--gray-10);}
+.ts{flex:1;}
+.tsr{position:relative;}
+.tsi{width:200px;height:30px;padding:0 10px 0 30px;font-family:inherit;font-size:13px;background:var(--gray-2);border:1px solid var(--gray-4);border-radius:6px;outline:none;color:var(--gray-12);transition:all var(--dur-fast);}
+.tsi::placeholder{color:var(--gray-8);}
+.tsi:focus{background:var(--surface);border-color:var(--gray-7);box-shadow:0 0 0 2px #eceae7;}
+.tsii{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--gray-8);}
+.tibtn{width:30px;height:30px;border-radius:6px;border:none;background:transparent;cursor:pointer;color:var(--gray-9);display:flex;align-items:center;justify-content:center;transition:all var(--dur-fast);}
+.tibtn:hover{background:var(--gray-2);}
+.tav{width:28px;height:28px;border-radius:50%;background:var(--amber-2);border:1.5px solid var(--amber-3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--amber-11);cursor:pointer;}
+.sidebar{position:fixed;top:var(--topbar-h);left:0;bottom:0;width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:8px 0 32px;z-index:90;}
+.sidebar::-webkit-scrollbar{width:3px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--gray-4);border-radius:4px;}
+.sgl{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-8);padding:14px 16px 5px;}
+.si{display:flex;align-items:center;gap:8px;height:34px;padding:0 10px 0 16px;margin:1px 8px;border-radius:6px;font-size:13px;color:var(--gray-10);cursor:pointer;text-decoration:none;transition:all var(--dur-fast);border:none;background:none;font-family:inherit;width:calc(100% - 16px);text-align:left;}
+.si:hover{background:var(--gray-2);color:var(--gray-12);}
+.si.active{background:var(--amber-2);color:var(--gray-12);font-weight:600;border-left:2.5px solid var(--amber-9);padding-left:13.5px;}
+.si svg{width:15px;height:15px;flex-shrink:0;opacity:.7;}
+.si.active svg{opacity:1;}
+.sibadge{margin-left:auto;font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;background:var(--gray-3);color:var(--gray-9);}
+.sibadge.red{background:var(--red-bg);color:var(--red-text);}
+.main{margin-top:var(--topbar-h);margin-left:var(--sidebar-w);min-height:calc(100vh - var(--topbar-h));}
+.pc{padding:24px 28px 60px;}
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;}
+.bc{display:flex;align-items:center;gap:4px;margin-bottom:6px;}
+.bci{font-size:12px;color:var(--gray-9);cursor:pointer;}
+.bci.cur{color:var(--gray-11);font-weight:500;cursor:default;}
+.bcs{font-size:11px;color:var(--gray-7);}
+.ptitle{font-size:20px;font-weight:700;color:var(--gray-12);letter-spacing:-0.03em;}
+.phr{display:flex;gap:8px;align-items:center;margin-top:2px;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;font-weight:500;cursor:pointer;border-radius:6px;border:1px solid transparent;transition:all var(--dur-fast);text-decoration:none;white-space:nowrap;letter-spacing:-.01em;}
+.btn-md{height:34px;padding:0 14px;font-size:13px;}
+.btn-sm{height:28px;padding:0 10px;font-size:12px;}
+.btn-p{background:var(--gray-12);color:#fff;border-color:var(--gray-12);}
+.btn-p:hover{background:#111;}
+.btn-o{background:transparent;color:var(--gray-11);border-color:var(--gray-6);}
+.btn-o:hover{background:var(--gray-2);}
+.btn-d{background:var(--red-solid);color:#fff;border-color:var(--red-solid);}
+.btn-g{background:var(--green-solid);color:#fff;border-color:var(--green-solid);}
+
+/* KPI row */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;}
+.kpi{background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;padding:16px;}
+.kpi-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;}
+.kpi-lbl{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--gray-9);}
+.kpi-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.kpi-val{font-size:24px;font-weight:700;letter-spacing:-0.04em;color:var(--gray-12);line-height:1;margin-bottom:6px;}
+.kpi-trend{font-size:11px;font-weight:500;}
+.tu{color:var(--green-solid);}
+.td2{color:var(--red-solid);}
+
+/* Tabs */
+.tbbar{display:flex;border-bottom:1px solid #F3F4F6;margin-bottom:16px;}
+.tb{padding:10px 16px;font-size:13px;color:var(--gray-9);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;align-items:center;gap:6px;transition:all var(--dur-fast);font-weight:500;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit;}
+.tb:hover{color:var(--gray-11);}
+.tb.active{color:var(--gray-12);border-bottom-color:var(--gray-12);font-weight:600;}
+.tbc{font-size:10px;font-weight:600;padding:1px 6px;border-radius:10px;background:var(--gray-3);color:var(--gray-9);}
+.tb.active .tbc{background:var(--gray-12);color:#fff;}
+.tbc.red{background:var(--red-bg);color:var(--red-text);}
+.tb.active .tbc.red{background:var(--red-solid);color:#fff;}
+
+/* FilterBar */
+.fb{background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;padding:14px 16px;margin-bottom:16px;}
+.fbr{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.fbr+.fbr{margin-top:10px;padding-top:10px;border-top:1px solid #F3F4F6;}
+.fbsw{position:relative;min-width:200px;flex:1;max-width:260px;}
+.fbsi{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--gray-8);pointer-events:none;}
+.fbi{width:100%;height:34px;padding:0 10px 0 32px;font-family:inherit;font-size:13px;color:var(--gray-12);background:var(--surface);border:1px solid var(--gray-6);border-radius:6px;outline:none;transition:all var(--dur-fast);}
+.fbi::placeholder{color:var(--gray-8);}
+.fbi:focus{border-color:var(--gray-7);box-shadow:0 0 0 2px #eceae7;}
+.fbslw{position:relative;}
+.fbsl{height:34px;padding:0 28px 0 10px;font-family:inherit;font-size:13px;color:var(--gray-11);background:var(--surface);border:1px solid var(--gray-6);border-radius:6px;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;transition:all var(--dur-fast);}
+.fbsl:focus{border-color:var(--gray-7);box-shadow:0 0 0 2px #eceae7;}
+.fbsla{position:absolute;right:9px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--gray-8);}
+.fbdw{position:relative;min-width:210px;}
+.fbdi{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--gray-8);pointer-events:none;z-index:1;}
+.fbdin{width:100%;height:34px;padding:0 10px 0 32px;font-family:inherit;font-size:13px;color:var(--gray-12);background:var(--surface);border:1px solid var(--gray-6);border-radius:6px;outline:none;cursor:pointer;transition:all var(--dur-fast);}
+.fbdin:focus{border-color:var(--gray-7);box-shadow:0 0 0 2px #eceae7;}
+.fbdin::placeholder{color:var(--gray-8);}
+.fbtag{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 8px;background:var(--amber-2);color:var(--amber-11);border:1px solid var(--amber-3);border-radius:4px;font-size:11px;font-weight:500;}
+.fbtag-rm{background:none;border:none;cursor:pointer;color:var(--amber-11);font-size:14px;line-height:1;padding:0;opacity:.7;}
+.fbtag-rm:hover{opacity:1;}
+
+/* flatpickr */
+.flatpickr-calendar{font-family:'Inter',system-ui,sans-serif !important;border:1px solid var(--gray-5) !important;box-shadow:var(--shadow-popup) !important;border-radius:10px !important;}
+.flatpickr-day{border-radius:6px !important;font-size:12px !important;color:var(--gray-11) !important;}
+.flatpickr-day.selected,.flatpickr-day.startRange,.flatpickr-day.endRange{background:var(--gray-12) !important;border-color:var(--gray-12) !important;color:#fff !important;}
+.flatpickr-day.inRange{background:var(--amber-2) !important;border-color:var(--amber-2) !important;box-shadow:-5px 0 0 var(--amber-2),5px 0 0 var(--amber-2) !important;color:var(--amber-11) !important;}
+.flatpickr-day.today{border-color:var(--amber-9) !important;}
+
+/* Table */
+.tw{background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;overflow:hidden;}
+.tbar{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid #F3F4F6;min-height:50px;}
+.tbtitle{font-size:13px;font-weight:600;color:var(--gray-12);flex:1;}
+.tbcount{font-size:12px;color:var(--gray-9);margin-left:6px;font-weight:400;}
+.bulkb{display:flex;align-items:center;gap:8px;}
+.blbl{font-size:12px;color:var(--amber-11);font-weight:500;}
+table{width:100%;border-collapse:collapse;}
+th{background:var(--gray-2);color:var(--gray-9);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1px solid #F3F4F6;white-space:nowrap;user-select:none;}
+th.st{cursor:pointer;}
+th.st:hover{color:var(--gray-11);background:var(--gray-3);}
+.thi{display:flex;align-items:center;gap:5px;}
+.sico{display:flex;flex-direction:column;gap:1px;opacity:.35;}
+th.sa .sico,th.sd .sico{opacity:1;}
+th.sa .sico .ssd{opacity:.25;}
+th.sd .sico .ssu{opacity:.25;}
+th.ccb,td.ccb{width:40px;padding:10px 6px 10px 16px;}
+.cb{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--gray-6);background:var(--surface);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:all var(--dur-fast);}
+.cb.ck,.cb.ind{background:var(--gray-12);border-color:var(--gray-12);}
+.cb:hover{border-color:var(--gray-8);}
+td{padding:11px 14px;font-size:13px;color:var(--gray-11);border-bottom:1px solid #F3F4F6;transition:background var(--dur-fast);}
+tr:last-child td{border-bottom:none;}
+tr.rs td{background:var(--amber-1);}
+tr:not(.rs):hover td{background:var(--gray-1);}
+td.ca{text-align:right;white-space:nowrap;}
+.ra{display:flex;align-items:center;justify-content:flex-end;gap:4px;}
+.rab{display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 8px;border-radius:5px;font-size:11px;font-weight:500;font-family:inherit;cursor:pointer;transition:all var(--dur-fast);background:transparent;border:1px solid transparent;color:var(--gray-9);}
+.rab:hover{background:var(--gray-2);color:var(--gray-12);border-color:var(--gray-4);}
+.rab.green{color:var(--green-text);}
+.rab.green:hover{background:var(--green-bg);border-color:var(--green-border);}
+.rab.red{color:var(--red-text);}
+.rab.red:hover{background:var(--red-bg);border-color:var(--red-border);}
+.mono{font-family:'JetBrains Mono',monospace;font-size:12px;}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;letter-spacing:.02em;border-radius:20px;padding:2px 8px;border:1px solid transparent;}
+.bdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.bs{background:var(--green-bg);color:var(--green-text);border-color:var(--green-border);}
+.bw{background:var(--amber-2);color:var(--amber-11);border-color:var(--amber-3);}
+.br{background:var(--red-bg);color:var(--red-text);border-color:var(--red-border);}
+.bi{background:var(--blue-bg);color:var(--blue-text);border-color:var(--blue-border);}
+.bd{background:var(--gray-3);color:var(--gray-11);border-color:var(--gray-4);}
+.bu{background:var(--orange-bg);color:var(--orange-text);border-color:var(--orange-border);}
+.bp{background:var(--purple-bg);color:var(--purple-text);border-color:var(--purple-border);}
+.sk{height:12px;border-radius:4px;background:linear-gradient(90deg,var(--gray-3) 25%,var(--gray-2) 50%,var(--gray-3) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.tep{padding:56px 24px;text-align:center;}
+.tei{width:48px;height:48px;border-radius:12px;background:var(--gray-2);border:1px solid var(--gray-4);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:22px;}
+.tet{font-size:14px;font-weight:600;color:var(--gray-11);margin-bottom:6px;}
+.ted{font-size:12px;color:var(--gray-8);margin-bottom:16px;}
+.pgn{display:flex;align-items:center;gap:6px;padding:12px 16px;border-top:1px solid var(--gray-3);}
+.pgi{font-size:12px;color:var(--gray-9);flex:1;}
+.pgsw{display:flex;align-items:center;gap:5px;margin-right:6px;}
+.pgsl{font-size:12px;color:var(--gray-9);}
+.pgss{height:26px;padding:0 20px 0 8px;font-family:inherit;font-size:12px;background:var(--surface);border:1px solid var(--gray-5);border-radius:5px;appearance:none;cursor:pointer;color:var(--gray-11);}
+.pgb{width:28px;height:28px;border-radius:6px;border:1px solid var(--gray-5);background:var(--surface);font-size:12px;color:var(--gray-10);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--dur-fast);font-family:inherit;}
+.pgb:hover{border-color:var(--gray-7);}
+.pgb.act{background:var(--gray-12);color:#fff;border-color:var(--gray-12);}
+.pgb:disabled{opacity:.4;cursor:not-allowed;}
+.pge{font-size:12px;color:var(--gray-8);padding:0 2px;}
+
+/* Priority badge */
+.pri{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;}
+.pri-high{background:var(--red-bg);color:var(--red-text);border:1px solid var(--red-border);}
+.pri-med{background:var(--amber-2);color:var(--amber-11);border:1px solid var(--amber-3);}
+.pri-low{background:var(--gray-3);color:var(--gray-9);border:1px solid var(--gray-4);}
+
+/* Drawer */
+.dov{position:fixed;inset:0;background:rgba(31,29,28,0);z-index:200;pointer-events:none;transition:background var(--dur-normal) var(--ease);}
+.dov.on{background:rgba(31,29,28,.3);pointer-events:all;}
+.dr{position:fixed;top:0;right:0;bottom:0;width:480px;background:var(--surface);border-left:1px solid var(--gray-4);box-shadow:-8px 0 32px rgba(0,0,0,.08);display:flex;flex-direction:column;z-index:201;transform:translateX(100%);transition:transform var(--dur-normal) var(--ease);}
+.dr.on{transform:translateX(0);}
+.drh{display:flex;align-items:center;gap:10px;padding:0 20px;height:54px;border-bottom:1px solid #F3F4F6;flex-shrink:0;}
+.drt{font-size:14px;font-weight:700;color:var(--gray-12);flex:1;letter-spacing:-.02em;}
+.drc{width:30px;height:30px;border-radius:6px;border:none;background:transparent;cursor:pointer;color:var(--gray-8);display:flex;align-items:center;justify-content:center;transition:all var(--dur-fast);}
+.drc:hover{background:var(--gray-2);color:var(--gray-12);}
+.drb{flex:1;overflow-y:auto;padding:20px;}
+.drb::-webkit-scrollbar{width:4px;}
+.drb::-webkit-scrollbar-thumb{background:var(--gray-4);border-radius:4px;}
+.drs{margin-bottom:20px;}
+.drst{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-8);margin-bottom:10px;}
+.drg{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.dfl{font-size:11px;color:var(--gray-8);margin-bottom:3px;}
+.dfv{font-size:13px;color:var(--gray-12);font-weight:500;}
+.dfv.mu{color:var(--gray-10);font-weight:400;line-height:1.6;}
+.dff{grid-column:1/-1;}
+.ddv{height:1px;background:#F3F4F6;margin:16px 0;}
+.drf{padding:14px 20px;border-top:1px solid #F3F4F6;display:flex;gap:8px;justify-content:flex-end;flex-shrink:0;}
+/* Approval decision area */
+.decision-area{background:var(--gray-1);border:1px solid var(--gray-4);border-radius:8px;padding:16px;margin-bottom:0;}
+.decision-title{font-size:12px;font-weight:600;color:var(--gray-11);margin-bottom:12px;}
+.decision-radio{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.dro-item{display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px 10px;border-radius:6px;border:1px solid var(--gray-4);background:var(--surface);transition:all var(--dur-fast);}
+.dro-item:hover{border-color:var(--gray-6);background:var(--gray-1);}
+.dro-item.sel-approve{border-color:var(--green-solid);background:var(--green-bg);}
+.dro-item.sel-reject{border-color:var(--red-solid);background:var(--red-bg);}
+.dro{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--gray-6);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.dro.checked{border-color:var(--green-solid);}
+.dro.checked::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--green-solid);}
+.dro.checked-r{border-color:var(--red-solid);}
+.dro.checked-r::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--red-solid);}
+.dro-label{font-size:12px;font-weight:500;}
+.decision-note{width:100%;min-height:72px;padding:8px 10px;font-family:inherit;font-size:12px;color:var(--gray-12);background:var(--surface);border:1px solid var(--gray-6);border-radius:6px;outline:none;resize:vertical;transition:all var(--dur-fast);}
+.decision-note:focus{border-color:var(--gray-7);box-shadow:0 0 0 2px #eceae7;}
+.decision-note::placeholder{color:var(--gray-8);}
+/* Timeline */
+.dtl{display:flex;flex-direction:column;}
+.dtli{display:flex;gap:12px;}
+.dtll{position:relative;width:18px;flex-shrink:0;display:flex;justify-content:center;}
+.dtld{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0;z-index:1;}
+.dtll::after{content:'';position:absolute;left:50%;top:18px;bottom:-8px;width:1.5px;background:var(--gray-3);transform:translateX(-50%);}
+.dtli:last-child .dtll::after{display:none;}
+.dtlc{padding-bottom:14px;flex:1;}
+.dtlt{font-size:12px;font-weight:600;color:var(--gray-12);}
+.dtlm{font-size:11px;color:var(--gray-9);margin-top:2px;}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="tl"><div class="tld">N</div>NearGo OMS</div>
+  <div class="tdiv"></div>
+  <span class="tp">审批管理</span>
+  <div class="ts"></div>
+  <div class="tsr">
+    <svg class="tsii" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input class="tsi" placeholder="搜索申请单、申请人…" />
+  </div>
+  <button class="tibtn">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+  </button>
+  <div class="tav">Z</div>
+</header>
+
+<nav class="sidebar">
+  <div class="sgl">主菜单</div>
+  <button class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>数据总览</button>
+  <button class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>订单管理<span class="sibadge">234</span></button>
+  <button class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>门店管理</button>
+  <button class="si active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>审批管理<span class="sibadge red">15</span></button>
+  <button class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>经营报表</button>
+  <div class="sgl">系统</div>
+  <button class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>系统设置</button>
+</nav>
+
+<main class="main">
+  <div class="pc">
+
+    <!-- Page Header -->
+    <div class="ph">
+      <div>
+        <div class="bc"><a class="bci" href="#">首页</a><span class="bcs">›</span><span class="bci cur">审批管理</span></div>
+        <h1 class="ptitle">审批管理</h1>
+      </div>
+      <div class="phr">
+        <button class="btn btn-md btn-o">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          导出报告
+        </button>
+        <button class="btn btn-md btn-p">审批规则设置</button>
+      </div>
+    </div>
+
+    <!-- KPI Row -->
+    <div class="kpi-row">
+      <div class="kpi">
+        <div class="kpi-hdr"><div class="kpi-lbl">待审批</div><div class="kpi-icon" style="background:var(--orange-bg);">⏳</div></div>
+        <div class="kpi-val" style="color:var(--orange-text);">15</div>
+        <div class="kpi-trend" style="color:var(--orange-text);">↑ 3 较昨日新增</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-hdr"><div class="kpi-lbl">今日通过</div><div class="kpi-icon" style="background:var(--green-bg);">✅</div></div>
+        <div class="kpi-val">24</div>
+        <div class="kpi-trend tu">↑ 8% 较昨日</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-hdr"><div class="kpi-lbl">今日拒绝</div><div class="kpi-icon" style="background:var(--red-bg);">❌</div></div>
+        <div class="kpi-val">3</div>
+        <div class="kpi-trend td2">↑ 1 较昨日</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-hdr"><div class="kpi-lbl">平均处理时长</div><div class="kpi-icon" style="background:var(--blue-bg);">⏱</div></div>
+        <div class="kpi-val">2.4h</div>
+        <div class="kpi-trend tu">↓ 0.3h 效率提升</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tbbar">
+      <button class="tb active" onclick="stab(this)">全部 <span class="tbc">86</span></button>
+      <button class="tb" onclick="stab(this)">待审批 <span class="tbc red">15</span></button>
+      <button class="tb" onclick="stab(this)">审批中 <span class="tbc">8</span></button>
+      <button class="tb" onclick="stab(this)">已通过 <span class="tbc">52</span></button>
+      <button class="tb" onclick="stab(this)">已拒绝 <span class="tbc">11</span></button>
+    </div>
+
+    <!-- FilterBar -->
+    <div class="fb">
+      <div class="fbr">
+        <div class="fbsw">
+          <svg class="fbsi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input class="fbi" id="appr-search" placeholder="搜索申请单号、申请人…" />
+        </div>
+        <div class="fbslw">
+          <select class="fbsl" id="appr-type">
+            <option value="">全部类型</option>
+            <option>进货申请</option>
+            <option>退款申请</option>
+            <option>费用报销</option>
+            <option>活动申请</option>
+            <option>设备采购</option>
+          </select>
+          <span class="fbsla"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+        </div>
+        <div class="fbslw">
+          <select class="fbsl" id="appr-priority">
+            <option value="">全部优先级</option>
+            <option>紧急</option>
+            <option>普通</option>
+            <option>低</option>
+          </select>
+          <span class="fbsla"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+        </div>
+        <div class="fbslw">
+          <select class="fbsl" id="appr-store">
+            <option value="">全部门店</option>
+            <option>朝阳旗舰店</option>
+            <option>海淀科技店</option>
+            <option>浦东联营店</option>
+            <option>西湖旗舰店</option>
+          </select>
+          <span class="fbsla"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+        </div>
+        <div class="fbdw">
+          <svg class="fbdi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <input class="fbdin" id="appr-date" placeholder="提交时间范围" readonly />
+        </div>
+        <div style="flex:1;"></div>
+        <button class="btn btn-sm btn-o" onclick="resetAppr()">重置</button>
+        <button class="btn btn-sm btn-p">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          搜索
+        </button>
+      </div>
+      <div class="fbr" id="appr-tags-row" style="display:none;">
+        <div id="appr-tags" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;"><span style="font-size:11px;color:var(--gray-8);">已筛选：</span></div>
+        <button style="font-size:11px;color:var(--gray-9);cursor:pointer;background:none;border:none;font-family:inherit;padding:0 2px;" onclick="resetAppr()">清除全部</button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="tw">
+      <div class="tbar">
+        <span class="tbtitle">审批列表 <span class="tbcount" id="appr-count">共 86 条记录</span></span>
+        <div class="bulkb" id="appr-bulk" style="display:none;">
+          <span class="blbl" id="appr-blbl">已选 0 条</span>
+          <button class="btn btn-sm" style="background:var(--green-bg);color:var(--green-text);border-color:var(--green-border);" onclick="doBulk2('approve')">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>批量通过
+          </button>
+          <button class="btn btn-sm" style="background:var(--red-bg);color:var(--red-text);border-color:var(--red-border);" onclick="doBulk2('reject')">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>批量拒绝
+          </button>
+        </div>
+        <div id="appr-norm" style="display:flex;gap:8px;">
+          <button class="btn btn-sm btn-o">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>导出
+          </button>
+        </div>
+      </div>
+
+      <div id="appr-tbl">
+        <table>
+          <thead>
+            <tr>
+              <th class="ccb"><div class="cb" id="cb-all-a" onclick="selAllA(this)"></div></th>
+              <th class="st" onclick="sca(this)"><div class="thi">申请单号<span class="sico"><svg width="8" height="8" viewBox="0 0 8 8" class="ssu"><path d="M4 1L7 5H1z" fill="currentColor"/></svg><svg width="8" height="8" viewBox="0 0 8 8" class="ssd"><path d="M4 7L1 3H7z" fill="currentColor"/></svg></span></div></th>
+              <th>申请类型</th>
+              <th>申请人</th>
+              <th>所属门店</th>
+              <th class="st" onclick="sca(this)"><div class="thi">申请金额<span class="sico"><svg width="8" height="8" viewBox="0 0 8 8" class="ssu"><path d="M4 1L7 5H1z" fill="currentColor"/></svg><svg width="8" height="8" viewBox="0 0 8 8" class="ssd"><path d="M4 7L1 3H7z" fill="currentColor"/></svg></span></div></th>
+              <th>优先级</th>
+              <th>状态</th>
+              <th class="st" onclick="sca(this)"><div class="thi">提交时间<span class="sico"><svg width="8" height="8" viewBox="0 0 8 8" class="ssu"><path d="M4 1L7 5H1z" fill="currentColor"/></svg><svg width="8" height="8" viewBox="0 0 8 8" class="ssd"><path d="M4 7L1 3H7z" fill="currentColor"/></svg></span></div></th>
+              <th style="text-align:right;">操作</th>
+            </tr>
+          </thead>
+          <tbody id="appr-body"></tbody>
+        </table>
+      </div>
+
+      <div id="appr-empty" style="display:none;">
+        <div class="tep"><div class="tei">📋</div><div class="tet">暂无审批记录</div><div class="ted">当前筛选条件下没有匹配的审批申请</div><button class="btn btn-sm btn-o" onclick="resetAppr()">清除筛选</button></div>
+      </div>
+
+      <div class="pgn">
+        <span class="pgi">共 <strong>86</strong> 条记录</span>
+        <div class="pgsw">
+          <span class="pgsl">每页</span>
+          <div style="position:relative;"><select class="pgss"><option>10</option><option selected>20</option><option>50</option></select><span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--gray-8);font-size:10px;">▾</span></div>
+          <span class="pgsl">条</span>
+        </div>
+        <button class="pgb" disabled>‹</button>
+        <button class="pgb act">1</button>
+        <button class="pgb">2</button>
+        <button class="pgb">3</button>
+        <span class="pge">…</span>
+        <button class="pgb">5</button>
+        <button class="pgb">›</button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- Drawer -->
+<div class="dov" id="dov" onclick="cdr()"></div>
+<div class="dr" id="adr">
+  <div class="drh">
+    <div>
+      <div class="drt">审批详情</div>
+      <div style="font-size:11px;color:var(--gray-9);margin-top:1px;" id="dr-sub">APR-2024-001 · 进货申请</div>
+    </div>
+    <span class="badge bu" style="margin-left:auto;"><span class="bdot" style="background:var(--orange-solid);"></span>待审批</span>
+    <button class="drc" onclick="cdr()" style="margin-left:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="drb">
+    <div class="drs">
+      <div class="drst">申请信息</div>
+      <div class="drg">
+        <div><div class="dfl">申请单号</div><div class="dfv mono" id="dr-id">APR-2024-001</div></div>
+        <div><div class="dfl">申请类型</div><div class="dfv" id="dr-type">进货申请</div></div>
+        <div><div class="dfl">申请人</div><div class="dfv" id="dr-person">王小明</div></div>
+        <div><div class="dfl">所属门店</div><div class="dfv" id="dr-store">朝阳旗舰店</div></div>
+        <div><div class="dfl">申请金额</div><div class="dfv" style="font-size:20px;font-weight:700;letter-spacing:-.03em;" id="dr-amount">¥4,280.00</div></div>
+        <div><div class="dfl">提交时间</div><div class="dfv" id="dr-time">2024-01-15 09:30</div></div>
+        <div class="dff"><div class="dfl">申请说明</div><div class="dfv mu">因本周末大促活动，预估销量增加约 40%，申请补充主力商品库存，具体清单详见附件。</div></div>
+      </div>
+    </div>
+    <div class="ddv"></div>
+    <div class="drs">
+      <div class="drst">审批进度</div>
+      <div class="dtl">
+        <div class="dtli"><div class="dtll"><div class="dtld" style="background:var(--green-solid);border:2px solid var(--green-border);"></div></div><div class="dtlc"><div class="dtlt">提交申请</div><div class="dtlm">王小明 · 2024-01-15 09:30</div></div></div>
+        <div class="dtli"><div class="dtll"><div class="dtld" style="background:var(--amber-9);border:2px solid var(--amber-3);"></div></div><div class="dtlc"><div class="dtlt" style="color:var(--amber-11);">一级审批待处理</div><div class="dtlm">等待您处理…</div></div></div>
+        <div class="dtli"><div class="dtll"><div class="dtld" style="background:var(--gray-5);border:2px solid var(--gray-4);"></div></div><div class="dtlc"><div class="dtlt" style="color:var(--gray-8);">财务审核</div><div class="dtlm" style="color:var(--gray-7);">待处理</div></div></div>
+        <div class="dtli"><div class="dtll"><div class="dtld" style="background:var(--gray-5);border:2px solid var(--gray-4);"></div></div><div class="dtlc"><div class="dtlt" style="color:var(--gray-8);">完成放款</div><div class="dtlm" style="color:var(--gray-7);">待处理</div></div></div>
+      </div>
+    </div>
+    <div class="ddv"></div>
+    <div class="drs">
+      <div class="drst">审批决定</div>
+      <div class="decision-area">
+        <div class="decision-radio">
+          <div class="dro-item sel-approve" id="dro-approve" onclick="selDecision('approve')">
+            <div class="dro checked" id="radio-approve"></div>
+            <span class="dro-label" style="color:var(--green-text);">✓ 通过 — 申请符合条件，准予放款</span>
+          </div>
+          <div class="dro-item" id="dro-reject" onclick="selDecision('reject')">
+            <div class="dro" id="radio-reject"></div>
+            <span class="dro-label" style="color:var(--gray-11);">✗ 拒绝 — 申请不符合条件</span>
+          </div>
+        </div>
+        <textarea class="decision-note" placeholder="填写审批意见（可选）…"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="drf">
+    <button class="btn btn-md btn-o" onclick="cdr()">取消</button>
+    <button class="btn btn-md" style="background:var(--red-bg);color:var(--red-text);border-color:var(--red-border);" onclick="submitDecision('reject')">拒绝</button>
+    <button class="btn btn-md btn-p" onclick="submitDecision('approve')">确认通过</button>
+  </div>
+</div>
+
+<script>
+const apprRows = [
+  {id:'APR-2024-001',type:'进货申请',person:'王小明',store:'朝阳旗舰店',amount:'¥4,280',status:'bu',slabel:'待审批',dot:'var(--orange-solid)',priority:'high',plabel:'紧急',time:'2024-01-15 09:30'},
+  {id:'APR-2024-002',type:'退款申请',person:'张三丰',store:'海淀科技店',amount:'¥1,960',status:'bw',slabel:'待审批',dot:'var(--amber-9)',priority:'med',plabel:'普通',time:'2024-01-15 10:14'},
+  {id:'APR-2024-003',type:'费用报销',person:'李阿花',store:'浦东联营店',amount:'¥860',status:'bi',slabel:'审批中',dot:'var(--blue-solid)',priority:'low',plabel:'低',time:'2024-01-15 11:05'},
+  {id:'APR-2024-004',type:'活动申请',person:'赵大宝',store:'西湖旗舰店',amount:'¥12,500',status:'bu',slabel:'待审批',dot:'var(--orange-solid)',priority:'high',plabel:'紧急',time:'2024-01-15 12:40'},
+  {id:'APR-2024-005',type:'进货申请',person:'陈小花',store:'天河加盟店',amount:'¥3,200',status:'bs',slabel:'已通过',dot:'var(--green-solid)',priority:'med',plabel:'普通',time:'2024-01-15 14:22'},
+  {id:'APR-2024-006',type:'设备采购',person:'周明明',store:'南山科技店',amount:'¥28,000',status:'br',slabel:'已拒绝',dot:'var(--red-solid)',priority:'med',plabel:'普通',time:'2024-01-15 15:10'},
+  {id:'APR-2024-007',type:'退款申请',person:'吴大力',store:'龙华联营店',amount:'¥540',status:'bw',slabel:'待审批',dot:'var(--amber-9)',priority:'low',plabel:'低',time:'2024-01-15 16:00'},
+];
+const priClass={high:'pri-high',med:'pri-med',low:'pri-low'};
+let selA=new Set();
+function renderAppr(){
+  const tb=document.getElementById('appr-body');
+  tb.innerHTML=apprRows.map((r,i)=>`
+    <tr class="${selA.has(i)?'rs':''}" id="ar${i}">
+      <td class="ccb"><div class="cb ${selA.has(i)?'ck':''}" onclick="selARow(${i},this)">${selA.has(i)?'<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}</div></td>
+      <td><span class="mono" style="color:var(--blue-text);cursor:pointer;" onclick="odr('${r.id}','${r.type}','${r.person}','${r.store}','${r.amount}','${r.time}')">${r.id}</span></td>
+      <td><span style="font-size:12px;color:var(--gray-11);">${r.type}</span></td>
+      <td style="font-weight:500;color:var(--gray-12);">${r.person}</td>
+      <td style="color:var(--gray-10);">${r.store}</td>
+      <td style="font-weight:600;color:var(--gray-12);">${r.amount}</td>
+      <td><span class="pri ${priClass[r.priority]}">${r.plabel}</span></td>
+      <td><span class="badge ${r.status}"><span class="bdot" style="background:${r.dot};"></span>${r.slabel}</span></td>
+      <td style="color:var(--gray-9);font-size:12px;">${r.time}</td>
+      <td class="ca">
+        <div class="ra">
+          <button class="rab green" onclick="odr('${r.id}','${r.type}','${r.person}','${r.store}','${r.amount}','${r.time}')">审批</button>
+          <button class="rab">详情</button>
+          <button class="rab red">拒绝</button>
+        </div>
+      </td>
+    </tr>`).join('');
+  updBulk2();
+}
+function selARow(i,el){selA.has(i)?selA.delete(i):selA.add(i);renderAppr();updSelAllA();}
+function selAllA(el){selA.size===apprRows.length?selA.clear():apprRows.forEach((_,i)=>selA.add(i));renderAppr();updSelAllA();}
+function updSelAllA(){const cb=document.getElementById('cb-all-a');if(!cb)return;if(selA.size===0){cb.className='cb';cb.innerHTML='';}else if(selA.size===apprRows.length){cb.className='cb ck';cb.innerHTML='<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';}else{cb.className='cb ind';cb.innerHTML='<svg width="8" height="2" viewBox="0 0 8 2" fill="none"><rect x="0" y="0.5" width="8" height="1" rx="0.5" fill="white"/></svg>';}}
+function updBulk2(){const b=document.getElementById('appr-bulk'),n=document.getElementById('appr-norm');if(selA.size>0){b.style.display='flex';n.style.display='none';document.getElementById('appr-blbl').textContent=`已选 ${selA.size} 条`;}else{b.style.display='none';n.style.display='flex';}}
+function doBulk2(a){if(a==='approve')alert(`批量通过 ${selA.size} 条`);else if(a==='reject'&&confirm(`确认拒绝 ${selA.size} 条？`)){selA.clear();renderAppr();updSelAllA();}}
+function sca(th){const hs=document.querySelectorAll('th.st');hs.forEach(h=>{if(h!==th){h.classList.remove('sa','sd');}});th.classList.contains('sa')?th.classList.replace('sa','sd'):(th.classList.contains('sd')?th.classList.remove('sd'):th.classList.add('sa'));}
+function stab(el){document.querySelectorAll('.tb').forEach(t=>t.classList.remove('active'));el.classList.add('active');}
+let curDec='approve';
+function selDecision(d){curDec=d;['approve','reject'].forEach(x=>{document.getElementById('dro-'+x).className='dro-item';document.getElementById('radio-'+x).className='dro';});document.getElementById('dro-'+d).classList.add(d==='approve'?'sel-approve':'sel-reject');document.getElementById('radio-'+d).className='dro '+(d==='approve'?'checked':'checked-r');}
+function submitDecision(d){const msg=d==='approve'?'审批已通过！放款流程已启动。':'已拒绝该申请。';alert(msg);cdr();}
+function odr(id,type,person,store,amount,time){
+  document.getElementById('dr-id').textContent=id;
+  document.getElementById('dr-type').textContent=type;
+  document.getElementById('dr-person').textContent=person;
+  document.getElementById('dr-store').textContent=store;
+  document.getElementById('dr-amount').textContent=amount+'.00';
+  document.getElementById('dr-time').textContent=time;
+  document.getElementById('dr-sub').textContent=`${id} · ${type}`;
+  document.getElementById('dov').classList.add('on');
+  document.getElementById('adr').classList.add('on');
+}
+function cdr(){document.getElementById('dov').classList.remove('on');document.getElementById('adr').classList.remove('on');}
+const apprTags={};
+function resetAppr(){document.getElementById('appr-search').value='';document.getElementById('appr-type').value='';document.getElementById('appr-priority').value='';document.getElementById('appr-store').value='';Object.keys(apprTags).forEach(k=>delete apprTags[k]);document.getElementById('appr-tags-row').style.display='none';}
+flatpickr('#appr-date',{mode:'range',dateFormat:'Y-m-d',locale:'zh',showMonths:2,disableMobile:true});
+renderAppr();
+</script>
+</body>
+</html>

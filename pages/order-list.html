@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>订单管理 — NearGo OMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--gray-12); line-height: 1.5; min-height: 100vh; }
+
+:root {
+  --amber-2:#fff8d6; --amber-3:#ffeea8; --amber-9:#FFA902; --amber-10:#f09a00; --amber-11:#8c5c00;
+  --gray-1:#fdfdfc; --gray-2:#f9f9f8; --gray-3:#f2f1ef; --gray-4:#eceae7; --gray-5:#e5e3e0;
+  --gray-6:#dddbd8; --gray-7:#cac8c4; --gray-8:#b0adaa; --gray-9:#8c8a87; --gray-10:#807e7b;
+  --gray-11:#4a4846; --gray-12:#1F1D1C;
+  --green-bg:#edfbf4; --green-border:#cdf4ea; --green-solid:#29a383; --green-text:#107060;
+  --red-bg:#fff5f5; --red-border:#ffe0e0; --red-solid:#e5484d; --red-text:#ce2c31;
+  --blue-bg:#f0f8ff; --blue-border:#d5efff; --blue-solid:#0090ff; --blue-text:#0060cf;
+  --orange-bg:#fff6f0; --orange-border:#ffe8d7; --orange-solid:#f76b15; --orange-text:#bd4b00;
+  --surface:#ffffff; --bg:#F4F5F7; --border:#dddbd8;
+  --shadow-popup:0 8px 24px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.04);
+  --dur-fast:120ms; --dur-normal:200ms; --ease:cubic-bezier(0.4,0,0.2,1);
+  --topbar-h:54px; --sidebar-w:220px;
+}
+
+/* ─── Shell ── */
+.topbar {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  height:var(--topbar-h); background:var(--surface);
+  display:flex; align-items:center; padding:0 20px; gap:12px;
+  border-bottom:1px solid var(--border);
+}
+.topbar-logo { font-size:15px; font-weight:700; color:var(--gray-12); letter-spacing:-0.03em; display:flex; align-items:center; gap:8px; }
+.topbar-logo-dot { width:22px; height:22px; border-radius:6px; background:var(--amber-9); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:#fff; }
+.topbar-divider { width:1px; height:18px; background:var(--border); }
+.topbar-page { font-size:13px; color:var(--gray-10); }
+.topbar-spacer { flex:1; }
+.topbar-search-wrap { position:relative; }
+.topbar-search { width:200px; height:30px; padding:0 10px 0 30px; font-family:inherit; font-size:13px; background:var(--gray-2); border:1px solid var(--gray-4); border-radius:6px; outline:none; color:var(--gray-12); transition:all var(--dur-fast); }
+.topbar-search::placeholder { color:var(--gray-8); }
+.topbar-search:focus { background:var(--surface); border-color:var(--gray-7); box-shadow:0 0 0 2px #eceae7; }
+.topbar-search-icon { position:absolute; left:9px; top:50%; transform:translateY(-50%); color:var(--gray-8); }
+.topbar-avatar { width:28px; height:28px; border-radius:50%; background:var(--amber-2); border:1.5px solid var(--amber-3); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:var(--amber-11); cursor:pointer; }
+.topbar-icon-btn { width:30px; height:30px; border-radius:6px; border:none; background:transparent; cursor:pointer; color:var(--gray-9); display:flex; align-items:center; justify-content:center; transition:all var(--dur-fast); }
+.topbar-icon-btn:hover { background:var(--gray-2); color:var(--gray-12); }
+
+.sidebar {
+  position:fixed; top:var(--topbar-h); left:0; bottom:0;
+  width:var(--sidebar-w); background:var(--surface);
+  border-right:1px solid var(--border); overflow-y:auto;
+  padding:8px 0 32px; z-index:90;
+}
+.sidebar::-webkit-scrollbar { width:3px; }
+.sidebar::-webkit-scrollbar-thumb { background:var(--gray-4); border-radius:4px; }
+.sb-group-label { font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--gray-8); padding:14px 16px 5px; }
+.sb-item {
+  display:flex; align-items:center; gap:8px;
+  height:34px; padding:0 10px 0 16px; margin:1px 8px; border-radius:6px;
+  font-size:13px; color:var(--gray-10); cursor:pointer; text-decoration:none;
+  transition:all var(--dur-fast); border:none; background:none; font-family:inherit; width:calc(100% - 16px); text-align:left;
+}
+.sb-item:hover { background:var(--gray-2); color:var(--gray-12); }
+.sb-item.active { background:var(--amber-2); color:var(--gray-12); font-weight:600; border-left:2.5px solid var(--amber-9); padding-left:13.5px; }
+.sb-item svg { width:15px; height:15px; flex-shrink:0; opacity:.7; }
+.sb-item.active svg { opacity:1; }
+.sb-badge { margin-left:auto; font-size:10px; font-weight:600; padding:1px 6px; border-radius:20px; background:var(--gray-3); color:var(--gray-9); }
+.sb-badge.red { background:var(--red-bg); color:var(--red-text); }
+
+/* ─── Main ── */
+.main { margin-top:var(--topbar-h); margin-left:var(--sidebar-w); min-height:calc(100vh - var(--topbar-h)); }
+.page-content { padding:24px 28px 60px; }
+
+/* ─── Page Header ── */
+.page-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px; }
+.page-header-left { }
+.breadcrumb { display:flex; align-items:center; gap:4px; margin-bottom:6px; }
+.bc-item { font-size:12px; color:var(--gray-9); cursor:pointer; text-decoration:none; }
+.bc-item:hover { color:var(--gray-12); }
+.bc-item.current { color:var(--gray-11); font-weight:500; cursor:default; }
+.bc-sep { font-size:11px; color:var(--gray-7); }
+.page-title { font-size:20px; font-weight:700; color:var(--gray-12); letter-spacing:-0.03em; }
+.page-header-right { display:flex; gap:8px; align-items:center; margin-top:2px; }
+
+/* ─── Buttons ── */
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; font-family:inherit; font-weight:500; cursor:pointer; border-radius:6px; border:1px solid transparent; transition:all var(--dur-fast); text-decoration:none; white-space:nowrap; letter-spacing:-.01em; }
+.btn-md { height:34px; padding:0 14px; font-size:13px; }
+.btn-sm { height:28px; padding:0 10px; font-size:12px; }
+.btn-primary { background:var(--gray-12); color:#fff; border-color:var(--gray-12); }
+.btn-primary:hover { background:#111; }
+.btn-outline { background:transparent; color:var(--gray-11); border-color:var(--gray-6); }
+.btn-outline:hover { background:var(--gray-2); }
+.btn-ghost { background:transparent; color:var(--gray-10); border-color:transparent; }
+.btn-ghost:hover { background:var(--gray-2); }
+.btn-destructive { background:var(--red-solid); color:#fff; border-color:var(--red-solid); }
+
+/* ─── Tabs ── */
+.tabs-bar { display:flex; border-bottom:1px solid #F3F4F6; margin-bottom:16px; }
+.tab { padding:10px 16px; font-size:13px; color:var(--gray-9); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; display:flex; align-items:center; gap:6px; transition:all var(--dur-fast); font-weight:500; background:none; border-top:none; border-left:none; border-right:none; font-family:inherit; }
+.tab:hover { color:var(--gray-11); }
+.tab.active { color:var(--gray-12); border-bottom-color:var(--gray-12); font-weight:600; }
+.tab-count { font-size:10px; font-weight:600; padding:1px 6px; border-radius:10px; background:var(--gray-3); color:var(--gray-9); }
+.tab.active .tab-count { background:var(--gray-12); color:#fff; }
+
+/* ─── FilterBar ── */
+.filter-bar { background:var(--surface); border:1px solid #F3F4F6; border-radius:8px; padding:14px 16px; margin-bottom:16px; }
+.filter-bar-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.filter-bar-row + .filter-bar-row { margin-top:10px; padding-top:10px; border-top:1px solid #F3F4F6; }
+.fb-search-wrap { position:relative; min-width:220px; flex:1; max-width:280px; }
+.fb-search-icon { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--gray-8); pointer-events:none; }
+.fb-input { width:100%; height:34px; padding:0 10px 0 32px; font-family:inherit; font-size:13px; color:var(--gray-12); background:var(--surface); border:1px solid var(--gray-6); border-radius:6px; outline:none; transition:all var(--dur-fast); }
+.fb-input::placeholder { color:var(--gray-8); }
+.fb-input:focus { border-color:var(--gray-7); box-shadow:0 0 0 2px #eceae7; }
+.fb-select-wrap { position:relative; }
+.fb-select { height:34px; padding:0 28px 0 10px; font-family:inherit; font-size:13px; color:var(--gray-11); background:var(--surface); border:1px solid var(--gray-6); border-radius:6px; outline:none; cursor:pointer; appearance:none; -webkit-appearance:none; transition:all var(--dur-fast); }
+.fb-select:focus { border-color:var(--gray-7); box-shadow:0 0 0 2px #eceae7; }
+.fb-select-arrow { position:absolute; right:9px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--gray-8); }
+.fb-date-wrap { position:relative; min-width:220px; }
+.fb-date-icon { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--gray-8); pointer-events:none; z-index:1; }
+.fb-date-input { width:100%; height:34px; padding:0 10px 0 32px; font-family:inherit; font-size:13px; color:var(--gray-12); background:var(--surface); border:1px solid var(--gray-6); border-radius:6px; outline:none; cursor:pointer; transition:all var(--dur-fast); }
+.fb-date-input:focus { border-color:var(--gray-7); box-shadow:0 0 0 2px #eceae7; }
+.fb-date-input::placeholder { color:var(--gray-8); }
+.fb-tag { display:inline-flex; align-items:center; gap:5px; height:24px; padding:0 8px; background:var(--amber-2); color:var(--amber-11); border:1px solid var(--amber-3); border-radius:4px; font-size:11px; font-weight:500; }
+.fb-tag-remove { background:none; border:none; cursor:pointer; color:var(--amber-11); font-size:14px; line-height:1; padding:0; opacity:.7; }
+.fb-tag-remove:hover { opacity:1; }
+
+/* flatpickr overrides */
+.flatpickr-calendar { font-family:'Inter',system-ui,sans-serif !important; border:1px solid var(--gray-5) !important; box-shadow:var(--shadow-popup) !important; border-radius:10px !important; }
+.flatpickr-day { border-radius:6px !important; font-size:12px !important; color:var(--gray-11) !important; }
+.flatpickr-day.selected,.flatpickr-day.startRange,.flatpickr-day.endRange { background:var(--gray-12) !important; border-color:var(--gray-12) !important; color:#fff !important; }
+.flatpickr-day.inRange { background:var(--amber-2) !important; border-color:var(--amber-2) !important; box-shadow:-5px 0 0 var(--amber-2),5px 0 0 var(--amber-2) !important; color:var(--amber-11) !important; }
+.flatpickr-day.today { border-color:var(--amber-9) !important; }
+
+/* ─── Table ── */
+.table-wrap { background:var(--surface); border:1px solid #F3F4F6; border-radius:8px; overflow:hidden; }
+.table-toolbar { display:flex; align-items:center; gap:10px; padding:12px 16px; border-bottom:1px solid #F3F4F6; min-height:50px; }
+.table-toolbar-title { font-size:13px; font-weight:600; color:var(--gray-12); flex:1; }
+.table-toolbar-count { font-size:12px; color:var(--gray-9); margin-left:6px; font-weight:400; }
+.bulk-bar { display:flex; align-items:center; gap:8px; animation:fadeIn var(--dur-fast) ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+.bulk-label { font-size:12px; color:var(--amber-11); font-weight:500; }
+
+table { width:100%; border-collapse:collapse; }
+th { background:var(--gray-2); color:var(--gray-9); font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; padding:10px 14px; text-align:left; border-bottom:1px solid #F3F4F6; white-space:nowrap; user-select:none; }
+th.sortable { cursor:pointer; }
+th.sortable:hover { color:var(--gray-11); background:var(--gray-3); }
+.th-inner { display:flex; align-items:center; gap:5px; }
+.sort-icon { display:flex; flex-direction:column; gap:1px; opacity:.35; }
+th.sort-asc .sort-icon, th.sort-desc .sort-icon { opacity:1; }
+th.sort-asc .sort-icon .sd { opacity:.25; }
+th.sort-desc .sort-icon .su { opacity:.25; }
+th.col-cb, td.col-cb { width:40px; padding:10px 6px 10px 16px; }
+.cb { width:15px; height:15px; border-radius:4px; border:1.5px solid var(--gray-6); background:var(--surface); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:all var(--dur-fast); }
+.cb.checked,.cb.indeterminate { background:var(--gray-12); border-color:var(--gray-12); }
+.cb:hover { border-color:var(--gray-8); }
+td { padding:12px 14px; font-size:13px; color:var(--gray-11); border-bottom:1px solid #F3F4F6; transition:background var(--dur-fast); }
+tr:last-child td { border-bottom:none; }
+tr.row-sel td { background:var(--amber-1); }
+tr:not(.row-sel):hover td { background:var(--gray-1); }
+td.col-act { text-align:right; white-space:nowrap; }
+.row-acts { display:flex; align-items:center; justify-content:flex-end; gap:4px; }
+.row-act-btn { display:inline-flex; align-items:center; gap:4px; height:26px; padding:0 8px; border-radius:5px; font-size:11px; font-weight:500; font-family:inherit; cursor:pointer; transition:all var(--dur-fast); background:transparent; border:1px solid transparent; color:var(--gray-9); }
+.row-act-btn:hover { background:var(--gray-2); color:var(--gray-12); border-color:var(--gray-4); }
+.more-btn { width:26px; height:26px; border-radius:5px; border:1px solid transparent; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--gray-8); transition:all var(--dur-fast); font-size:16px; }
+.more-btn:hover { background:var(--gray-2); border-color:var(--gray-4); }
+.menu-wrap { position:relative; display:inline-block; }
+.menu-wrap.open .more-btn { background:var(--gray-2); border-color:var(--gray-4); }
+.dropdown { position:absolute; right:0; top:calc(100% + 4px); min-width:140px; background:var(--surface); border:1px solid var(--gray-5); border-radius:8px; box-shadow:var(--shadow-popup); padding:4px; z-index:50; opacity:0; transform:translateY(-6px) scale(.97); pointer-events:none; transition:opacity var(--dur-fast) var(--ease),transform var(--dur-fast) var(--ease); }
+.menu-wrap.open .dropdown { opacity:1; transform:translateY(0) scale(1); pointer-events:all; }
+.dd-item { display:flex; align-items:center; gap:8px; padding:7px 10px; border-radius:5px; font-size:12px; color:var(--gray-11); cursor:pointer; transition:background var(--dur-fast); }
+.dd-item:hover { background:var(--gray-2); }
+.dd-item.danger { color:var(--red-text); }
+.dd-item.danger:hover { background:var(--red-bg); }
+.dd-sep { height:1px; background:var(--gray-3); margin:4px 6px; }
+.mono { font-family:'JetBrains Mono',monospace; font-size:12px; }
+
+/* Badge */
+.badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:500; letter-spacing:.02em; border-radius:20px; padding:2px 8px; border:1px solid transparent; }
+.bdot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.b-success { background:var(--green-bg); color:var(--green-text); border-color:var(--green-border); }
+.b-warning { background:var(--amber-2); color:var(--amber-11); border-color:var(--amber-3); }
+.b-danger  { background:var(--red-bg); color:var(--red-text); border-color:var(--red-border); }
+.b-info    { background:var(--blue-bg); color:var(--blue-text); border-color:var(--blue-border); }
+.b-default { background:var(--gray-3); color:var(--gray-11); border-color:var(--gray-4); }
+.b-urgent  { background:var(--orange-bg); color:var(--orange-text); border-color:var(--orange-border); }
+
+/* Skeleton */
+.sk { height:12px; border-radius:4px; background:linear-gradient(90deg,var(--gray-3) 25%,var(--gray-2) 50%,var(--gray-3) 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* Empty */
+.tbl-empty { padding:56px 24px; text-align:center; }
+.tbl-empty-icon { width:48px; height:48px; border-radius:12px; background:var(--gray-2); border:1px solid var(--gray-4); display:flex; align-items:center; justify-content:center; margin:0 auto 14px; font-size:22px; }
+.tbl-empty-title { font-size:14px; font-weight:600; color:var(--gray-11); margin-bottom:6px; }
+.tbl-empty-desc { font-size:12px; color:var(--gray-8); margin-bottom:16px; }
+
+/* Pagination */
+.pagination { display:flex; align-items:center; gap:6px; padding:12px 16px; border-top:1px solid var(--gray-3); }
+.page-info { font-size:12px; color:var(--gray-9); flex:1; }
+.pg-size-wrap { display:flex; align-items:center; gap:5px; margin-right:6px; }
+.pg-size-label { font-size:12px; color:var(--gray-9); }
+.pg-size-sel { height:26px; padding:0 20px 0 8px; font-family:inherit; font-size:12px; background:var(--surface); border:1px solid var(--gray-5); border-radius:5px; appearance:none; cursor:pointer; color:var(--gray-11); }
+.page-btn { width:28px; height:28px; border-radius:6px; border:1px solid var(--gray-5); background:var(--surface); font-size:12px; color:var(--gray-10); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all var(--dur-fast); font-family:inherit; }
+.page-btn:hover { border-color:var(--gray-7); }
+.page-btn.active { background:var(--gray-12); color:#fff; border-color:var(--gray-12); }
+.page-btn:disabled { opacity:.4; cursor:not-allowed; }
+.page-ellipsis { font-size:12px; color:var(--gray-8); padding:0 2px; }
+
+/* Drawer */
+.drawer-overlay { position:fixed; inset:0; background:rgba(31,29,28,0); z-index:200; pointer-events:none; transition:background var(--dur-normal) var(--ease); }
+.drawer-overlay.on { background:rgba(31,29,28,.3); pointer-events:all; }
+.drawer { position:fixed; top:0; right:0; bottom:0; width:460px; background:var(--surface); border-left:1px solid var(--gray-4); box-shadow:-8px 0 32px rgba(0,0,0,.08); display:flex; flex-direction:column; z-index:201; transform:translateX(100%); transition:transform var(--dur-normal) var(--ease); }
+.drawer.on { transform:translateX(0); }
+.drawer-header { display:flex; align-items:center; gap:10px; padding:0 20px; height:54px; border-bottom:1px solid #F3F4F6; flex-shrink:0; }
+.drawer-title { font-size:14px; font-weight:700; color:var(--gray-12); flex:1; letter-spacing:-.02em; }
+.drawer-close { width:30px; height:30px; border-radius:6px; border:none; background:transparent; cursor:pointer; color:var(--gray-8); display:flex; align-items:center; justify-content:center; transition:all var(--dur-fast); }
+.drawer-close:hover { background:var(--gray-2); color:var(--gray-12); }
+.drawer-body { flex:1; overflow-y:auto; padding:20px; }
+.drawer-body::-webkit-scrollbar { width:4px; }
+.drawer-body::-webkit-scrollbar-thumb { background:var(--gray-4); border-radius:4px; }
+.drawer-section { margin-bottom:20px; }
+.drawer-sec-title { font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--gray-8); margin-bottom:10px; }
+.drawer-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.d-field-label { font-size:11px; color:var(--gray-8); margin-bottom:3px; }
+.d-field-val { font-size:13px; color:var(--gray-12); font-weight:500; }
+.d-field-val.muted { color:var(--gray-10); font-weight:400; line-height:1.6; }
+.d-full { grid-column:1/-1; }
+.drawer-div { height:1px; background:#F3F4F6; margin:16px 0; }
+.drawer-footer { padding:14px 20px; border-top:1px solid #F3F4F6; display:flex; gap:8px; justify-content:flex-end; flex-shrink:0; }
+
+/* Timeline */
+.dtl { display:flex; flex-direction:column; }
+.dtl-item { display:flex; gap:12px; }
+.dtl-line { position:relative; width:18px; flex-shrink:0; display:flex; justify-content:center; }
+.dtl-dot { width:8px; height:8px; border-radius:50%; margin-top:5px; flex-shrink:0; z-index:1; }
+.dtl-line::after { content:''; position:absolute; left:50%; top:18px; bottom:-8px; width:1.5px; background:var(--gray-3); transform:translateX(-50%); }
+.dtl-item:last-child .dtl-line::after { display:none; }
+.dtl-content { padding-bottom:16px; flex:1; }
+.dtl-title { font-size:12px; font-weight:600; color:var(--gray-12); }
+.dtl-meta { font-size:11px; color:var(--gray-9); margin-top:2px; }
+</style>
+</head>
+<body>
+
+<!-- ── Topbar ── -->
+<header class="topbar">
+  <div class="topbar-logo">
+    <div class="topbar-logo-dot">N</div>
+    NearGo OMS
+  </div>
+  <div class="topbar-divider"></div>
+  <span class="topbar-page">订单管理</span>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-search-wrap">
+    <svg class="topbar-search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input class="topbar-search" placeholder="搜索订单、门店…" />
+  </div>
+  <button class="topbar-icon-btn" title="通知">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+  </button>
+  <div class="topbar-avatar" title="Xuewan Zou">Z</div>
+</header>
+
+<!-- ── Sidebar ── -->
+<nav class="sidebar">
+  <div class="sb-group-label">主菜单</div>
+  <button class="sb-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    数据总览
+  </button>
+  <button class="sb-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+    订单管理
+    <span class="sb-badge red">24</span>
+  </button>
+  <button class="sb-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    门店管理
+    <span class="sb-badge">86</span>
+  </button>
+  <button class="sb-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    商品管理
+  </button>
+  <button class="sb-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    活动管理
+  </button>
+  <div class="sb-group-label">数据分析</div>
+  <button class="sb-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    经营报表
+  </button>
+  <div class="sb-group-label">系统</div>
+  <button class="sb-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+    系统设置
+  </button>
+</nav>
+
+<!-- ── Main ── -->
+<main class="main">
+  <div class="page-content">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="breadcrumb">
+          <a class="bc-item" href="#">首页</a>
+          <span class="bc-sep">›</span>
+          <span class="bc-item current">订单管理</span>
+        </div>
+        <h1 class="page-title">订单管理</h1>
+      </div>
+      <div class="page-header-right">
+        <button class="btn btn-md btn-outline">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          导出报表
+        </button>
+        <button class="btn btn-md btn-primary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          新建订单
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs-bar">
+      <button class="tab" onclick="switchTab(this,'all')">全部 <span class="tab-count">234</span></button>
+      <button class="tab active" onclick="switchTab(this,'pending')">待审批 <span class="tab-count">28</span></button>
+      <button class="tab" onclick="switchTab(this,'processing')">进行中 <span class="tab-count">46</span></button>
+      <button class="tab" onclick="switchTab(this,'approved')">已通过 <span class="tab-count">140</span></button>
+      <button class="tab" onclick="switchTab(this,'rejected')">已拒绝 <span class="tab-count">20</span></button>
+    </div>
+
+    <!-- FilterBar -->
+    <div class="filter-bar">
+      <div class="filter-bar-row">
+        <div class="fb-search-wrap">
+          <svg class="fb-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input class="fb-input" id="search-input" placeholder="搜索订单号、门店名称…" />
+        </div>
+        <div class="fb-select-wrap">
+          <select class="fb-select" id="sel-store-type">
+            <option value="">全部门店类型</option>
+            <option>旗舰门店</option>
+            <option>标准门店</option>
+            <option>加盟门店</option>
+            <option>合作门店</option>
+          </select>
+          <span class="fb-select-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+        </div>
+        <div class="fb-select-wrap">
+          <select class="fb-select" id="sel-amount">
+            <option value="">全部金额</option>
+            <option>1,000 以下</option>
+            <option>1,000 ~ 5,000</option>
+            <option>5,000 ~ 20,000</option>
+            <option>20,000 以上</option>
+          </select>
+          <span class="fb-select-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+        </div>
+        <div class="fb-date-wrap">
+          <svg class="fb-date-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <input class="fb-date-input" id="date-range" placeholder="创建时间范围" readonly />
+        </div>
+        <div style="flex:1;"></div>
+        <button class="btn btn-sm btn-outline" onclick="resetFilters()">重置</button>
+        <button class="btn btn-sm btn-primary" onclick="applyFilters()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          搜索
+        </button>
+      </div>
+      <div class="filter-bar-row" id="tag-row" style="display:none;">
+        <div id="tag-container" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+          <span style="font-size:11px;color:var(--gray-8);">已筛选：</span>
+        </div>
+        <button style="font-size:11px;color:var(--gray-9);cursor:pointer;background:none;border:none;font-family:inherit;padding:0 2px;" onclick="clearFilters()">清除全部</button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <div class="table-toolbar">
+        <span class="table-toolbar-title">订单列表 <span class="table-toolbar-count" id="count-label">共 28 条待审批</span></span>
+        <div class="bulk-bar" id="bulk-bar" style="display:none;">
+          <span class="bulk-label" id="bulk-count">已选 0 条</span>
+          <button class="btn btn-sm btn-outline" onclick="doBulk('approve')">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>批量通过
+          </button>
+          <button class="btn btn-sm btn-outline" onclick="doBulk('export')">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>导出
+          </button>
+          <button class="btn btn-sm" style="color:var(--red-text);border-color:var(--red-border);background:var(--red-bg);" onclick="doBulk('delete')">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>批量删除
+          </button>
+        </div>
+        <div id="normal-bar" style="display:flex;gap:8px;">
+          <button class="btn btn-sm btn-outline">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>导出
+          </button>
+          <button class="btn btn-sm btn-outline">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="11" y2="18"/></svg>筛选列
+          </button>
+        </div>
+      </div>
+
+      <div id="tbl-main">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-cb"><div class="cb" id="cb-all" onclick="selAll(this)"></div></th>
+              <th class="sortable" onclick="sortCol(this)">
+                <div class="th-inner">订单号 <span class="sort-icon"><svg width="8" height="8" viewBox="0 0 8 8" class="su"><path d="M4 1L7 5H1z" fill="currentColor"/></svg><svg width="8" height="8" viewBox="0 0 8 8" class="sd"><path d="M4 7L1 3H7z" fill="currentColor"/></svg></span></div>
+              </th>
+              <th>门店名称</th>
+              <th>门店类型</th>
+              <th class="sortable" onclick="sortCol(this)">
+                <div class="th-inner">申请金额 <span class="sort-icon"><svg width="8" height="8" viewBox="0 0 8 8" class="su"><path d="M4 1L7 5H1z" fill="currentColor"/></svg><svg width="8" height="8" viewBox="0 0 8 8" class="sd"><path d="M4 7L1 3H7z" fill="currentColor"/></svg></span></div>
+              </th>
+              <th>状态</th>
+              <th class="sortable" onclick="sortCol(this)">
+                <div class="th-inner">提交时间 <span class="sort-icon"><svg width="8" height="8" viewBox="0 0 8 8" class="su"><path d="M4 1L7 5H1z" fill="currentColor"/></svg><svg width="8" height="8" viewBox="0 0 8 8" class="sd"><path d="M4 7L1 3H7z" fill="currentColor"/></svg></span></div>
+              </th>
+              <th>申请人</th>
+              <th style="text-align:right;">操作</th>
+            </tr>
+          </thead>
+          <tbody id="tbl-body"></tbody>
+        </table>
+      </div>
+
+      <div id="tbl-empty" style="display:none;">
+        <div class="tbl-empty">
+          <div class="tbl-empty-icon">📭</div>
+          <div class="tbl-empty-title">暂无订单数据</div>
+          <div class="tbl-empty-desc">当前筛选条件下没有匹配的订单，请调整筛选条件后重试</div>
+          <button class="btn btn-sm btn-outline" onclick="resetFilters()">清除筛选</button>
+        </div>
+      </div>
+
+      <div class="pagination">
+        <span class="page-info">共 <strong>28</strong> 条待审批记录</span>
+        <div class="pg-size-wrap">
+          <span class="pg-size-label">每页</span>
+          <div style="position:relative;">
+            <select class="pg-size-sel"><option>10</option><option selected>20</option><option>50</option></select>
+            <span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--gray-8);font-size:10px;">▾</span>
+          </div>
+          <span class="pg-size-label">条</span>
+        </div>
+        <button class="page-btn" disabled>‹</button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <span class="page-ellipsis">…</span>
+        <button class="page-btn">›</button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ── Drawer ── -->
+<div class="drawer-overlay" id="ov" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div>
+      <div class="drawer-title" id="drawer-title">订单详情</div>
+      <div style="font-size:11px;color:var(--gray-9);margin-top:1px;" id="drawer-sub">ORD-20240115-002 · 待审批</div>
+    </div>
+    <span class="badge b-warning" style="margin-left:auto;" id="drawer-badge"><span class="bdot" style="background:var(--amber-9);"></span>待审批</span>
+    <button class="drawer-close" onclick="closeDrawer()" style="margin-left:8px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <div class="drawer-sec-title">基本信息</div>
+      <div class="drawer-grid">
+        <div><div class="d-field-label">订单号</div><div class="d-field-val mono" id="d-id">ORD-20240115-002</div></div>
+        <div><div class="d-field-label">提交时间</div><div class="d-field-val" id="d-time">2024-01-15 10:14</div></div>
+        <div><div class="d-field-label">门店名称</div><div class="d-field-val" id="d-store">海淀科技店</div></div>
+        <div><div class="d-field-label">门店类型</div><div class="d-field-val">旗舰门店</div></div>
+        <div><div class="d-field-label">申请人</div><div class="d-field-val" id="d-person">张三丰</div></div>
+        <div><div class="d-field-label">联系方式</div><div class="d-field-val mono">+86 138 0013 8000</div></div>
+      </div>
+    </div>
+    <div class="drawer-div"></div>
+    <div class="drawer-section">
+      <div class="drawer-sec-title">金额明细</div>
+      <div class="drawer-grid">
+        <div><div class="d-field-label">申请金额</div><div class="d-field-val" style="font-size:20px;font-weight:700;letter-spacing:-.03em;" id="d-amount">¥1,960.00</div></div>
+        <div><div class="d-field-label">申请类型</div><div class="d-field-val">进货补货</div></div>
+        <div class="d-full"><div class="d-field-label">备注说明</div><div class="d-field-val muted">因本周活动预期销量增加 30%，申请补货饮料类目商品，详见附件清单。</div></div>
+      </div>
+    </div>
+    <div class="drawer-div"></div>
+    <div class="drawer-section">
+      <div class="drawer-sec-title">审批进度</div>
+      <div class="dtl">
+        <div class="dtl-item"><div class="dtl-line"><div class="dtl-dot" style="background:var(--green-solid);border:2px solid var(--green-border);"></div></div><div class="dtl-content"><div class="dtl-title">提交申请</div><div class="dtl-meta">张三丰 · 2024-01-15 10:14</div></div></div>
+        <div class="dtl-item"><div class="dtl-line"><div class="dtl-dot" style="background:var(--green-solid);border:2px solid var(--green-border);"></div></div><div class="dtl-content"><div class="dtl-title">初审通过</div><div class="dtl-meta">李四 · 2024-01-15 11:20 · "符合补货标准"</div></div></div>
+        <div class="dtl-item"><div class="dtl-line"><div class="dtl-dot" style="background:var(--amber-9);border:2px solid var(--amber-3);"></div></div><div class="dtl-content"><div class="dtl-title" style="color:var(--amber-11);">终审待处理</div><div class="dtl-meta">等待终审负责人处理…</div></div></div>
+        <div class="dtl-item"><div class="dtl-line"><div class="dtl-dot" style="background:var(--gray-5);border:2px solid var(--gray-4);"></div></div><div class="dtl-content"><div class="dtl-title" style="color:var(--gray-8);">财务放款</div><div class="dtl-meta" style="color:var(--gray-7);">待处理</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-footer">
+    <button class="btn btn-md btn-outline" onclick="closeDrawer()">关闭</button>
+    <button class="btn btn-md btn-destructive">拒绝</button>
+    <button class="btn btn-md btn-primary">审批通过</button>
+  </div>
+</div>
+
+<script>
+const rows = [
+  { id:'ORD-20240115-001', store:'朝阳旗舰店', type:'旗舰门店', amount:'¥4,280', amountFull:'¥4,280.00', status:'b-warning', label:'待审批', dot:'var(--amber-9)', time:'2024-01-15 09:30', person:'王小明' },
+  { id:'ORD-20240115-002', store:'海淀科技店', type:'旗舰门店', amount:'¥1,960', amountFull:'¥1,960.00', status:'b-warning', label:'待审批', dot:'var(--amber-9)', time:'2024-01-15 10:14', person:'张三丰' },
+  { id:'ORD-20240115-003', store:'浦东联营店', type:'加盟门店', amount:'¥8,530', amountFull:'¥8,530.00', status:'b-urgent',  label:'紧急',   dot:'var(--orange-solid)', time:'2024-01-15 11:05', person:'李阿花' },
+  { id:'ORD-20240115-004', store:'西湖旗舰店', type:'旗舰门店', amount:'¥3,120', amountFull:'¥3,120.00', status:'b-warning', label:'待审批', dot:'var(--amber-9)', time:'2024-01-15 12:40', person:'赵大宝' },
+  { id:'ORD-20240115-005', store:'天河加盟店', type:'加盟门店', amount:'¥660',   amountFull:'¥660.00',   status:'b-info',    label:'进行中', dot:'var(--blue-solid)', time:'2024-01-15 14:22', person:'陈小花' },
+  { id:'ORD-20240115-006', store:'南山科技店', type:'标准门店', amount:'¥2,340', amountFull:'¥2,340.00', status:'b-warning', label:'待审批', dot:'var(--amber-9)', time:'2024-01-15 15:10', person:'周明明' },
+  { id:'ORD-20240115-007', store:'龙华联营店', type:'合作门店', amount:'¥5,800', amountFull:'¥5,800.00', status:'b-urgent',  label:'紧急',   dot:'var(--orange-solid)', time:'2024-01-15 16:00', person:'吴大力' },
+];
+
+let sel = new Set();
+function renderRows() {
+  const tb = document.getElementById('tbl-body');
+  tb.innerHTML = rows.map((r,i) => `
+    <tr class="${sel.has(i)?'row-sel':''}" id="r${i}">
+      <td class="col-cb"><div class="cb ${sel.has(i)?'checked':''}" onclick="selRow(${i},this)">${sel.has(i)?'<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}</div></td>
+      <td><span class="mono" style="color:var(--blue-text);cursor:pointer;" onclick="openDrawer('${r.id}','${r.store}','${r.amount}','${r.time}','${r.person}','${r.label}')">${r.id}</span></td>
+      <td style="font-weight:500;color:var(--gray-12);">${r.store}</td>
+      <td><span style="font-size:11px;color:var(--gray-9);">${r.type}</span></td>
+      <td style="font-weight:600;color:var(--gray-12);">${r.amount}</td>
+      <td><span class="badge ${r.status}"><span class="bdot" style="background:${r.dot};"></span>${r.label}</span></td>
+      <td style="color:var(--gray-9);">${r.time}</td>
+      <td style="color:var(--gray-10);">${r.person}</td>
+      <td class="col-act">
+        <div class="row-acts">
+          <button class="row-act-btn" onclick="openDrawer('${r.id}','${r.store}','${r.amount}','${r.time}','${r.person}','${r.label}')">查看</button>
+          <button class="row-act-btn">审批</button>
+          <div class="menu-wrap" id="m${i}">
+            <button class="more-btn" onclick="toggleMenu(${i})">···</button>
+            <div class="dropdown">
+              <div class="dd-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>审批通过</div>
+              <div class="dd-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>导出记录</div>
+              <div class="dd-sep"></div>
+              <div class="dd-item danger"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>删除</div>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>`).join('');
+  updateBulk();
+}
+function selRow(i,el) { sel.has(i)?sel.delete(i):sel.add(i); renderRows(); updateSelAll(); }
+function selAll(el) {
+  sel.size===rows.length?sel.clear():rows.forEach((_,i)=>sel.add(i));
+  renderRows(); updateSelAll();
+}
+function updateSelAll() {
+  const cb = document.getElementById('cb-all');
+  if (!cb) return;
+  if (sel.size===0){cb.className='cb';cb.innerHTML='';}
+  else if (sel.size===rows.length){cb.className='cb checked';cb.innerHTML='<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';}
+  else{cb.className='cb indeterminate';cb.innerHTML='<svg width="8" height="2" viewBox="0 0 8 2" fill="none"><rect x="0" y="0.5" width="8" height="1" rx="0.5" fill="white"/></svg>';}
+}
+function updateBulk() {
+  const b=document.getElementById('bulk-bar'), n=document.getElementById('normal-bar');
+  if (sel.size>0){b.style.display='flex';n.style.display='none';document.getElementById('bulk-count').textContent=`已选 ${sel.size} 条`;}
+  else{b.style.display='none';n.style.display='flex';}
+}
+function toggleMenu(i) { document.querySelectorAll('.menu-wrap').forEach((m,j)=>{if(j!==i)m.classList.remove('open');}); document.getElementById('m'+i).classList.toggle('open'); }
+document.addEventListener('click', e=>{ if(!e.target.closest('.menu-wrap')) document.querySelectorAll('.menu-wrap').forEach(m=>m.classList.remove('open')); });
+function sortCol(th) { const hs=document.querySelectorAll('th.sortable'); hs.forEach(h=>{if(h!==th){h.classList.remove('sort-asc','sort-desc');}}); th.classList.contains('sort-asc')?th.classList.replace('sort-asc','sort-desc'):(th.classList.contains('sort-desc')?th.classList.remove('sort-desc'):th.classList.add('sort-asc')); }
+function switchTab(el, tab) { document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); el.classList.add('active'); }
+function doBulk(a) { if(a==='approve')alert(`批量通过 ${sel.size} 条`); else if(a==='export')alert(`导出 ${sel.size} 条`); else if(a==='delete'&&confirm(`确认删除 ${sel.size} 条？`)){sel.clear();renderRows();updateSelAll();} }
+const tags={};
+function applyFilters(){ const s=document.getElementById('search-input').value; if(s)addTag('搜索',s); }
+function addTag(k,v){tags[k]=v;renderTags();}
+function removeTag(k){delete tags[k];renderTags();}
+function renderTags(){const row=document.getElementById('tag-row'),c=document.getElementById('tag-container'); const ks=Object.keys(tags); if(!ks.length){row.style.display='none';return;} row.style.display='flex'; c.innerHTML='<span style="font-size:11px;color:var(--gray-8);">已筛选：</span>'; ks.forEach(k=>{const t=document.createElement('span');t.className='fb-tag';t.innerHTML=`${k}：${tags[k]} <button class="fb-tag-remove" onclick="removeTag('${k}')">×</button>`;c.appendChild(t);});}
+function resetFilters(){document.getElementById('search-input').value='';document.getElementById('sel-store-type').value='';document.getElementById('sel-amount').value='';Object.keys(tags).forEach(k=>delete tags[k]);renderTags();}
+function clearFilters(){resetFilters();}
+function openDrawer(id,store,amount,time,person,label){
+  id=id||'ORD-20240115-002'; store=store||'海淀科技店'; amount=amount||'¥1,960'; time=time||'2024-01-15 10:14'; person=person||'张三丰'; label=label||'待审批';
+  document.getElementById('d-id').textContent=id;
+  document.getElementById('d-store').textContent=store;
+  document.getElementById('d-amount').textContent=amount+'.00';
+  document.getElementById('d-time').textContent=time;
+  document.getElementById('d-person').textContent=person;
+  document.getElementById('drawer-sub').textContent=`${id} · ${label}`;
+  document.getElementById('ov').classList.add('on');
+  document.getElementById('drawer').classList.add('on');
+}
+function closeDrawer(){document.getElementById('ov').classList.remove('on');document.getElementById('drawer').classList.remove('on');}
+
+// Init
+flatpickr('#date-range',{mode:'range',dateFormat:'Y-m-d',locale:'zh',showMonths:2,disableMobile:true});
+renderRows();
+</script>
+</body>
+</html>
