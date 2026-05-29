@@ -40,6 +40,46 @@ body {
   --shadow-popup:0 8px 24px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.04);
   --topbar-h:54px;
   --sidebar-w:220px;
+
+  /* ── Border Semantic Variables ─────────────────────────
+   * 按使用场景分层，统一管理所有边框色
+   * ──────────────────────────────────────────────────── */
+
+  /* 基础层 — 结构与分隔 */
+  --border-subtle:   #F3F4F6;       /* 极轻，卡片内分隔线、列表行间 */
+  --border-default:  var(--gray-6); /* 默认边框：输入框、卡片、分隔  */
+  --border-strong:   var(--gray-7); /* 加强：下拉面板、Popover       */
+  --border-divider:  var(--gray-5); /* 区域分隔线（稍重于 subtle）   */
+
+  /* 交互状态 — 通用控件 */
+  --border-hover:         var(--gray-7);   /* 悬停时边框加深              */
+  --border-focus:         var(--gray-7);   /* 聚焦时边框色                */
+  --border-focus-ring:    #eceae7;         /* 聚焦时外层光晕 (box-shadow) */
+  --border-active:        var(--gray-12);  /* 按下 / 选中（checkbox等）  */
+  --border-disabled:      var(--gray-4);   /* 禁用状态边框                */
+
+  /* 语义状态 — 反馈色 */
+  --border-error:         var(--red-solid);    /* 错误输入框               */
+  --border-error-focus:   var(--red-border);   /* 错误+聚焦光晕色          */
+  --border-success:       var(--green-border); /* 成功 / 通过               */
+  --border-warning:       var(--amber-3);      /* 警告                     */
+  --border-info:          var(--blue-border);  /* 信息                     */
+  --border-danger:        var(--red-border);   /* 危险                     */
+  --border-orange:        var(--orange-border);/* 紧急提示                 */
+  --border-purple:        var(--purple-border);/* 特殊标签                 */
+
+  /* 品牌 & 强调 */
+  --border-brand:         var(--amber-9);  /* 品牌高亮边框（选中 Tab 等）*/
+  --border-brand-subtle:  var(--amber-3);  /* 品牌浅边框（卡片装饰）     */
+  --border-selected:      var(--green-solid); /* Radio / 绿选中            */
+
+  /* 特殊用途 */
+  --border-dashed:        var(--gray-6);   /* 虚线上传区默认              */
+  --border-dashed-hover:  var(--gray-7);   /* 虚线上传区悬停              */
+  --border-input:         var(--gray-6);   /* Input 默认（语义别名）      */
+  --border-card:          var(--gray-5);   /* Card 边框（语义别名）       */
+  --border-table:         var(--gray-4);   /* Table 行分隔线              */
+  --border-popup:         var(--gray-6);   /* Dialog / Dropdown 边框      */
 }
 
 /* ─── Layout Shell ───────────────────────────────────── */
@@ -615,76 +655,6 @@ tr.hover td { background: var(--gray-2); }
 }
 .section-divider { height: 1px; background: #F3F4F6; margin: 28px 0; }
 .text-muted { color: var(--gray-9); font-size: 12px; }
-
-/* ─── Dropdown Menu ─── */
-.dm-wrap{position:relative;display:inline-block;}
-.dm-icon-btn{width:28px;height:28px;border-radius:6px;border:1px solid transparent;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gray-8);transition:all 120ms;font-family:inherit;}
-.dm-icon-btn:hover{background:var(--gray-2);border-color:var(--gray-4);color:var(--gray-12);}
-.dm-menu{position:absolute;left:0;top:calc(100% + 4px);min-width:148px;background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.04);padding:4px;z-index:60;opacity:0;transform:translateY(-6px) scale(.97);pointer-events:none;transition:opacity 120ms ease,transform 120ms ease;}
-.dm-wrap.open .dm-menu{opacity:1;transform:translateY(0) scale(1);pointer-events:all;}
-.dm-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:5px;font-size:13px;color:var(--gray-11);cursor:pointer;transition:background 100ms;white-space:nowrap;}
-.dm-item:hover{background:var(--gray-2);color:var(--gray-12);}
-.dm-danger{color:var(--red-text)!important;}
-.dm-danger:hover{background:var(--red-bg)!important;}
-.dm-sep{height:1px;background:var(--gray-3);margin:4px 6px;}
-.dm-group-label{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--gray-8);padding:6px 10px 3px;}
-
-/* ─── Dialog ─── */
-.dlg-overlay{position:fixed;inset:0;background:rgba(31,29,28,.45);backdrop-filter:blur(2px);z-index:300;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 200ms ease;}
-.dlg-overlay.open{opacity:1;pointer-events:all;}
-.dlg{background:var(--surface);border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.14),0 4px 12px rgba(0,0,0,.08);width:100%;transform:scale(.95);transition:transform 200ms ease;border:1px solid var(--gray-4);}
-.dlg-overlay.open .dlg{transform:scale(1);}
-.dlg-header{display:flex;align-items:flex-start;gap:12px;padding:20px 20px 16px;}
-.dlg-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.dlg-header-text{flex:1;}
-.dlg-title{font-size:15px;font-weight:700;color:var(--gray-12);letter-spacing:-.02em;margin-bottom:4px;}
-.dlg-desc{font-size:13px;color:var(--gray-9);line-height:1.6;}
-.dlg-close{width:28px;height:28px;border-radius:6px;border:none;background:transparent;cursor:pointer;color:var(--gray-8);display:flex;align-items:center;justify-content:center;transition:all 120ms;flex-shrink:0;}
-.dlg-close:hover{background:var(--gray-2);color:var(--gray-12);}
-.dlg-footer{display:flex;justify-content:flex-end;gap:8px;padding:14px 20px;border-top:1px solid #F3F4F6;}
-.btn-brand{background:var(--amber-9);color:#fff;border-color:var(--amber-10);}
-.btn-brand:hover{background:var(--amber-10);}
-
-/* ─── Tooltip ─── */
-.tt-wrap{position:relative;display:inline-flex;align-items:center;}
-.tt{position:absolute;background:var(--gray-12);color:#fff;font-size:12px;line-height:1.4;padding:5px 10px;border-radius:5px;white-space:nowrap;max-width:240px;white-space:normal;z-index:100;pointer-events:none;opacity:0;transition:opacity 120ms ease,transform 120ms ease;}
-.tt-wrap:hover .tt{opacity:1;}
-.tt-arrow{position:absolute;width:0;height:0;}
-.tt-top{bottom:calc(100% + 7px);left:50%;transform:translateX(-50%) translateY(4px);}
-.tt-wrap:hover .tt-top{transform:translateX(-50%) translateY(0);}
-.tt-arrow-top{top:100%;left:50%;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-top:5px solid var(--gray-12);}
-.tt-bottom{top:calc(100% + 7px);left:50%;transform:translateX(-50%) translateY(-4px);}
-.tt-wrap:hover .tt-bottom{transform:translateX(-50%) translateY(0);}
-.tt-arrow-bottom{bottom:100%;left:50%;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:5px solid var(--gray-12);}
-.tt-left{right:calc(100% + 8px);top:50%;transform:translateY(-50%) translateX(4px);}
-.tt-wrap:hover .tt-left{transform:translateY(-50%) translateX(0);}
-.tt-arrow-left{left:100%;top:50%;transform:translateY(-50%);border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:5px solid var(--gray-12);}
-.tt-right{left:calc(100% + 8px);top:50%;transform:translateY(-50%) translateX(-4px);}
-.tt-wrap:hover .tt-right{transform:translateY(-50%) translateX(0);}
-.tt-arrow-right{right:100%;top:50%;transform:translateY(-50%);border-top:5px solid transparent;border-bottom:5px solid transparent;border-right:5px solid var(--gray-12);}
-
-/* ─── Combobox / Multi-Select ─── */
-.cmb-wrap{position:relative;}
-.cmb-trigger{width:100%;height:34px;padding:0 10px;display:flex;align-items:center;justify-content:space-between;font-family:inherit;font-size:13px;background:var(--surface);border:1px solid var(--gray-6);border-radius:6px;cursor:pointer;transition:all 120ms;color:var(--gray-12);}
-.cmb-trigger:hover{border-color:var(--gray-7);}
-.cmb-wrap.open .cmb-trigger{border-color:var(--gray-7);box-shadow:0 0 0 2px #eceae7;}
-.cmb-panel{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.08);z-index:60;opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity 120ms ease,transform 120ms ease;overflow:hidden;}
-.cmb-wrap.open .cmb-panel{opacity:1;transform:translateY(0);pointer-events:all;}
-.cmb-search{width:100%;height:30px;padding:0 10px;font-family:inherit;font-size:13px;border:none;outline:none;color:var(--gray-12);background:transparent;}
-.cmb-search::placeholder{color:var(--gray-8);}
-.cmb-list{max-height:200px;overflow-y:auto;padding:4px;}
-.cmb-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:5px;font-size:13px;color:var(--gray-11);cursor:pointer;transition:background 100ms;}
-.cmb-item:hover,.cmb-item.selected{background:var(--gray-2);color:var(--gray-12);}
-.cmb-item.selected::after{content:"✓";font-size:11px;color:var(--gray-12);font-weight:700;}
-.ms-wrap{display:flex;align-items:center;flex-wrap:wrap;gap:4px;min-height:34px;padding:4px 8px;background:var(--surface);border:1px solid var(--gray-6);border-radius:6px;cursor:text;transition:all 120ms;}
-.ms-wrap:focus-within{border-color:var(--gray-7);box-shadow:0 0 0 2px #eceae7;}
-.ms-tags{display:flex;flex-wrap:wrap;gap:4px;}
-.ms-tag{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px;background:var(--gray-3);color:var(--gray-11);border:1px solid var(--gray-4);border-radius:4px;font-size:11px;font-weight:500;}
-.ms-tag-rm{background:none;border:none;cursor:pointer;color:var(--gray-9);font-size:13px;line-height:1;padding:0;}
-.ms-tag-rm:hover{color:var(--gray-12);}
-.ms-input{border:none;outline:none;font-family:inherit;font-size:13px;color:var(--gray-12);width:100%;background:transparent;min-width:80px;}
-.ms-input::placeholder{color:var(--gray-8);}
-.ms-panel{position:relative;background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.08);z-index:60;margin-top:4px;overflow:hidden;}
 </style>
 </head>
 <body>
@@ -732,18 +702,8 @@ tr.hover td { background: var(--gray-2); }
   <a class="toc-link" href="#layout">布局结构</a>
   <a class="toc-link" href="#sidebar">侧边栏 Sidebar</a>
 
-  <div class="toc-group-label">P0 复合组件</div>
-  <a class="toc-link" href="#filterbar">FilterBar 筛选栏</a>
-  <a class="toc-link" href="#table-full">Table 完整版</a>
-  <a class="toc-link" href="#drawer">Drawer 抽屉面板</a>
-  <a class="toc-link" href="#when-to-use">When to Use</a>
-
-  <div class="toc-group-label">P1 补充组件</div>
-  <a class="toc-link" href="#dropdown-menu">Dropdown Menu</a>
-  <a class="toc-link" href="#dialog-full">Dialog / Alert Dialog</a>
-  <a class="toc-link" href="#tooltip">Tooltip</a>
-  <a class="toc-link" href="#empty-state">Empty State</a>
-  <a class="toc-link" href="#combobox">Combobox / Multi-Select</a>
+  <div class="toc-group-label">设计 Token</div>
+  <a class="toc-link" href="#border-tokens">边框变量 Border</a>
 </nav>
 
 <!-- ═══ MAIN CONTENT ════════════════════════════════════════════ -->
@@ -2172,1020 +2132,254 @@ tr.hover td { background: var(--gray-2); }
   </script>
 
 
+  <!-- ─── 21. Border Token Variables ─── -->
+  <section class="section" id="border-tokens">
+    <div class="section-title">边框变量 Border Tokens</div>
+    <p class="section-subtitle">按使用场景语义化分层 — 统一管理所有组件的边框色，避免硬编码</p>
 
+    <!-- 基础层 -->
+    <div class="sub-label">基础层 — Structure &amp; Divider</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;">
 
-<!-- ══════════════════════════════════════════════════════
-     §21  FILTERBAR
-══════════════════════════════════════════════════════ -->
-<section class="section" id="filterbar">
-  <div class="section-title">筛选栏 FilterBar</div>
-  <p class="section-subtitle">搜索 · Select · DateRangePicker · 已选标签 · 重置/搜索 — 列表页顶部标准筛选组件</p>
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--gray-1);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray-11);margin-bottom:2px;">--border-subtle</div>
+        <code class="chip">#F3F4F6</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">卡片内分隔、列表行间</div>
+      </div>
 
-  <!-- Demo 1: Order list FilterBar -->
-  <div class="sub-label">订单列表 — 完整状态</div>
-  <div class="filter-bar" style="margin-bottom:24px;">
-    <div class="filter-bar-row">
-      <!-- Search -->
-      <div class="fb-search-wrap">
-        <span class="fb-search-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-          </svg>
-        </span>
-        <input class="fb-input" placeholder="搜索订单号、门店名…" id="fb-search-1" />
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1px solid var(--border-default);border-radius:5px;background:var(--gray-1);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray-11);margin-bottom:2px;">--border-default</div>
+        <code class="chip">gray-6 · #dddbd8</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">输入框、卡片、面板默认边框</div>
       </div>
-      <!-- Status select -->
-      <div class="fb-select-wrap">
-        <select class="fb-select" id="fb-status">
-          <option value="">全部状态</option>
-          <option value="pending">待处理</option>
-          <option value="processing">进行中</option>
-          <option value="approved">已通过</option>
-          <option value="rejected">已拒绝</option>
-          <option value="cancelled">已取消</option>
-        </select>
-        <span class="fb-select-arrow">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </span>
-      </div>
-      <!-- Store type select -->
-      <div class="fb-select-wrap">
-        <select class="fb-select" id="fb-store-type">
-          <option value="">全部门店类型</option>
-          <option value="flagship">旗舰门店</option>
-          <option value="standard">标准门店</option>
-          <option value="franchise">加盟门店</option>
-          <option value="partner">合作门店</option>
-        </select>
-        <span class="fb-select-arrow">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </span>
-      </div>
-      <!-- Date range -->
-      <div class="fb-date-wrap">
-        <span class="fb-date-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-          </svg>
-        </span>
-        <input class="fb-date-input" id="fb-date-range" placeholder="创建时间范围" readonly />
-      </div>
-      <!-- Spacer -->
-      <div style="flex:1;"></div>
-      <!-- Actions -->
-      <button class="btn btn-sm btn-outline" onclick="resetFilter()">重置</button>
-      <button class="btn btn-sm btn-primary" onclick="applyFilter()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        搜索
-      </button>
-    </div>
-    <!-- Active filter tags row (shown when filters applied) -->
-    <div class="filter-bar-row" id="fb-tags-row" style="display:none;">
-      <div class="fb-tags" id="fb-tags">
-        <span style="font-size:11px;color:var(--gray-8);">已筛选：</span>
-      </div>
-      <button class="fb-clear-all" onclick="clearAllFilters()">清除全部</button>
-    </div>
-  </div>
 
-  <!-- Demo 2: Approval list FilterBar (slightly different fields) -->
-  <div class="sub-label">审批列表 — 变体</div>
-  <div class="filter-bar" style="margin-bottom:28px;">
-    <div class="filter-bar-row">
-      <div class="fb-search-wrap">
-        <span class="fb-search-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-          </svg>
-        </span>
-        <input class="fb-input" placeholder="搜索申请单号、申请人…" />
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1px solid var(--border-strong);border-radius:5px;background:var(--gray-1);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray-11);margin-bottom:2px;">--border-strong</div>
+        <code class="chip">gray-7 · #cac8c4</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">下拉面板、Popover、分隔加重</div>
       </div>
-      <div class="fb-select-wrap">
-        <select class="fb-select">
-          <option value="">审批状态</option>
-          <option>待审批</option>
-          <option>审批中</option>
-          <option>已通过</option>
-          <option>已拒绝</option>
-        </select>
-        <span class="fb-select-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
-      </div>
-      <div class="fb-select-wrap">
-        <select class="fb-select">
-          <option value="">申请类型</option>
-          <option>进货申请</option>
-          <option>退款申请</option>
-          <option>费用报销</option>
-          <option>活动申请</option>
-        </select>
-        <span class="fb-select-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
-      </div>
-      <div class="fb-select-wrap">
-        <select class="fb-select">
-          <option value="">优先级</option>
-          <option>紧急</option>
-          <option>普通</option>
-          <option>低</option>
-        </select>
-        <span class="fb-select-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
-      </div>
-      <div class="fb-date-wrap">
-        <span class="fb-date-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-          </svg>
-        </span>
-        <input class="fb-date-input" id="fb-date-2" placeholder="提交时间范围" readonly />
-      </div>
-      <div style="flex:1;"></div>
-      <button class="btn btn-sm btn-outline">重置</button>
-      <button class="btn btn-sm btn-primary">搜索</button>
-    </div>
-  </div>
 
-  <!-- Anatomy -->
-  <div class="sub-label">结构说明</div>
-  <div style="background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;padding:16px 20px;margin-bottom:0;">
-    <table style="width:100%;border-collapse:collapse;font-size:12px;">
-      <thead>
-        <tr style="border-bottom:1px solid #F3F4F6;">
-          <th style="padding:8px 12px 8px 0;text-align:left;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--gray-8);font-weight:600;">元素</th>
-          <th style="padding:8px 12px;text-align:left;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--gray-8);font-weight:600;">Class</th>
-          <th style="padding:8px 0;text-align:left;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--gray-8);font-weight:600;">用途</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:8px 12px 8px 0;color:var(--gray-11);">筛选栏容器</td><td style="padding:8px 12px;"><span class="chip">.filter-bar</span></td><td style="padding:8px 0;color:var(--gray-9);">白色卡片，border-radius:8px</td></tr>
-        <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:8px 12px 8px 0;color:var(--gray-11);">筛选行</td><td style="padding:8px 12px;"><span class="chip">.filter-bar-row</span></td><td style="padding:8px 0;color:var(--gray-9);">flex布局，可多行堆叠</td></tr>
-        <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:8px 12px 8px 0;color:var(--gray-11);">搜索框</td><td style="padding:8px 12px;"><span class="chip">.fb-search-wrap</span></td><td style="padding:8px 0;color:var(--gray-9);">带图标前缀，flex:1 自适应宽度</td></tr>
-        <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:8px 12px 8px 0;color:var(--gray-11);">下拉选择</td><td style="padding:8px 12px;"><span class="chip">.fb-select-wrap</span></td><td style="padding:8px 0;color:var(--gray-9);">原生 select + 自定义箭头</td></tr>
-        <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:8px 12px 8px 0;color:var(--gray-11);">日期范围</td><td style="padding:8px 12px;"><span class="chip">.fb-date-wrap</span></td><td style="padding:8px 0;color:var(--gray-9);">flatpickr range 模式</td></tr>
-        <tr><td style="padding:8px 12px 8px 0;color:var(--gray-11);">已选标签</td><td style="padding:8px 12px;"><span class="chip">.fb-tag</span></td><td style="padding:8px 0;color:var(--gray-9);">Amber色，有删除按钮，第二行展示</td></tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════
-     §22  TABLE FULL
-══════════════════════════════════════════════════════ -->
-<section class="section" id="table-full">
-  <div class="section-title">表格完整版 Table (Full)</div>
-  <p class="section-subtitle">多选 · 列排序 · 行操作菜单 · 批量操作栏 · 空状态 · 骨架屏加载 · 分页（含每页条数）</p>
-
-  <!-- State switcher -->
-  <div class="sub-label">状态切换</div>
-  <div class="row" style="margin-bottom:16px;">
-    <button class="btn btn-sm btn-secondary" onclick="setTableState('normal')" id="ts-normal" style="background:var(--gray-12);color:#fff;border-color:var(--gray-12);">正常数据</button>
-    <button class="btn btn-sm btn-secondary" onclick="setTableState('selected')">多选状态</button>
-    <button class="btn btn-sm btn-secondary" onclick="setTableState('empty')">空状态</button>
-    <button class="btn btn-sm btn-secondary" onclick="setTableState('loading')">加载中</button>
-  </div>
-
-  <!-- TABLE WRAP -->
-  <div class="table-wrap" id="main-table">
-
-    <!-- Toolbar -->
-    <div class="table-toolbar">
-      <span class="table-toolbar-title">订单列表 <span class="table-toolbar-count" id="tt-count">共 234 条</span></span>
-      <!-- Bulk actions (hidden by default) -->
-      <div class="table-bulk-actions" id="bulk-actions" style="display:none;">
-        <span class="table-bulk-label" id="bulk-label">已选 0 条</span>
-        <button class="btn btn-sm btn-outline" onclick="bulkApprove()">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
-          批量通过
-        </button>
-        <button class="btn btn-sm btn-outline" onclick="bulkExport()">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          导出
-        </button>
-        <button class="btn btn-sm" style="color:var(--red-text);border-color:var(--red-border);background:var(--red-bg);" onclick="bulkDelete()">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6M9 6V4h6v2"/></svg>
-          批量删除
-        </button>
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1px solid var(--border-divider);border-radius:5px;background:var(--gray-1);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray-11);margin-bottom:2px;">--border-divider</div>
+        <code class="chip">gray-5 · #e5e3e0</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">区域分隔线（略重于 subtle）</div>
       </div>
-      <!-- Normal right actions -->
-      <div id="normal-actions" style="display:flex;gap:8px;">
-        <button class="btn btn-sm btn-outline">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          导出
-        </button>
-        <button class="btn btn-sm btn-primary">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          新建订单
-        </button>
-      </div>
+
     </div>
 
-    <!-- Table body (toggled by state) -->
-    <div id="table-body-normal">
-      <table>
+    <!-- 交互状态 -->
+    <div class="sub-label">交互状态 — Interaction States</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:28px;">
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-hover);border-radius:5px;background:var(--gray-1);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray-11);margin-bottom:2px;">--border-hover</div>
+        <code class="chip">gray-7</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">鼠标悬停时加深</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-focus);border-radius:5px;box-shadow:0 0 0 3px var(--border-focus-ring);background:var(--gray-1);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray-11);margin-bottom:2px;">--border-focus</div>
+        <code class="chip">gray-7</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">键盘聚焦边框</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-focus-ring);border-radius:5px;background:var(--border-focus-ring);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray-11);margin-bottom:2px;">--border-focus-ring</div>
+        <code class="chip">#eceae7</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">聚焦光晕 box-shadow 色</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:2px solid var(--border-active);border-radius:5px;background:var(--gray-1);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray-11);margin-bottom:2px;">--border-active</div>
+        <code class="chip">gray-12</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">选中 / Checkbox checked</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1px dashed var(--border-disabled);border-radius:5px;background:var(--gray-2);margin-bottom:10px;opacity:.7;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray-11);margin-bottom:2px;">--border-disabled</div>
+        <code class="chip">gray-4</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">禁用态控件边框</div>
+      </div>
+
+    </div>
+
+    <!-- 语义反馈 -->
+    <div class="sub-label">语义反馈 — Semantic Feedback</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;">
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-error);border-radius:5px;box-shadow:0 0 0 3px var(--border-error-focus);background:var(--red-bg);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--red-text);margin-bottom:2px;">--border-error</div>
+        <code class="chip">red-solid · #e5484d</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">表单校验失败</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-success);border-radius:5px;background:var(--green-bg);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--green-text);margin-bottom:2px;">--border-success</div>
+        <code class="chip">green-border · #cdf4ea</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">通过 / 成功状态</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-warning);border-radius:5px;background:var(--amber-2);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--amber-11);margin-bottom:2px;">--border-warning</div>
+        <code class="chip">amber-3 · #ffeea8</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">警告提示框</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-info);border-radius:5px;background:var(--blue-bg);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--blue-text);margin-bottom:2px;">--border-info</div>
+        <code class="chip">blue-border · #d5efff</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">信息提示</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-danger);border-radius:5px;background:var(--red-bg);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--red-text);margin-bottom:2px;">--border-danger</div>
+        <code class="chip">red-border · #ffe0e0</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">危险操作提示</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-orange);border-radius:5px;background:var(--orange-bg);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--orange-text);margin-bottom:2px;">--border-orange</div>
+        <code class="chip">orange-border · #ffe8d7</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">紧急提示卡片</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-purple);border-radius:5px;background:var(--purple-bg);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--purple-text);margin-bottom:2px;">--border-purple</div>
+        <code class="chip">purple-border · #ecdcfe</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">特殊标签</div>
+      </div>
+
+    </div>
+
+    <!-- 品牌 & 强调 -->
+    <div class="sub-label">品牌 &amp; 强调 — Brand &amp; Selected</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;">
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:2px solid var(--border-brand);border-radius:5px;background:var(--amber-1);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--amber-11);margin-bottom:2px;">--border-brand</div>
+        <code class="chip">amber-9 · #FFA902</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">品牌高亮：选中 Tab、激活导航</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-brand-subtle);border-radius:5px;background:var(--amber-2);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--amber-11);margin-bottom:2px;">--border-brand-subtle</div>
+        <code class="chip">amber-3 · #ffeea8</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">品牌浅边框：卡片装饰、Banner</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:2px solid var(--border-selected);border-radius:5px;background:var(--green-bg);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--green-text);margin-bottom:2px;">--border-selected</div>
+        <code class="chip">green-solid · #29a383</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">Radio 选中 / 绿勾选确认</div>
+      </div>
+
+    </div>
+
+    <!-- 特殊用途 -->
+    <div class="sub-label">语义别名 — Semantic Aliases</div>
+    <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;overflow:hidden;margin-bottom:28px;">
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
         <thead>
-          <tr>
-            <th class="col-cb">
-              <div class="cb" id="cb-all" onclick="toggleAllRows(this)"></div>
-            </th>
-            <th class="sortable" onclick="sortColumn(this,'order')">
-              <div class="th-inner">订单号 <span class="sort-icon"><svg viewBox="0 0 8 8" class="sort-up"><path d="M4 1L7 5H1z" fill="currentColor"/></svg><svg viewBox="0 0 8 8" class="sort-down"><path d="M4 7L1 3H7z" fill="currentColor"/></svg></span></div>
-            </th>
-            <th>门店</th>
-            <th class="sortable" onclick="sortColumn(this,'amount')">
-              <div class="th-inner">金额 <span class="sort-icon"><svg viewBox="0 0 8 8" class="sort-up"><path d="M4 1L7 5H1z" fill="currentColor"/></svg><svg viewBox="0 0 8 8" class="sort-down"><path d="M4 7L1 3H7z" fill="currentColor"/></svg></span></div>
-            </th>
-            <th>状态</th>
-            <th class="sortable" onclick="sortColumn(this,'time')">
-              <div class="th-inner">创建时间 <span class="sort-icon"><svg viewBox="0 0 8 8" class="sort-up"><path d="M4 1L7 5H1z" fill="currentColor"/></svg><svg viewBox="0 0 8 8" class="sort-down"><path d="M4 7L1 3H7z" fill="currentColor"/></svg></span></div>
-            </th>
-            <th style="text-align:right;">操作</th>
-          </tr>
-        </thead>
-        <tbody id="table-rows">
-          <!-- Rows injected by JS -->
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Empty state -->
-    <div id="table-body-empty" style="display:none;">
-      <div class="table-empty">
-        <div class="table-empty-icon">📭</div>
-        <div class="table-empty-title">暂无订单数据</div>
-        <div class="table-empty-desc">当前筛选条件下没有匹配的订单，请调整筛选条件后重试</div>
-        <button class="btn btn-sm btn-outline" onclick="resetFilter()">清除筛选条件</button>
-      </div>
-    </div>
-
-    <!-- Skeleton loading -->
-    <div id="table-body-loading" style="display:none;">
-      <table>
-        <thead>
-          <tr>
-            <th class="col-cb"><div class="cb"></div></th>
-            <th>订单号</th><th>门店</th><th>金额</th><th>状态</th><th>创建时间</th><th>操作</th>
+          <tr style="background:var(--gray-2);">
+            <th style="text-align:left;padding:10px 16px;font-size:11px;font-weight:600;color:var(--gray-9);letter-spacing:.04em;text-transform:uppercase;border-bottom:1px solid var(--gray-4);">变量名</th>
+            <th style="text-align:left;padding:10px 16px;font-size:11px;font-weight:600;color:var(--gray-9);letter-spacing:.04em;text-transform:uppercase;border-bottom:1px solid var(--gray-4);">映射值</th>
+            <th style="text-align:left;padding:10px 16px;font-size:11px;font-weight:600;color:var(--gray-9);letter-spacing:.04em;text-transform:uppercase;border-bottom:1px solid var(--gray-4);">使用场景</th>
           </tr>
         </thead>
         <tbody>
-          <!-- 5 skeleton rows -->
-          <tr class="table-skeleton-row"><td class="col-cb"><div class="cb"></div></td><td><div class="skeleton-cell" style="width:140px;"></div></td><td><div class="skeleton-cell" style="width:80px;"></div></td><td><div class="skeleton-cell" style="width:60px;"></div></td><td><div class="skeleton-cell" style="width:64px;border-radius:20px;"></div></td><td><div class="skeleton-cell" style="width:110px;"></div></td><td><div class="skeleton-cell" style="width:60px;margin-left:auto;"></div></td></tr>
-          <tr class="table-skeleton-row"><td class="col-cb"><div class="cb"></div></td><td><div class="skeleton-cell" style="width:120px;"></div></td><td><div class="skeleton-cell" style="width:96px;"></div></td><td><div class="skeleton-cell" style="width:70px;"></div></td><td><div class="skeleton-cell" style="width:64px;border-radius:20px;"></div></td><td><div class="skeleton-cell" style="width:110px;"></div></td><td><div class="skeleton-cell" style="width:60px;margin-left:auto;"></div></td></tr>
-          <tr class="table-skeleton-row"><td class="col-cb"><div class="cb"></div></td><td><div class="skeleton-cell" style="width:150px;"></div></td><td><div class="skeleton-cell" style="width:72px;"></div></td><td><div class="skeleton-cell" style="width:55px;"></div></td><td><div class="skeleton-cell" style="width:64px;border-radius:20px;"></div></td><td><div class="skeleton-cell" style="width:110px;"></div></td><td><div class="skeleton-cell" style="width:60px;margin-left:auto;"></div></td></tr>
-          <tr class="table-skeleton-row"><td class="col-cb"><div class="cb"></div></td><td><div class="skeleton-cell" style="width:130px;"></div></td><td><div class="skeleton-cell" style="width:88px;"></div></td><td><div class="skeleton-cell" style="width:65px;"></div></td><td><div class="skeleton-cell" style="width:64px;border-radius:20px;"></div></td><td><div class="skeleton-cell" style="width:110px;"></div></td><td><div class="skeleton-cell" style="width:60px;margin-left:auto;"></div></td></tr>
-          <tr class="table-skeleton-row"><td class="col-cb"><div class="cb"></div></td><td><div class="skeleton-cell" style="width:145px;"></div></td><td><div class="skeleton-cell" style="width:80px;"></div></td><td><div class="skeleton-cell" style="width:58px;"></div></td><td><div class="skeleton-cell" style="width:64px;border-radius:20px;"></div></td><td><div class="skeleton-cell" style="width:110px;"></div></td><td><div class="skeleton-cell" style="width:60px;margin-left:auto;"></div></td></tr>
+          <tr style="border-bottom:1px solid var(--gray-3);">
+            <td style="padding:10px 16px;"><code class="chip">--border-input</code></td>
+            <td style="padding:10px 16px;color:var(--gray-9);">→ gray-6 · #dddbd8</td>
+            <td style="padding:10px 16px;color:var(--gray-10);">Input / Textarea / Select 边框</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--gray-3);">
+            <td style="padding:10px 16px;"><code class="chip">--border-card</code></td>
+            <td style="padding:10px 16px;color:var(--gray-9);">→ gray-5 · #e5e3e0</td>
+            <td style="padding:10px 16px;color:var(--gray-10);">Card / Panel 容器外边框</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--gray-3);">
+            <td style="padding:10px 16px;"><code class="chip">--border-table</code></td>
+            <td style="padding:10px 16px;color:var(--gray-9);">→ gray-4 · #eceae7</td>
+            <td style="padding:10px 16px;color:var(--gray-10);">Table 行间分隔线</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--gray-3);">
+            <td style="padding:10px 16px;"><code class="chip">--border-popup</code></td>
+            <td style="padding:10px 16px;color:var(--gray-9);">→ gray-6 · #dddbd8</td>
+            <td style="padding:10px 16px;color:var(--gray-10);">Dialog / Dropdown / Tooltip 容器</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--gray-3);">
+            <td style="padding:10px 16px;"><code class="chip">--border-dashed</code></td>
+            <td style="padding:10px 16px;color:var(--gray-9);">→ gray-6 · #dddbd8</td>
+            <td style="padding:10px 16px;color:var(--gray-10);">文件上传区虚线边框（默认）</td>
+          </tr>
+          <tr>
+            <td style="padding:10px 16px;"><code class="chip">--border-dashed-hover</code></td>
+            <td style="padding:10px 16px;color:var(--gray-9);">→ gray-7 · #cac8c4</td>
+            <td style="padding:10px 16px;color:var(--gray-10);">文件上传区虚线边框（悬停）</td>
+          </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Pagination -->
-    <div class="pagination" id="table-pagination">
-      <span class="page-info">共 <strong>234</strong> 条记录</span>
-      <div class="page-size-wrap">
-        <span class="page-size-label">每页</span>
-        <div style="position:relative;">
-          <select class="page-size-select">
-            <option>10</option><option selected>20</option><option>50</option><option>100</option>
-          </select>
-          <span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--gray-8);font-size:10px;">▾</span>
-        </div>
-        <span class="page-size-label">条</span>
-      </div>
-      <button class="page-btn" disabled>‹</button>
-      <button class="page-btn active">1</button>
-      <button class="page-btn">2</button>
-      <button class="page-btn">3</button>
-      <span class="page-ellipsis">…</span>
-      <button class="page-btn">12</button>
-      <button class="page-btn">›</button>
-    </div>
-  </div>
-</section>
+    <!-- Live Demo -->
+    <div class="sub-label">交互演示 — Live Demo</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
 
-<!-- ══════════════════════════════════════════════════════
-     §23  DRAWER
-══════════════════════════════════════════════════════ -->
-<section class="section" id="drawer">
-  <div class="section-title">抽屉面板 Drawer</div>
-  <p class="section-subtitle">从右侧滑入的详情/操作面板 — 不离开列表上下文查看详情、快速审批</p>
-
-  <div class="sub-label">订单详情 Drawer — 交互演示</div>
-  <div style="margin-bottom:8px;display:flex;gap:8px;align-items:center;">
-    <button class="btn btn-sm btn-primary" onclick="openDrawer()">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-      打开订单详情 Drawer
-    </button>
-    <span style="font-size:12px;color:var(--gray-8);">点击遮罩或关闭按钮可关闭</span>
-  </div>
-
-  <div class="drawer-demo-container" id="drawer-demo">
-    <!-- Mock page content -->
-    <div class="drawer-demo-page" id="drawer-bg-page">
-      <div style="background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;overflow:hidden;">
-        <div style="padding:12px 16px;border-bottom:1px solid #F3F4F6;font-size:13px;font-weight:600;color:var(--gray-12);">订单列表</div>
-        <table style="width:100%;border-collapse:collapse;">
-          <thead><tr>
-            <th style="background:var(--gray-2);color:var(--gray-9);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:8px 14px;text-align:left;border-bottom:1px solid #F3F4F6;">订单号</th>
-            <th style="background:var(--gray-2);color:var(--gray-9);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:8px 14px;text-align:left;border-bottom:1px solid #F3F4F6;">门店</th>
-            <th style="background:var(--gray-2);color:var(--gray-9);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:8px 14px;text-align:left;border-bottom:1px solid #F3F4F6;">金额</th>
-            <th style="background:var(--gray-2);color:var(--gray-9);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:8px 14px;text-align:left;border-bottom:1px solid #F3F4F6;">状态</th>
-          </tr></thead>
-          <tbody>
-            <tr onclick="openDrawer()" style="cursor:pointer;" onmouseenter="this.style.background='var(--amber-1)'" onmouseleave="this.style.background=''">
-              <td style="padding:10px 14px;font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--blue-text);border-bottom:1px solid #F3F4F6;">ORD-20240115-002</td>
-              <td style="padding:10px 14px;font-size:13px;color:var(--gray-11);border-bottom:1px solid #F3F4F6;">海淀科技店</td>
-              <td style="padding:10px 14px;font-size:13px;font-weight:600;color:var(--gray-12);border-bottom:1px solid #F3F4F6;">¥1,960</td>
-              <td style="padding:10px 14px;border-bottom:1px solid #F3F4F6;"><span class="badge badge-warning"><span class="badge-dot" style="background:var(--amber-9);"></span>待审批</span></td>
-            </tr>
-            <tr>
-              <td style="padding:10px 14px;font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--gray-9);border-bottom:1px solid #F3F4F6;">ORD-20240115-003</td>
-              <td style="padding:10px 14px;font-size:13px;color:var(--gray-9);border-bottom:1px solid #F3F4F6;">浦东联营店</td>
-              <td style="padding:10px 14px;font-size:13px;font-weight:600;color:var(--gray-9);border-bottom:1px solid #F3F4F6;">¥8,530</td>
-              <td style="padding:10px 14px;border-bottom:1px solid #F3F4F6;"><span class="badge badge-success"><span class="badge-dot" style="background:var(--green-solid);"></span>已通过</span></td>
-            </tr>
-            <tr>
-              <td style="padding:10px 14px;font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--gray-9);">ORD-20240115-004</td>
-              <td style="padding:10px 14px;font-size:13px;color:var(--gray-9);">西湖旗舰店</td>
-              <td style="padding:10px 14px;font-size:13px;font-weight:600;color:var(--gray-9);">¥3,120</td>
-              <td style="padding:10px 14px;"><span class="badge badge-info"><span class="badge-dot" style="background:var(--blue-solid);"></span>进行中</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Overlay -->
-    <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
-
-    <!-- Drawer panel -->
-    <div class="drawer" id="drawer-panel">
-      <div class="drawer-header">
-        <div>
-          <div class="drawer-title">订单详情</div>
-          <div class="drawer-subtitle" style="font-size:11px;color:var(--gray-9);margin-top:1px;">ORD-20240115-002 · 待审批</div>
-        </div>
-        <div style="margin-left:auto;display:flex;align-items:center;gap:6px;">
-          <span class="badge badge-warning"><span class="badge-dot" style="background:var(--amber-9);"></span>待审批</span>
-          <button class="drawer-close" onclick="closeDrawer()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
+      <!-- Input states -->
+      <div style="background:var(--surface);border:1px solid var(--border-card);border-radius:8px;padding:16px;">
+        <div style="font-size:11px;font-weight:600;color:var(--gray-9);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">Input 状态</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <input style="height:34px;padding:0 12px;border:1px solid var(--border-input);border-radius:6px;outline:none;font-size:13px;font-family:inherit;background:var(--surface);color:var(--gray-12);" placeholder="Default — border-input">
+          <input style="height:34px;padding:0 12px;border:1.5px solid var(--border-focus);border-radius:6px;box-shadow:0 0 0 3px var(--border-focus-ring);outline:none;font-size:13px;font-family:inherit;background:var(--surface);color:var(--gray-12);" placeholder="Focus — border-focus + ring" value="聚焦状态">
+          <input style="height:34px;padding:0 12px;border:1.5px solid var(--border-error);border-radius:6px;box-shadow:0 0 0 3px var(--border-error-focus);outline:none;font-size:13px;font-family:inherit;background:var(--red-bg);color:var(--gray-12);" placeholder="Error — border-error" value="格式不正确">
+          <input style="height:34px;padding:0 12px;border:1px solid var(--border-disabled);border-radius:6px;outline:none;font-size:13px;font-family:inherit;background:var(--gray-2);color:var(--gray-8);cursor:not-allowed;" placeholder="Disabled — border-disabled" disabled>
         </div>
       </div>
 
-      <div class="drawer-body">
-        <!-- Basic info -->
-        <div class="drawer-section">
-          <div class="drawer-section-title">基本信息</div>
-          <div class="drawer-field-grid">
-            <div class="drawer-field">
-              <div class="drawer-field-label">订单号</div>
-              <div class="drawer-field-value mono">ORD-20240115-002</div>
-            </div>
-            <div class="drawer-field">
-              <div class="drawer-field-label">创建时间</div>
-              <div class="drawer-field-value">2024-01-15 10:14</div>
-            </div>
-            <div class="drawer-field">
-              <div class="drawer-field-label">门店名称</div>
-              <div class="drawer-field-value">海淀科技店</div>
-            </div>
-            <div class="drawer-field">
-              <div class="drawer-field-label">门店类型</div>
-              <div class="drawer-field-value">旗舰门店</div>
-            </div>
-            <div class="drawer-field">
-              <div class="drawer-field-label">申请人</div>
-              <div class="drawer-field-value">张三丰</div>
-            </div>
-            <div class="drawer-field">
-              <div class="drawer-field-label">联系电话</div>
-              <div class="drawer-field-value mono">+86 138 0013 8000</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="drawer-divider"></div>
-
-        <!-- Amount details -->
-        <div class="drawer-section">
-          <div class="drawer-section-title">金额明细</div>
-          <div class="drawer-field-grid">
-            <div class="drawer-field">
-              <div class="drawer-field-label">申请金额</div>
-              <div class="drawer-field-value" style="font-size:18px;font-weight:700;letter-spacing:-.03em;color:var(--gray-12);">¥1,960.00</div>
-            </div>
-            <div class="drawer-field">
-              <div class="drawer-field-label">申请类型</div>
-              <div class="drawer-field-value">进货补货</div>
-            </div>
-            <div class="drawer-field full">
-              <div class="drawer-field-label">备注说明</div>
-              <div class="drawer-field-value" style="font-weight:400;color:var(--gray-10);line-height:1.6;">因本周活动预期销量增加 30%，申请补货饮料类目商品，详见附件清单。</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="drawer-divider"></div>
-
-        <!-- Approval timeline -->
-        <div class="drawer-section">
-          <div class="drawer-section-title">审批进度</div>
-          <div class="drawer-timeline">
-            <div class="dt-item">
-              <div class="dt-line"><div class="dt-dot" style="background:var(--green-solid);border:2px solid var(--green-border);"></div></div>
-              <div class="dt-content">
-                <div class="dt-title">提交申请</div>
-                <div class="dt-meta">张三丰 · 2024-01-15 10:14</div>
-              </div>
-            </div>
-            <div class="dt-item">
-              <div class="dt-line"><div class="dt-dot" style="background:var(--green-solid);border:2px solid var(--green-border);"></div></div>
-              <div class="dt-content">
-                <div class="dt-title">初审通过</div>
-                <div class="dt-meta">李四 · 2024-01-15 11:20 · "符合补货标准"</div>
-              </div>
-            </div>
-            <div class="dt-item">
-              <div class="dt-line"><div class="dt-dot" style="background:var(--amber-9);border:2px solid var(--amber-3);"></div></div>
-              <div class="dt-content">
-                <div class="dt-title" style="color:var(--amber-11);">终审待处理</div>
-                <div class="dt-meta">等待终审负责人处理…</div>
-              </div>
-            </div>
-            <div class="dt-item">
-              <div class="dt-line"><div class="dt-dot" style="background:var(--gray-5);border:2px solid var(--gray-4);"></div></div>
-              <div class="dt-content">
-                <div class="dt-title" style="color:var(--gray-8);">财务放款</div>
-                <div class="dt-meta" style="color:var(--gray-7);">待处理</div>
-              </div>
-            </div>
-          </div>
+      <!-- Card states -->
+      <div style="background:var(--surface);border:1px solid var(--border-card);border-radius:8px;padding:16px;">
+        <div style="font-size:11px;font-weight:600;color:var(--gray-9);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">Card / Alert 状态</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="padding:10px 12px;border:1px solid var(--border-default);border-radius:6px;font-size:12px;color:var(--gray-11);">Default 卡片 — border-default</div>
+          <div style="padding:10px 12px;border:1.5px solid var(--border-success);border-radius:6px;background:var(--green-bg);font-size:12px;color:var(--green-text);">✓ 成功提示 — border-success</div>
+          <div style="padding:10px 12px;border:1.5px solid var(--border-warning);border-radius:6px;background:var(--amber-2);font-size:12px;color:var(--amber-11);">⚠ 警告提示 — border-warning</div>
+          <div style="padding:10px 12px;border:1.5px solid var(--border-error);border-radius:6px;background:var(--red-bg);font-size:12px;color:var(--red-text);">✕ 错误提示 — border-error</div>
         </div>
       </div>
 
-      <div class="drawer-footer">
-        <button class="btn btn-md btn-outline" onclick="closeDrawer()">关闭</button>
-        <button class="btn btn-md btn-destructive">拒绝</button>
-        <button class="btn btn-md btn-primary">审批通过</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Token reference -->
-  <div class="sub-label" style="margin-top:24px;">CSS 变量 / 尺寸规范</div>
-  <div style="background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;padding:16px 20px;">
-    <table style="width:100%;border-collapse:collapse;font-size:12px;">
-      <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:7px 12px 7px 0;color:var(--gray-9);">默认宽度</td><td style="padding:7px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">440px</td></tr>
-      <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:7px 12px 7px 0;color:var(--gray-9);">动画时长</td><td style="padding:7px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">--dur-normal: 200ms</td></tr>
-      <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:7px 12px 7px 0;color:var(--gray-9);">动画曲线</td><td style="padding:7px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">cubic-bezier(0.4, 0, 0.2, 1)</td></tr>
-      <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:7px 12px 7px 0;color:var(--gray-9);">遮罩透明度</td><td style="padding:7px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">rgba(31,29,28, .28)</td></tr>
-      <tr><td style="padding:7px 12px 7px 0;color:var(--gray-9);">Header 高度</td><td style="padding:7px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">54px</td></tr>
-    </table>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════
-     §24  WHEN TO USE
-══════════════════════════════════════════════════════ -->
-<section class="section" id="when-to-use">
-  <div class="section-title">使用规范 When to Use</div>
-  <p class="section-subtitle">避免 AI 生成时错误选择组件 — 每个组件的使用边界</p>
-
-  <div class="doc-grid">
-    <div class="doc-card">
-      <div class="doc-card-title" style="color:var(--green-text);">✓ FilterBar — 应用场景</div>
-      <div class="doc-item do">每个列表页顶部，包含 2 个以上可筛选字段时</div>
-      <div class="doc-item do">筛选结果需要实时标签展示时（已选条件可视化）</div>
-      <div class="doc-item do">搜索 + 状态筛选 + 日期范围三者组合</div>
-    </div>
-    <div class="doc-card">
-      <div class="doc-card-title" style="color:var(--red-text);">✗ FilterBar — 不应用场景</div>
-      <div class="doc-item dont">只有单个搜索框时，直接用 Input 即可</div>
-      <div class="doc-item dont">弹窗内的筛选，改用 Form + Select 竖向排列</div>
-      <div class="doc-item dont">筛选字段超过 6 个时，需做展开/收起折叠处理</div>
-    </div>
-    <div class="doc-card">
-      <div class="doc-card-title" style="color:var(--green-text);">✓ Table 完整版 vs 简版</div>
-      <div class="doc-item do">需要批量操作时，用完整版（多选 + 批量操作栏）</div>
-      <div class="doc-item do">列数 ≥ 5 且需要排序时，用完整版</div>
-      <div class="doc-item do">数据量 > 10 条时，配合分页使用</div>
-    </div>
-    <div class="doc-card">
-      <div class="doc-card-title" style="color:var(--green-text);">✓ Drawer vs Dialog</div>
-      <div class="doc-item do"><strong>Drawer</strong>：查看详情、快速审批 — 不离开列表上下文</div>
-      <div class="doc-item do"><strong>Dialog</strong>：需要用户强制确认、填写重要信息时</div>
-      <div class="doc-item dont">不要在 Drawer 内再嵌套 Dialog（层级超过 2 层）</div>
-      <div class="doc-item dont">Drawer 内表单字段 > 8 个时，改为独立详情页</div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════
-     §25  COMBINATIONS
-══════════════════════════════════════════════════════ -->
-<section class="section" id="combinations">
-  <div class="section-title">标准组合方式 Component Combinations</div>
-  <p class="section-subtitle">列表页的推荐组件组合顺序</p>
-
-  <div style="background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;padding:24px;max-width:640px;">
-    <div style="display:flex;flex-direction:column;gap:0;">
-
-      <div style="display:flex;gap:16px;align-items:flex-start;padding-bottom:16px;border-bottom:1px solid #F3F4F6;">
-        <div style="width:28px;height:28px;border-radius:50%;background:var(--gray-12);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px;">1</div>
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--gray-12);margin-bottom:3px;">PageHeader</div>
-          <div style="font-size:12px;color:var(--gray-9);">面包屑 + 页面标题 + 右侧主操作按钮（新建/导入）</div>
+      <!-- Brand & selected states -->
+      <div style="background:var(--surface);border:1px solid var(--border-card);border-radius:8px;padding:16px;">
+        <div style="font-size:11px;font-weight:600;color:var(--gray-9);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">品牌 &amp; 选中状态</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="padding:10px 12px;border:2px solid var(--border-brand);border-radius:6px;background:var(--amber-1);font-size:12px;color:var(--amber-11);font-weight:500;">品牌高亮 — border-brand</div>
+          <div style="padding:10px 12px;border:1.5px solid var(--border-brand-subtle);border-radius:6px;background:var(--amber-2);font-size:12px;color:var(--amber-11);">品牌浅框 — border-brand-subtle</div>
+          <div style="padding:10px 12px;border:2px solid var(--border-selected);border-radius:6px;background:var(--green-bg);font-size:12px;color:var(--green-text);font-weight:500;">✓ 已选中 — border-selected</div>
+          <div style="padding:10px 12px;border:2px dashed var(--border-dashed);border-radius:6px;font-size:12px;color:var(--gray-9);text-align:center;">虚线上传区 — border-dashed</div>
         </div>
       </div>
 
-      <div style="display:flex;gap:16px;align-items:flex-start;padding:16px 0;border-bottom:1px solid #F3F4F6;">
-        <div style="width:28px;height:28px;border-radius:50%;background:var(--gray-12);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px;">2</div>
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--gray-12);margin-bottom:3px;">FilterBar <span style="font-size:10px;font-weight:400;color:var(--amber-11);background:var(--amber-2);border-radius:4px;padding:1px 6px;margin-left:4px;">§21 新增</span></div>
-          <div style="font-size:12px;color:var(--gray-9);">搜索 + Select × N + DateRangePicker + 重置/搜索</div>
-        </div>
-      </div>
-
-      <div style="display:flex;gap:16px;align-items:flex-start;padding:16px 0;border-bottom:1px solid #F3F4F6;">
-        <div style="width:28px;height:28px;border-radius:50%;background:var(--gray-12);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px;">3</div>
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--gray-12);margin-bottom:3px;">Tabs <span style="font-size:10px;font-weight:400;color:var(--gray-8);margin-left:4px;">可选</span></div>
-          <div style="font-size:12px;color:var(--gray-9);">全部 / 待处理 / 已完成 等状态分组，带数量 Badge</div>
-        </div>
-      </div>
-
-      <div style="display:flex;gap:16px;align-items:flex-start;padding:16px 0;border-bottom:1px solid #F3F4F6;">
-        <div style="width:28px;height:28px;border-radius:50%;background:var(--gray-12);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px;">4</div>
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--gray-12);margin-bottom:3px;">Table Full <span style="font-size:10px;font-weight:400;color:var(--amber-11);background:var(--amber-2);border-radius:4px;padding:1px 6px;margin-left:4px;">§22 新增</span></div>
-          <div style="font-size:12px;color:var(--gray-9);">Toolbar + 表头（排序+多选）+ 数据行（状态Badge+行操作）+ 空态/骨架屏</div>
-        </div>
-      </div>
-
-      <div style="display:flex;gap:16px;align-items:flex-start;padding:16px 0;">
-        <div style="width:28px;height:28px;border-radius:50%;background:var(--gray-12);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px;">5</div>
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--gray-12);margin-bottom:3px;">Drawer <span style="font-size:10px;font-weight:400;color:var(--amber-11);background:var(--amber-2);border-radius:4px;padding:1px 6px;margin-left:4px;">§23 新增</span></div>
-          <div style="font-size:12px;color:var(--gray-9);">点击行操作"查看详情"触发，展示完整详情 + 审批操作</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-
-
-<!-- ══════════════════════════════════════════════════════
-     §26  DROPDOWN MENU
-══════════════════════════════════════════════════════ -->
-<section class="section" id="dropdown-menu">
-  <div class="section-title">下拉菜单 Dropdown Menu</div>
-  <p class="section-subtitle">行操作菜单、顶部导航、更多操作 — 所有列表页标配组件</p>
-
-  <div class="sub-label">基础变体</div>
-  <div class="row" style="margin-bottom:28px;align-items:flex-start;gap:24px;">
-
-    <!-- Trigger + Menu: Default -->
-    <div>
-      <div style="font-size:11px;color:var(--gray-8);margin-bottom:8px;">行操作菜单</div>
-      <div class="dm-wrap" id="dm1">
-        <button class="btn btn-sm btn-outline" onclick="toggleDM('dm1')">
-          更多操作
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="dm-menu">
-          <div class="dm-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            查看详情
-          </div>
-          <div class="dm-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            编辑
-          </div>
-          <div class="dm-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            导出记录
-          </div>
-          <div class="dm-sep"></div>
-          <div class="dm-item dm-danger">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6M9 6V4h6v2"/></svg>
-            删除
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- Icon trigger (···) -->
-    <div>
-      <div style="font-size:11px;color:var(--gray-8);margin-bottom:8px;">图标触发</div>
-      <div class="dm-wrap" id="dm2">
-        <button class="dm-icon-btn" onclick="toggleDM('dm2')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-        </button>
-        <div class="dm-menu">
-          <div class="dm-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>审批通过</div>
-          <div class="dm-item dm-danger"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>拒绝</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- With sub-label -->
-    <div>
-      <div style="font-size:11px;color:var(--gray-8);margin-bottom:8px;">带分组标签</div>
-      <div class="dm-wrap" id="dm3">
-        <button class="btn btn-sm btn-outline" onclick="toggleDM('dm3')">
-          导出
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="dm-menu" style="min-width:160px;">
-          <div class="dm-group-label">格式</div>
-          <div class="dm-item">导出为 Excel</div>
-          <div class="dm-item">导出为 CSV</div>
-          <div class="dm-item">导出为 PDF</div>
-          <div class="dm-sep"></div>
-          <div class="dm-group-label">范围</div>
-          <div class="dm-item">当前页 (20 条)</div>
-          <div class="dm-item">全部结果 (234 条)</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Anatomy -->
-  <div class="sub-label">Token 规范</div>
-  <div style="background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;padding:14px 18px;">
-    <table style="width:100%;border-collapse:collapse;font-size:12px;">
-      <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:7px 12px 7px 0;color:var(--gray-9);">菜单容器</td><td style="padding:7px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-12);">border-radius:8px · shadow-popup · min-width:140px · padding:4px</td></tr>
-      <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:7px 12px 7px 0;color:var(--gray-9);">菜单项</td><td style="padding:7px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-12);">height:32px · border-radius:5px · font-size:13px · gap:8px</td></tr>
-      <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:7px 12px 7px 0;color:var(--gray-9);">菜单项 hover</td><td style="padding:7px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-12);">background:--gray-2 · color:--gray-12</td></tr>
-      <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:7px 12px 7px 0;color:var(--gray-9);">危险项</td><td style="padding:7px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-12);">color:--red-text · hover:bg --red-bg</td></tr>
-      <tr><td style="padding:7px 12px 7px 0;color:var(--gray-9);">出现动画</td><td style="padding:7px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-12);">opacity 0→1 · translateY(-6px)→0 · scale(.97)→1 · 120ms ease</td></tr>
-    </table>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════
-     §27  DIALOG / ALERT-DIALOG
-══════════════════════════════════════════════════════ -->
-<section class="section" id="dialog-full">
-  <div class="section-title">弹窗 Dialog / Alert Dialog</div>
-  <p class="section-subtitle">信息确认、二次操作、危险操作拦截 — 需要强制用户决策时使用</p>
-
-  <div class="sub-label">变体演示</div>
-  <div class="row" style="margin-bottom:28px;flex-wrap:wrap;gap:10px;">
-    <button class="btn btn-sm btn-outline" onclick="openDialog('dlg-confirm')">确认弹窗</button>
-    <button class="btn btn-sm" style="background:var(--red-bg);color:var(--red-text);border-color:var(--red-border);" onclick="openDialog('dlg-delete')">危险操作</button>
-    <button class="btn btn-sm btn-outline" onclick="openDialog('dlg-form')">表单弹窗</button>
-    <button class="btn btn-sm btn-outline" onclick="openDialog('dlg-info')">信息弹窗</button>
-  </div>
-
-  <!-- Confirm Dialog -->
-  <div class="dlg-overlay" id="dlg-confirm" onclick="closeDlgOnOverlay(event,'dlg-confirm')">
-    <div class="dlg" style="max-width:420px;">
-      <div class="dlg-header">
-        <div class="dlg-icon" style="background:var(--amber-2);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--amber-11)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        </div>
-        <div class="dlg-header-text">
-          <div class="dlg-title">确认提交审批？</div>
-          <div class="dlg-desc">提交后将进入审批流程，期间无法修改申请内容。</div>
-        </div>
-        <button class="dlg-close" onclick="closeDialog('dlg-confirm')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-      </div>
-      <div class="dlg-footer">
-        <button class="btn btn-md btn-outline" onclick="closeDialog('dlg-confirm')">取消</button>
-        <button class="btn btn-md btn-primary" onclick="closeDialog('dlg-confirm')">确认提交</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Delete / Danger Alert Dialog -->
-  <div class="dlg-overlay" id="dlg-delete" onclick="closeDlgOnOverlay(event,'dlg-delete')">
-    <div class="dlg" style="max-width:400px;">
-      <div class="dlg-header">
-        <div class="dlg-icon" style="background:var(--red-bg);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--red-solid)" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6M9 6V4h6v2"/></svg>
-        </div>
-        <div class="dlg-header-text">
-          <div class="dlg-title">确认删除此订单？</div>
-          <div class="dlg-desc">此操作不可逆，订单 <strong>ORD-20240115-002</strong> 的所有数据将被永久删除。</div>
-        </div>
-        <button class="dlg-close" onclick="closeDialog('dlg-delete')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-      </div>
-      <div class="dlg-footer">
-        <button class="btn btn-md btn-outline" onclick="closeDialog('dlg-delete')">取消</button>
-        <button class="btn btn-md btn-destructive" onclick="closeDialog('dlg-delete')">确认删除</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Form Dialog -->
-  <div class="dlg-overlay" id="dlg-form" onclick="closeDlgOnOverlay(event,'dlg-form')">
-    <div class="dlg" style="max-width:480px;">
-      <div class="dlg-header" style="border-bottom:1px solid #F3F4F6;padding-bottom:14px;margin-bottom:0;">
-        <div class="dlg-header-text">
-          <div class="dlg-title">添加备注</div>
-          <div class="dlg-desc">为订单 ORD-20240115-002 添加处理备注</div>
-        </div>
-        <button class="dlg-close" onclick="closeDialog('dlg-form')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-      </div>
-      <div style="padding:18px 20px;">
-        <div style="margin-bottom:14px;">
-          <label style="font-size:12px;font-weight:500;color:var(--gray-11);display:block;margin-bottom:6px;">备注类型</label>
-          <div style="position:relative;">
-            <select style="width:100%;height:34px;padding:0 28px 0 10px;font-family:inherit;font-size:13px;color:var(--gray-11);background:var(--surface);border:1px solid var(--gray-6);border-radius:6px;outline:none;appearance:none;cursor:pointer;">
-              <option>处理进度说明</option><option>风险提示</option><option>内部沟通记录</option>
-            </select>
-            <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--gray-8);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
-          </div>
-        </div>
-        <div>
-          <label style="font-size:12px;font-weight:500;color:var(--gray-11);display:block;margin-bottom:6px;">备注内容 <span style="color:var(--red-solid);">*</span></label>
-          <textarea style="width:100%;min-height:80px;padding:8px 10px;font-family:inherit;font-size:13px;color:var(--gray-12);background:var(--surface);border:1px solid var(--gray-6);border-radius:6px;outline:none;resize:vertical;" placeholder="请填写备注内容…"></textarea>
-        </div>
-      </div>
-      <div class="dlg-footer" style="border-top:1px solid #F3F4F6;">
-        <button class="btn btn-md btn-outline" onclick="closeDialog('dlg-form')">取消</button>
-        <button class="btn btn-md btn-primary" onclick="closeDialog('dlg-form')">保存备注</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Info Dialog -->
-  <div class="dlg-overlay" id="dlg-info" onclick="closeDlgOnOverlay(event,'dlg-info')">
-    <div class="dlg" style="max-width:400px;">
-      <div class="dlg-header">
-        <div class="dlg-icon" style="background:var(--green-bg);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green-solid)" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
-        <div class="dlg-header-text">
-          <div class="dlg-title">审批已通过</div>
-          <div class="dlg-desc">订单 ORD-20240115-002 已通过审批，财务将在 1 个工作日内完成放款。</div>
-        </div>
-      </div>
-      <div class="dlg-footer">
-        <button class="btn btn-md btn-primary" onclick="closeDialog('dlg-info')">知道了</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Token table -->
-  <div class="sub-label">尺寸 & Token 规范</div>
-  <div style="background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;padding:14px 18px;">
-    <table style="width:100%;border-collapse:collapse;font-size:12px;">
-      <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:7px 12px 7px 0;width:140px;color:var(--gray-9);">遮罩背景</td><td style="padding:7px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-12);">rgba(31,29,28,.45) · backdrop-filter:blur(2px)</td></tr>
-      <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:7px 12px 7px 0;color:var(--gray-9);">弹窗宽度</td><td style="padding:7px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-12);">确认型 400–440px · 表单型 480–560px · 信息型 360–420px</td></tr>
-      <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:7px 12px 7px 0;color:var(--gray-9);">出现动画</td><td style="padding:7px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-12);">scale(.95)→scale(1) · opacity 0→1 · 200ms ease</td></tr>
-      <tr><td style="padding:7px 12px 7px 0;color:var(--gray-9);">关闭方式</td><td style="padding:7px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-12);">ESC 键 · 点击遮罩（危险型禁用）· 关闭按钮 · 操作按钮</td></tr>
-    </table>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════
-     §28  TOOLTIP
-══════════════════════════════════════════════════════ -->
-<section class="section" id="tooltip">
-  <div class="section-title">工具提示 Tooltip</div>
-  <p class="section-subtitle">图标按钮说明、截断文字补全、字段帮助提示 — 悬停 300ms 后出现</p>
-
-  <div class="sub-label">方向变体</div>
-  <div class="row" style="margin-bottom:28px;justify-content:flex-start;flex-wrap:wrap;gap:24px;padding:20px;background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;">
-
-    <div class="tt-wrap">
-      <button class="btn btn-sm btn-outline">上方提示</button>
-      <div class="tt tt-top">这是一条 Tooltip 提示文字<div class="tt-arrow tt-arrow-top"></div></div>
-    </div>
-
-    <div class="tt-wrap">
-      <button class="btn btn-sm btn-outline">下方提示</button>
-      <div class="tt tt-bottom">这是一条 Tooltip 提示文字<div class="tt-arrow tt-arrow-bottom"></div></div>
-    </div>
-
-    <div class="tt-wrap">
-      <button class="btn btn-sm btn-outline">左侧提示</button>
-      <div class="tt tt-left">Tooltip 文字<div class="tt-arrow tt-arrow-left"></div></div>
-    </div>
-
-    <div class="tt-wrap">
-      <button class="btn btn-sm btn-outline">右侧提示</button>
-      <div class="tt tt-right">Tooltip 文字<div class="tt-arrow tt-arrow-right"></div></div>
-    </div>
-
-    <div class="tt-wrap">
-      <button class="btn btn-sm btn-outline" style="width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">截断的长文字内容</button>
-      <div class="tt tt-top">截断的长文字内容完整展示<div class="tt-arrow tt-arrow-top"></div></div>
-    </div>
-
-    <div class="tt-wrap">
-      <div class="dm-icon-btn" style="display:flex;align-items:center;justify-content:center;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      </div>
-      <div class="tt tt-top">帮助说明：该字段为必填项，格式为 xxx-xxxx<div class="tt-arrow tt-arrow-top"></div></div>
-    </div>
-  </div>
-
-  <div class="sub-label">Token 规范</div>
-  <div style="background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;padding:14px 18px;">
-    <table style="width:100%;border-collapse:collapse;font-size:12px;">
-      <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:7px 12px 7px 0;width:130px;color:var(--gray-9);">背景色</td><td style="padding:7px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-12);">--gray-12 (#1F1D1C)</td></tr>
-      <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:7px 12px 7px 0;color:var(--gray-9);">文字色</td><td style="padding:7px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-12);">#ffffff · font-size:12px · max-width:240px</td></tr>
-      <tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:7px 12px 7px 0;color:var(--gray-9);">触发延迟</td><td style="padding:7px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-12);">hover 300ms delay · focus 0ms delay</td></tr>
-      <tr><td style="padding:7px 12px 7px 0;color:var(--gray-9);">出现动画</td><td style="padding:7px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-12);">opacity 0→1 · translateY(4px)→0 · 120ms ease</td></tr>
-    </table>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════
-     §29  EMPTY STATE
-══════════════════════════════════════════════════════ -->
-<section class="section" id="empty-state">
-  <div class="section-title">空状态 Empty State</div>
-  <p class="section-subtitle">无数据、无搜索结果、无权限、首次使用 — 四种场景各有专属变体</p>
-
-  <div class="sub-label">变体展示</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;">
-
-    <!-- No data -->
-    <div style="background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;padding:40px 24px;text-align:center;">
-      <div style="width:52px;height:52px;border-radius:14px;background:var(--gray-2);border:1px solid var(--gray-4);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:24px;">📭</div>
-      <div style="font-size:14px;font-weight:600;color:var(--gray-11);margin-bottom:6px;">暂无订单</div>
-      <div style="font-size:12px;color:var(--gray-8);margin-bottom:16px;line-height:1.6;">当前还没有任何订单记录，<br/>点击下方按钮创建第一条订单。</div>
-      <button class="btn btn-sm btn-primary">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        新建订单
-      </button>
-    </div>
-
-    <!-- No search results -->
-    <div style="background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;padding:40px 24px;text-align:center;">
-      <div style="width:52px;height:52px;border-radius:14px;background:var(--gray-2);border:1px solid var(--gray-4);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:24px;">🔍</div>
-      <div style="font-size:14px;font-weight:600;color:var(--gray-11);margin-bottom:6px;">未找到相关结果</div>
-      <div style="font-size:12px;color:var(--gray-8);margin-bottom:16px;line-height:1.6;">「海淀旗舰店」没有匹配的记录，<br/>请尝试调整搜索关键词或筛选条件。</div>
-      <button class="btn btn-sm btn-outline">清除筛选条件</button>
-    </div>
-
-    <!-- No permission -->
-    <div style="background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;padding:40px 24px;text-align:center;">
-      <div style="width:52px;height:52px;border-radius:14px;background:var(--orange-bg);border:1px solid var(--orange-border);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:24px;">🔒</div>
-      <div style="font-size:14px;font-weight:600;color:var(--gray-11);margin-bottom:6px;">暂无访问权限</div>
-      <div style="font-size:12px;color:var(--gray-8);margin-bottom:16px;line-height:1.6;">您没有查看此模块的权限，<br/>请联系系统管理员开通。</div>
-      <button class="btn btn-sm btn-outline">联系管理员</button>
-    </div>
-
-    <!-- First use / onboarding -->
-    <div style="background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;padding:40px 24px;text-align:center;">
-      <div style="width:52px;height:52px;border-radius:14px;background:var(--amber-2);border:1px solid var(--amber-3);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:24px;">🚀</div>
-      <div style="font-size:14px;font-weight:600;color:var(--gray-11);margin-bottom:6px;">开始使用审批功能</div>
-      <div style="font-size:12px;color:var(--gray-8);margin-bottom:16px;line-height:1.6;">配置您的审批流程，让门店申请<br/>自动流转到正确的审批人。</div>
-      <div style="display:flex;gap:8px;justify-content:center;">
-        <button class="btn btn-sm btn-outline">查看文档</button>
-        <button class="btn btn-sm btn-brand">立即配置</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="sub-label">内联空态（表格内使用）</div>
-  <div style="background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;overflow:hidden;margin-bottom:0;">
-    <table style="width:100%;border-collapse:collapse;">
-      <thead><tr>
-        <th style="background:var(--gray-2);color:var(--gray-9);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1px solid #F3F4F6;">订单号</th>
-        <th style="background:var(--gray-2);color:var(--gray-9);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1px solid #F3F4F6;">门店</th>
-        <th style="background:var(--gray-2);color:var(--gray-9);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1px solid #F3F4F6;">状态</th>
-      </tr></thead>
-    </table>
-    <div style="padding:48px 24px;text-align:center;">
-      <div style="width:40px;height:40px;border-radius:10px;background:var(--gray-2);border:1px solid var(--gray-4);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:18px;">📋</div>
-      <div style="font-size:13px;font-weight:600;color:var(--gray-10);margin-bottom:4px;">暂无数据</div>
-      <div style="font-size:12px;color:var(--gray-8);">当前筛选条件下没有匹配结果</div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════
-     §30  COMBOBOX / MULTI-SELECT
-══════════════════════════════════════════════════════ -->
-<section class="section" id="combobox">
-  <div class="section-title">组合选择器 Combobox / Multi-Select</div>
-  <p class="section-subtitle">带搜索的下拉选择 · 多选标签输入 — 门店选择、商品类目、人员指派</p>
-
-  <div class="sub-label">Combobox — 带搜索的单选</div>
-  <div class="row" style="margin-bottom:24px;align-items:flex-start;gap:16px;">
-    <div style="width:260px;">
-      <div class="cmb-wrap" id="cmb1">
-        <button class="cmb-trigger" onclick="toggleCmb('cmb1')">
-          <span id="cmb1-val" style="color:var(--gray-8);">选择门店…</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="cmb-panel">
-          <div style="padding:8px;border-bottom:1px solid #F3F4F6;">
-            <input class="cmb-search" placeholder="搜索门店名称…" oninput="filterCmb('cmb1',this.value)" />
-          </div>
-          <div class="cmb-list" id="cmb1-list">
-            <div class="cmb-item" onclick="selectCmb('cmb1','朝阳旗舰店')">朝阳旗舰店 <span style="font-size:11px;color:var(--gray-8);">旗舰</span></div>
-            <div class="cmb-item" onclick="selectCmb('cmb1','海淀科技店')">海淀科技店 <span style="font-size:11px;color:var(--gray-8);">旗舰</span></div>
-            <div class="cmb-item" onclick="selectCmb('cmb1','浦东联营店')">浦东联营店 <span style="font-size:11px;color:var(--gray-8);">加盟</span></div>
-            <div class="cmb-item" onclick="selectCmb('cmb1','西湖旗舰店')">西湖旗舰店 <span style="font-size:11px;color:var(--gray-8);">旗舰</span></div>
-            <div class="cmb-item" onclick="selectCmb('cmb1','天河加盟店')">天河加盟店 <span style="font-size:11px;color:var(--gray-8);">加盟</span></div>
-            <div class="cmb-item" onclick="selectCmb('cmb1','南山科技店')">南山科技店 <span style="font-size:11px;color:var(--gray-8);">标准</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="sub-label">Multi-Select — 多选标签输入</div>
-  <div style="margin-bottom:24px;max-width:480px;">
-    <div class="ms-wrap" id="ms1" onclick="focusMs('ms1')">
-      <div class="ms-tags" id="ms1-tags"></div>
-      <div style="position:relative;flex:1;min-width:120px;">
-        <input class="ms-input" id="ms1-input" placeholder="搜索并选择类目…" oninput="filterMs('ms1',this.value)" onfocus="openMs('ms1')" />
-      </div>
-      <svg style="margin-left:auto;flex-shrink:0;color:var(--gray-8);" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-    </div>
-    <div class="ms-panel" id="ms1-panel" style="display:none;">
-      <div class="cmb-list" id="ms1-list">
-        <div class="cmb-item" onclick="selectMs('ms1','进货申请')">进货申请</div>
-        <div class="cmb-item" onclick="selectMs('ms1','退款申请')">退款申请</div>
-        <div class="cmb-item" onclick="selectMs('ms1','费用报销')">费用报销</div>
-        <div class="cmb-item" onclick="selectMs('ms1','活动申请')">活动申请</div>
-        <div class="cmb-item" onclick="selectMs('ms1','设备采购')">设备采购</div>
-        <div class="cmb-item" onclick="selectMs('ms1','人员调配')">人员调配</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-
-
-  <script>
-  // Dropdown Menu
-  function toggleDM(id) {
-    document.querySelectorAll('.dm-wrap').forEach(w => { if (w.id !== id) w.classList.remove('open'); });
-    document.getElementById(id).classList.toggle('open');
-  }
-  document.addEventListener('click', e => {
-    if (!e.target.closest('.dm-wrap')) document.querySelectorAll('.dm-wrap').forEach(w => w.classList.remove('open'));
-  });
-
-  // Dialog
-  function openDialog(id) { document.getElementById(id).classList.add('open'); }
-  function closeDialog(id) { document.getElementById(id).classList.remove('open'); }
-  function closeDlgOnOverlay(e, id) { if (e.target === e.currentTarget) closeDialog(id); }
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.dlg-overlay.open').forEach(d => d.classList.remove('open')); });
-
-  // Combobox
-  function toggleCmb(id) {
-    document.querySelectorAll('.cmb-wrap').forEach(w => { if (w.id !== id) w.classList.remove('open'); });
-    document.getElementById(id).classList.toggle('open');
-  }
-  function selectCmb(id, val) {
-    document.getElementById(id + '-val').textContent = val;
-    document.getElementById(id + '-val').style.color = 'var(--gray-12)';
-    document.getElementById(id).classList.remove('open');
-  }
-  function filterCmb(id, q) {
-    document.querySelectorAll('#' + id + '-list .cmb-item').forEach(item => {
-      item.style.display = item.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
-    });
-  }
-  document.addEventListener('click', e => {
-    if (!e.target.closest('.cmb-wrap')) document.querySelectorAll('.cmb-wrap').forEach(w => w.classList.remove('open'));
-  });
-
-  // Multi-Select
-  const msSelected = { ms1: [] };
-  function openMs(id) { document.getElementById(id + '-panel').style.display = 'block'; }
-  function focusMs(id) { document.getElementById(id + '-input').focus(); }
-  function selectMs(id, val) {
-    if (!msSelected[id]) msSelected[id] = [];
-    if (msSelected[id].includes(val)) return;
-    msSelected[id].push(val);
-    renderMsTags(id);
-    document.getElementById(id + '-input').value = '';
-    document.getElementById(id + '-panel').style.display = 'none';
-  }
-  function removeMsTag(id, val) {
-    msSelected[id] = msSelected[id].filter(v => v !== val);
-    renderMsTags(id);
-  }
-  function renderMsTags(id) {
-    const container = document.getElementById(id + '-tags');
-    container.innerHTML = msSelected[id].map(v =>
-      `<span class="ms-tag">${v}<button class="ms-tag-rm" onclick="removeMsTag('${id}','${v}')">×</button></span>`
-    ).join('');
-  }
-  function filterMs(id, q) {
-    document.querySelectorAll('#' + id + '-list .cmb-item').forEach(item => {
-      item.style.display = item.textContent.trim().toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
-    });
-    if (q) document.getElementById(id + '-panel').style.display = 'block';
-  }
-  document.addEventListener('click', e => {
-    if (!e.target.closest('.ms-wrap') && !e.target.closest('.ms-panel')) {
-      document.querySelectorAll('.ms-panel').forEach(p => p.style.display = 'none');
-    }
-  });
-  </script>
-
+  </section>
 
 </main>
 
