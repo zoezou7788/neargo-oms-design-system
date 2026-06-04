@@ -176,8 +176,11 @@ export { Pagination, PageNav }         from "./pagination";
 export type { PaginationProps, PageNavProps } from "./pagination";
 
 // Data Display
-export { Timeline, Steps }             from "./timeline";
-export type { TimelineProps, TimelineItem, TimelineStatus, StepsProps, StepItem } from "./timeline";
+export { Timeline }                                                 from "./timeline";
+export type { TimelineProps, TimelineItem, TimelineStatus }         from "./timeline";
+
+export { Steps }                                                    from "./steps";
+export type { StepsProps, StepItem }                                from "./steps";
 
 export { KpiCard, KpiGrid }            from "./kpi-card";
 export type { KpiCardProps, KpiGridProps, KpiTrend, KpiColor } from "./kpi-card";
