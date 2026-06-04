@@ -124,56 +124,5 @@ export function Timeline({ items, className }: TimelineProps) {
   );
 }
 
-// Compact horizontal timeline for step indicators (e.g., order stages)
-export interface StepItem {
-  id: string;
-  label: string;
-  status: "done" | "active" | "pending";
-}
-
-export interface StepsProps {
-  steps: StepItem[];
-  className?: string;
-}
-
-export function Steps({ steps, className }: StepsProps) {
-  return (
-    <div className={cn("flex items-center", className)}>
-      {steps.map((step, index) => {
-        const isLast = index === steps.length - 1;
-        return (
-          <React.Fragment key={step.id}>
-            <div className="flex flex-col items-center gap-1.5">
-              <div className={cn(
-                "w-7 h-7 rounded-[9999px] flex items-center justify-center text-[11px] font-bold shrink-0 transition-colors",
-                step.status === "done"   && "bg-[var(--green-solid)] text-white",
-                step.status === "active" && "bg-[#1F1D1C] text-white",
-                step.status === "pending"&& "bg-[var(--gray-3)] text-[var(--gray-9)]",
-              )}>
-                {step.status === "done" ? (
-                  <CheckCircle2 size={14} className="text-white" />
-                ) : (
-                  index + 1
-                )}
-              </div>
-              <span className={cn(
-                "text-[11px] font-medium whitespace-nowrap",
-                step.status === "active"  && "text-[var(--gray-12)]",
-                step.status === "done"    && "text-[var(--green-solid)]",
-                step.status === "pending" && "text-[var(--gray-9)]",
-              )}>
-                {step.label}
-              </span>
-            </div>
-            {!isLast && (
-              <div className={cn(
-                "flex-1 h-px mx-2 mb-5",
-                step.status === "done" ? "bg-[var(--green-solid)] opacity-40" : "bg-[var(--border)]",
-              )} />
-            )}
-          </React.Fragment>
-        );
-      })}
-    </div>
-  );
-}
+// Steps 已拆分为独立组件，请从 "./steps" 导入
+export { Steps, type StepsProps, type StepItem } from "./steps";
