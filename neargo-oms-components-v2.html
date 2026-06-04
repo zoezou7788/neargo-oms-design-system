@@ -1,0 +1,2601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NearGo OMS — Design System v4.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+/* ─── Reset ──────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 14px; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text-hi);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ─── Design Tokens ──────────────────────────────────── */
+:root {
+  --amber-1:#fdfaf0; --amber-2:#fff8d6; --amber-3:#ffeea8;
+  --amber-9:#FFA902; --amber-10:#f09a00; --amber-11:#8c5c00;
+  --gray-1:#fdfdfc; --gray-2:#f9f9f8; --gray-3:#f2f1ef;
+  --gray-4:#eceae7; --gray-5:#e5e3e0; --gray-6:#dddbd8;
+  --gray-7:#cac8c4; --gray-8:#b0adaa; --gray-9:#8c8a87;
+  --gray-10:#807e7b; --gray-11:#4a4846; --gray-12:#1F1D1C;
+  --green-bg:#edfbf4; --green-border:#cdf4ea; --green-solid:#29a383; --green-text:#107060;
+  --red-bg:#fff5f5; --red-border:#ffe0e0; --red-solid:#e5484d; --red-text:#ce2c31;
+  --blue-bg:#f0f8ff; --blue-border:#d5efff; --blue-solid:#0090ff; --blue-text:#0060cf;
+  --orange-bg:#fff6f0; --orange-border:#ffe8d7; --orange-9:#f76b15; --orange-solid:#f76b15; --orange-text:#bd4b00;
+  --purple-bg:#faf5ff; --purple-border:#ecdcfe; --purple-9:#8e4ec6; --purple-solid:#8e4ec6; --purple-text:#793aaf;
+  --surface:#ffffff; --bg:#F4F5F7; --border:var(--gray-6);
+  --text-hi:var(--gray-12); --text-mid:var(--gray-11); --text-low:var(--gray-9);
+  --shadow-1:0 1px 2px rgba(0,0,0,.04);
+  --shadow-2:0 1px 3px rgba(0,0,0,.05),0 1px 2px rgba(0,0,0,.03);
+  --shadow-4:0 4px 12px rgba(0,0,0,.06),0 2px 4px rgba(0,0,0,.03);
+  --shadow-popup:0 8px 24px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.04);
+  --topbar-h:54px;
+  --sidebar-w:220px;
+
+  /* ── Border Semantic Variables ─────────────────────────
+   * 按使用场景分层，统一管理所有边框色
+   * ──────────────────────────────────────────────────── */
+
+  /* 基础层 — 结构与分隔 */
+  --border-subtle:   #F3F4F6;       /* 极轻，卡片内分隔线、列表行间 */
+  --border-default:  var(--gray-6); /* 默认边框：输入框、卡片、分隔  */
+  --border-strong:   var(--gray-7); /* 加强：下拉面板、Popover       */
+  --border-divider:  var(--gray-5); /* 区域分隔线（稍重于 subtle）   */
+
+  /* 交互状态 — 通用控件 */
+  --border-hover:         var(--gray-7);   /* 悬停时边框加深              */
+  --border-focus:         var(--gray-7);   /* 聚焦时边框色                */
+  --border-focus-ring:    #eceae7;         /* 聚焦时外层光晕 (box-shadow) */
+  --border-active:        var(--gray-12);  /* 按下 / 选中（checkbox等）  */
+  --border-disabled:      var(--gray-4);   /* 禁用状态边框                */
+
+  /* 语义状态 — 反馈色 */
+  --border-error:         var(--red-solid);    /* 错误输入框               */
+  --border-error-focus:   var(--red-border);   /* 错误+聚焦光晕色          */
+  --border-success:       var(--green-border); /* 成功 / 通过               */
+  --border-warning:       var(--amber-3);      /* 警告                     */
+  --border-info:          var(--blue-border);  /* 信息                     */
+  --border-danger:        var(--red-border);   /* 危险                     */
+  --border-orange:        var(--orange-border);/* 紧急提示                 */
+  --border-purple:        var(--purple-border);/* 特殊标签                 */
+
+  /* 品牌 & 强调 */
+  --border-brand:         var(--amber-9);  /* 品牌高亮边框（选中 Tab 等）*/
+  --border-brand-subtle:  var(--amber-3);  /* 品牌浅边框（卡片装饰）     */
+  --border-selected:      var(--green-solid); /* Radio / 绿选中            */
+
+  /* 特殊用途 */
+  --border-dashed:        var(--gray-6);   /* 虚线上传区默认              */
+  --border-dashed-hover:  var(--gray-7);   /* 虚线上传区悬停              */
+  --border-input:         var(--gray-6);   /* Input 默认（语义别名）      */
+  --border-card:          var(--gray-5);   /* Card 边框（语义别名）       */
+  --border-table:         var(--gray-4);   /* Table 行分隔线              */
+  --border-popup:         var(--gray-6);   /* Dialog / Dropdown 边框      */
+}
+
+/* ─── Layout Shell ───────────────────────────────────── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--topbar-h);
+  background: var(--surface);
+  display: flex; align-items: center;
+  padding: 0 20px;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.topbar-logo {
+  font-size: 15px; font-weight: 700;
+  color: var(--gray-12); letter-spacing: -0.03em;
+  display: flex; align-items: center; gap: 8px;
+}
+.topbar-logo-dot {
+  width: 22px; height: 22px; border-radius: 6px;
+  background: var(--amber-9);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: #fff;
+}
+.topbar-badge {
+  font-size: 11px; font-weight: 600; color: var(--gray-10);
+  background: var(--gray-2); border: 1px solid var(--border);
+  border-radius: 20px; padding: 2px 8px; letter-spacing: .02em;
+}
+.topbar-spacer { flex: 1; }
+.topbar-subtitle {
+  font-size: 12px; color: var(--gray-9); letter-spacing: .02em;
+}
+
+.sidebar {
+  position: fixed; top: var(--topbar-h); left: 0; bottom: 0;
+  width: var(--sidebar-w); overflow-y: auto;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 16px 0 32px;
+  z-index: 90;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--gray-5); border-radius: 4px; }
+
+.toc-group-label {
+  font-size: 10px; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--gray-8);
+  padding: 16px 16px 6px;
+}
+.toc-link {
+  display: block; padding: 6px 16px;
+  font-size: 13px; color: var(--gray-10);
+  text-decoration: none; transition: all .12s ease;
+  border-left: 2px solid transparent;
+}
+.toc-link:hover { background: var(--gray-2); color: var(--gray-12); }
+.toc-link.active {
+  background: var(--amber-2); color: var(--gray-12);
+  border-left-color: var(--amber-9); font-weight: 500;
+}
+
+.main {
+  margin-top: var(--topbar-h);
+  margin-left: var(--sidebar-w);
+  padding: 36px 40px 80px;
+  max-width: 1100px;
+}
+
+/* ─── Section Titles ─────────────────────────────────── */
+.section { margin-bottom: 52px; }
+.section-title {
+  font-size: 18px; font-weight: 700; color: var(--gray-12);
+  letter-spacing: -0.03em; margin-bottom: 4px;
+  padding-bottom: 12px; border-bottom: 1px solid var(--gray-4);
+}
+.section-subtitle {
+  font-size: 12px; color: var(--gray-9); margin-bottom: 24px;
+  margin-top: 4px;
+}
+.sub-label {
+  font-size: 11px; font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--gray-8); margin-bottom: 10px;
+}
+.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; margin-bottom: 20px; }
+.col { display: flex; flex-direction: column; gap: 12px; }
+
+/* ─── 1. Color Swatches ──────────────────────────────── */
+.swatch-row { display: flex; gap: 0; border-radius: 8px; overflow: hidden; margin-bottom: 16px; }
+.swatch {
+  flex: 1; height: 52px; display: flex; flex-direction: column;
+  justify-content: flex-end; padding: 4px 6px;
+  position: relative;
+}
+.swatch.featured::after {
+  content: attr(data-label);
+  position: absolute; top: 5px; left: 0; right: 0;
+  font-size: 8px; font-weight: 700; text-align: center;
+  letter-spacing: .04em;
+}
+.swatch-step { font-size: 9px; font-weight: 500; opacity: .6; }
+.swatch-hex { font-size: 8px; opacity: .55; font-family: 'JetBrains Mono', monospace; }
+
+.semantic-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.semantic-swatch {
+  flex: 1; border-radius: 6px; padding: 8px 10px;
+  border: 1px solid rgba(0,0,0,.06);
+}
+.semantic-name { font-size: 11px; font-weight: 600; margin-bottom: 2px; }
+.semantic-hex { font-size: 10px; font-family: 'JetBrains Mono', monospace; }
+
+/* ─── 2. Typography ──────────────────────────────────── */
+.type-stack { display: flex; flex-direction: column; gap: 0; }
+.type-row {
+  display: flex; align-items: baseline; gap: 20px;
+  padding: 14px 0; border-bottom: 1px solid var(--gray-3);
+}
+.type-row:last-child { border-bottom: none; }
+.type-meta {
+  width: 200px; flex-shrink: 0;
+}
+.type-name { font-size: 11px; font-weight: 600; color: var(--gray-9); letter-spacing: .04em; text-transform: uppercase; }
+.type-spec { font-size: 10px; color: var(--gray-8); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+
+/* ─── 3. Buttons ─────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 6px; font-family: inherit; font-weight: 500; cursor: pointer;
+  border-radius: 6px; border: 1px solid transparent;
+  transition: all .12s ease; text-decoration: none; white-space: nowrap;
+  letter-spacing: -.01em;
+}
+.btn-md { height: 34px; padding: 0 14px; font-size: 13px; }
+.btn-sm { height: 28px; padding: 0 10px; font-size: 12px; }
+.btn-lg { height: 40px; padding: 0 18px; font-size: 14px; }
+
+.btn-primary {
+  background: var(--gray-12); color: #fff; border-color: var(--gray-12);
+}
+.btn-secondary {
+  background: var(--gray-3); color: var(--gray-11); border-color: var(--gray-4);
+}
+.btn-outline {
+  background: transparent; color: var(--gray-11); border-color: var(--gray-6);
+}
+.btn-ghost {
+  background: transparent; color: var(--gray-10); border-color: transparent;
+}
+.btn-brand {
+  background: var(--amber-9); color: #fff; border-color: var(--amber-10);
+}
+.btn-destructive {
+  background: var(--red-solid); color: #fff; border-color: var(--red-solid);
+}
+.btn-disabled {
+  background: var(--gray-3); color: var(--gray-8);
+  border-color: var(--gray-4); cursor: not-allowed; opacity: .7;
+}
+.btn-loading {
+  background: var(--gray-12); color: rgba(255,255,255,.6);
+  border-color: var(--gray-12); cursor: wait;
+}
+.spinner {
+  width: 12px; height: 12px; border: 2px solid rgba(255,255,255,.3);
+  border-top-color: #fff; border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── 4. Badge ───────────────────────────────────────── */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 500; letter-spacing: .02em;
+  border-radius: 20px; padding: 2px 8px; border: 1px solid transparent;
+}
+.badge-dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+}
+.badge-default  { background: var(--gray-3); color: var(--gray-11); border-color: var(--gray-4); }
+.badge-success  { background: var(--green-bg); color: var(--green-text); border-color: var(--green-border); }
+.badge-warning  { background: var(--amber-2); color: var(--amber-11); border-color: var(--amber-3); }
+.badge-danger   { background: var(--red-bg); color: var(--red-text); border-color: var(--red-border); }
+.badge-info     { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue-border); }
+.badge-urgent   { background: var(--orange-bg); color: var(--orange-text); border-color: var(--orange-border); }
+.badge-brand    { background: var(--amber-9); color: #fff; border-color: var(--amber-10); }
+.badge-outline  { background: transparent; color: var(--gray-11); border-color: var(--gray-6); }
+.badge-purple   { background: var(--purple-bg); color: var(--purple-text); border-color: var(--purple-border); }
+
+/* ─── 5. Input ───────────────────────────────────────── */
+.input-wrap { position: relative; width: 300px; }
+.input {
+  width: 100%; height: 34px; padding: 0 12px;
+  font-family: inherit; font-size: 13px; color: var(--gray-12);
+  background: var(--surface); border: 1px solid var(--gray-6);
+  border-radius: 6px; outline: none; transition: all .12s;
+}
+.input::placeholder { color: var(--gray-8); }
+.input:focus { border-color: var(--gray-7); box-shadow: 0 0 0 2px #eceae7; }
+.input-focused { border-color: var(--gray-7); box-shadow: 0 0 0 2px #eceae7; }
+.input-error { border-color: var(--red-solid); }
+.input-error:focus { box-shadow: 0 0 0 3px var(--red-border); }
+.input-disabled { background: var(--gray-2); color: var(--gray-8); cursor: not-allowed; border-color: var(--gray-4); }
+.input-error-text { font-size: 11px; color: var(--red-text); margin-top: 4px; }
+.input-label { font-size: 12px; font-weight: 500; color: var(--gray-11); margin-bottom: 5px; }
+.input-prefix-wrap { position: relative; }
+.input-prefix-icon {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  color: var(--gray-8); pointer-events: none; font-size: 14px;
+}
+.input-with-prefix { padding-left: 30px; }
+.input-clear-btn {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer; color: var(--gray-7);
+  font-size: 14px; padding: 2px; line-height: 1;
+}
+
+/* ─── 6. Form Elements ───────────────────────────────── */
+.checkbox-wrap { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.checkbox {
+  width: 16px; height: 16px; border-radius: 4px;
+  border: 1.5px solid var(--gray-6); background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all .12s;
+}
+.checkbox.checked { background: var(--gray-12); border-color: var(--gray-12); }
+.checkbox.indeterminate { background: var(--gray-12); border-color: var(--gray-12); }
+.checkbox.disabled { background: var(--gray-3); border-color: var(--gray-5); }
+.checkbox-label { font-size: 13px; color: var(--gray-11); }
+.checkbox-label.disabled { color: var(--gray-8); }
+
+.radio-group { display: flex; flex-direction: column; gap: 10px; }
+.radio-wrap { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.radio {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 1.5px solid var(--gray-6); background: var(--surface);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.radio.selected { border-color: var(--green-solid); }
+.radio.selected::after {
+  content: ''; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green-solid);
+}
+.radio-label { font-size: 13px; color: var(--gray-11); }
+
+.switch-wrap { display: flex; align-items: center; gap: 10px; }
+.switch {
+  width: 36px; height: 20px; border-radius: 10px;
+  background: var(--gray-5); border: none; cursor: pointer;
+  position: relative; transition: background .2s;
+  flex-shrink: 0;
+}
+.switch.on { background: var(--gray-12); }
+.switch::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 16px; height: 16px; border-radius: 50%; background: #fff;
+  transition: transform .2s;
+}
+.switch.on::after { transform: translateX(16px); }
+.switch-label { font-size: 13px; color: var(--gray-11); }
+
+.select-wrap { position: relative; width: 220px; }
+.select-trigger {
+  width: 100%; height: 34px; padding: 0 32px 0 12px;
+  font-family: inherit; font-size: 13px; color: var(--gray-11);
+  background: var(--surface); border: 1px solid var(--gray-6);
+  border-radius: 6px; cursor: pointer; text-align: left;
+  display: flex; align-items: center;
+}
+.select-arrow {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  color: var(--gray-8); pointer-events: none; font-size: 12px;
+}
+.select-dropdown {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; box-shadow: var(--shadow-popup);
+  overflow: hidden; z-index: 10;
+}
+.select-option {
+  padding: 8px 12px; font-size: 13px; color: var(--gray-11); cursor: pointer;
+}
+.select-option:hover { background: var(--gray-2); }
+.select-option.selected { background: var(--amber-2); color: var(--gray-12); font-weight: 500; }
+
+/* ─── 7. Status Indicator ────────────────────────────── */
+.status-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.status-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 500; padding: 5px 12px;
+  border-radius: 6px; border: 1px solid transparent;
+}
+
+/* ─── 8. Card ────────────────────────────────────────── */
+.card {
+  background: var(--surface); border: 1px solid #F3F4F6;
+  border-radius: 8px; overflow: hidden;
+}
+.card-header {
+  padding: 14px 16px 12px; border-bottom: 1px solid #F3F4F6;
+}
+.card-title { font-size: 14px; font-weight: 600; color: var(--gray-12); }
+.card-desc { font-size: 12px; color: var(--gray-9); margin-top: 2px; }
+.card-body { padding: 16px; }
+
+.kpi-mini {
+  background: var(--surface); border: 1px solid #F3F4F6;
+  border-radius: 8px; padding: 16px;
+  min-width: 160px;
+}
+.kpi-mini-value { font-size: 24px; font-weight: 700; letter-spacing: -0.04em; color: var(--gray-12); }
+.kpi-mini-label { font-size: 12px; color: var(--gray-9); margin-bottom: 6px; }
+.kpi-mini-trend { font-size: 11px; margin-top: 4px; }
+.kpi-mini-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; margin-bottom: 10px;
+}
+
+.card-alert { background: var(--orange-bg); border: 1px solid var(--orange-border); border-radius: 8px; padding: 16px; }
+.card-alert-title { font-size: 13px; font-weight: 600; color: var(--orange-text); margin-bottom: 4px; }
+.card-alert-body { font-size: 12px; color: var(--orange-text); opacity: .85; }
+
+/* ─── 9. Progress ────────────────────────────────────── */
+.progress-wrap { margin-bottom: 14px; }
+.progress-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.progress-title { font-size: 12px; color: var(--gray-11); font-weight: 500; }
+.progress-pct { font-size: 11px; color: var(--gray-9); font-family: 'JetBrains Mono', monospace; }
+.progress-track {
+  height: 6px; background: var(--gray-3); border-radius: 999px; overflow: hidden;
+}
+.progress-fill { height: 100%; border-radius: 999px; transition: width .3s ease; }
+
+/* ─── 10. Table ──────────────────────────────────────── */
+.table-wrap {
+  background: var(--surface); border: 1px solid #F3F4F6;
+  border-radius: 8px; overflow: hidden;
+}
+table { width: 100%; border-collapse: collapse; }
+th {
+  background: var(--gray-2); color: var(--gray-9);
+  font-size: 11px; font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid #F3F4F6;
+}
+td { padding: 12px 14px; font-size: 13px; color: var(--gray-11); border-bottom: 1px solid #F3F4F6; }
+tr:last-child td { border-bottom: none; }
+tr.hover td { background: var(--gray-2); }
+.mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--gray-12); }
+
+.pagination {
+  display: flex; align-items: center; gap: 6px;
+  padding: 12px 16px; border-top: 1px solid var(--gray-3);
+  background: var(--surface);
+}
+.page-info { font-size: 12px; color: var(--gray-9); flex: 1; }
+.page-btn {
+  width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--gray-5);
+  background: var(--surface); font-size: 12px; color: var(--gray-10);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-family: inherit;
+}
+.page-btn.active { background: var(--gray-12); color: #fff; border-color: var(--gray-12); }
+.page-ellipsis { font-size: 12px; color: var(--gray-8); padding: 0 2px; }
+
+/* ─── Table Loading & Error 态 ─────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+.skeleton-cell {
+  height: 13px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--gray-3) 25%, var(--gray-2) 50%, var(--gray-3) 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  display: inline-block;
+}
+.table-loading tbody tr td { padding-top: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--border-subtle); }
+.table-loading tbody tr:last-child td { border-bottom: none; }
+.table-error-banner {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 16px;
+  background: var(--red-bg);
+  border-bottom: 1px solid var(--red-border);
+  font-size: 13px; color: var(--red-text);
+}
+.table-error-banner svg { flex-shrink: 0; }
+.table-error-banner-actions { margin-left: auto; display: flex; gap: 8px; }
+.table-empty-body td {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--gray-9);
+  font-size: 13px;
+}
+
+/* ─── 11. KPI Grid ───────────────────────────────────── */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.kpi-card {
+  background: var(--surface); border: 1px solid #F3F4F6;
+  border-radius: 8px; padding: 18px;
+}
+.kpi-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+.kpi-icon {
+  width: 38px; height: 38px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.kpi-label { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--gray-9); }
+.kpi-value { font-size: 26px; font-weight: 700; letter-spacing: -0.04em; color: var(--gray-12); line-height: 1; margin-bottom: 8px; }
+.kpi-trend { font-size: 11px; font-weight: 500; }
+.trend-up { color: var(--green-solid); }
+.trend-down { color: var(--red-solid); }
+
+/* ─── 12. Timeline ───────────────────────────────────── */
+.timeline { display: flex; flex-direction: column; gap: 0; }
+.tl-item { display: flex; gap: 16px; position: relative; }
+.tl-item:not(:last-child) .tl-line-wrap::after {
+  content: ''; position: absolute; left: 50%; top: 28px; bottom: -16px;
+  width: 1.5px; background: var(--gray-4); transform: translateX(-50%);
+}
+.tl-line-wrap { position: relative; width: 24px; flex-shrink: 0; }
+.tl-icon {
+  width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; position: relative; z-index: 1;
+  flex-shrink: 0; margin-top: 2px;
+}
+.tl-icon.done { background: var(--green-bg); color: var(--green-solid); border: 1.5px solid var(--green-border); }
+.tl-icon.active { background: var(--amber-2); color: var(--amber-9); border: 1.5px solid var(--amber-3); }
+.tl-icon.pending { background: var(--gray-2); color: var(--gray-7); border: 1.5px solid var(--gray-4); }
+.tl-content { padding-bottom: 20px; flex: 1; }
+.tl-title { font-size: 13px; font-weight: 600; color: var(--gray-12); }
+.tl-meta { font-size: 11px; color: var(--gray-9); margin-top: 2px; }
+
+/* ─── 13. Steps ──────────────────────────────────────── */
+.steps { display: flex; align-items: center; }
+.step-item { display: flex; align-items: center; flex: 1; }
+.step-item:last-child { flex: 0; }
+.step-circle {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; flex-shrink: 0;
+}
+.step-circle.done { background: var(--green-solid); color: #fff; }
+.step-circle.active { background: var(--gray-12); color: #fff; }
+.step-circle.pending { background: var(--gray-3); color: var(--gray-8); border: 1.5px solid var(--gray-5); }
+.step-label { font-size: 11px; margin-top: 4px; text-align: center; font-weight: 500; }
+.step-label.done { color: var(--green-text); }
+.step-label.active { color: var(--gray-12); }
+.step-label.pending { color: var(--gray-8); }
+.step-node { display: flex; flex-direction: column; align-items: center; }
+.step-connector { flex: 1; height: 1.5px; background: var(--gray-4); margin: 0 4px; margin-top: -14px; }
+.step-connector.done { background: var(--green-solid); }
+
+/* ─── 14. File Upload ────────────────────────────────── */
+.upload-zone {
+  border: 2px dashed var(--gray-6); border-radius: 8px;
+  padding: 32px 20px; text-align: center; background: var(--gray-1);
+  transition: border-color .15s;
+}
+.upload-zone:hover { border-color: var(--gray-7); }
+.upload-icon { font-size: 28px; margin-bottom: 10px; color: var(--gray-7); }
+.upload-text { font-size: 13px; font-weight: 500; color: var(--gray-11); }
+.upload-hint { font-size: 11px; color: var(--gray-8); margin-top: 4px; }
+.upload-btn-txt { color: var(--blue-solid); text-decoration: underline; cursor: pointer; }
+
+.file-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; background: var(--surface);
+  border: 1px solid var(--gray-4); border-radius: 8px;
+  margin-top: 8px;
+}
+.file-icon { font-size: 18px; }
+.file-name { font-size: 13px; color: var(--gray-12); font-weight: 500; flex: 1; }
+.file-size { font-size: 11px; color: var(--gray-9); }
+.file-remove { background: none; border: none; cursor: pointer; color: var(--gray-7); font-size: 16px; padding: 2px; }
+
+/* ─── 15. Layout Diagram ─────────────────────────────── */
+.layout-diagram {
+  border-radius: 10px; overflow: hidden;
+  border: 1px solid var(--border); box-shadow: var(--shadow-popup);
+  background: var(--gray-2);
+}
+.ld-topbar {
+  height: 36px; background: var(--surface);
+  display: flex; align-items: center; gap: 10px; padding: 0 14px;
+  flex-shrink: 0; border-bottom: 1px solid var(--border);
+}
+.ld-logo { font-size: 11px; font-weight: 700; color: var(--gray-12); letter-spacing: -.02em; }
+.ld-topbar-spacer { flex: 1; }
+.ld-topbar-icon {
+  width: 20px; height: 20px; border-radius: 4px;
+  background: var(--gray-2); display: flex; align-items: center;
+  justify-content: center; font-size: 10px; color: var(--gray-10);
+}
+.ld-body { display: flex; height: 260px; }
+.ld-sidebar {
+  width: 130px; background: var(--surface);
+  border-right: 1px solid var(--border); flex-shrink: 0;
+  padding: 10px 0; overflow: hidden;
+}
+.ld-nav-item {
+  height: 28px; margin: 2px 8px; border-radius: 5px;
+  background: var(--gray-2); display: flex; align-items: center;
+  padding: 0 8px; font-size: 9px; color: var(--gray-9);
+}
+.ld-nav-item.active {
+  background: var(--amber-2); color: var(--gray-12);
+  border-left: 2px solid var(--amber-9); font-weight: 600;
+}
+.ld-main { flex: 1; background: var(--gray-1); padding: 12px; overflow: hidden; }
+.ld-page-header {
+  height: 28px; background: var(--surface); border-radius: 5px;
+  border: 1px solid var(--border); margin-bottom: 10px;
+  display: flex; align-items: center; padding: 0 10px;
+  font-size: 10px; font-weight: 600; color: var(--gray-11);
+}
+.ld-table {
+  background: var(--surface); border-radius: 5px;
+  border: 1px solid var(--border); padding: 8px;
+}
+.ld-table-row {
+  height: 20px; background: var(--gray-2); border-radius: 3px;
+  margin-bottom: 4px; display: flex; align-items: center;
+  gap: 4px; padding: 0 6px;
+}
+.ld-table-row:first-child { background: var(--gray-3); }
+.ld-cell { height: 8px; background: var(--gray-5); border-radius: 2px; flex: 1; }
+.ld-cell.sm { max-width: 50px; }
+.ld-panel {
+  width: 160px; background: var(--surface); flex-shrink: 0;
+  border-left: 1px solid var(--border); padding: 12px;
+  overflow: hidden;
+}
+.ld-panel-label { font-size: 9px; font-weight: 600; color: var(--gray-9); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+.ld-panel-row { height: 14px; background: var(--gray-3); border-radius: 3px; margin-bottom: 5px; }
+.ld-panel-row.sm { width: 70%; }
+
+/* ─── 16. Dialog ─────────────────────────────────────── */
+.dialog-overlay {
+  background: rgba(31,29,28,.4); border-radius: 10px;
+  padding: 40px; display: flex; align-items: center; justify-content: center;
+  min-height: 200px;
+}
+.dialog {
+  background: var(--surface); border-radius: 12px;
+  box-shadow: var(--shadow-popup);
+  width: 380px; max-width: 100%; overflow: hidden;
+}
+.dialog-header { padding: 20px 20px 0; }
+.dialog-title { font-size: 15px; font-weight: 700; color: var(--gray-12); letter-spacing: -.02em; }
+.dialog-body { padding: 10px 20px 20px; font-size: 13px; color: var(--gray-10); line-height: 1.6; }
+.dialog-footer {
+  padding: 14px 20px; border-top: 1px solid var(--gray-3);
+  display: flex; justify-content: flex-end; gap: 8px;
+}
+
+/* ─── 17. Toast ──────────────────────────────────────── */
+.toast-stack { display: flex; flex-direction: column; gap: 8px; max-width: 360px; }
+.toast {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: var(--surface); border: 1px solid #F3F4F6;
+  border-radius: 8px; padding: 12px 14px;
+  box-shadow: var(--shadow-2);
+}
+.toast-success {}
+.toast-warning {}
+.toast-error   {}
+.toast-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.toast-text { flex: 1; }
+.toast-title { font-size: 13px; font-weight: 600; color: var(--gray-12); }
+.toast-msg { font-size: 12px; color: var(--gray-9); margin-top: 2px; }
+
+/* ─── 18. Tabs ───────────────────────────────────────── */
+.tabs-bar { border-bottom: 1px solid #F3F4F6; display: flex; gap: 0; }
+.tab-item {
+  padding: 10px 16px; font-size: 13px; color: var(--gray-9); cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  display: flex; align-items: center; gap: 6px; transition: all .12s;
+  font-weight: 500;
+}
+.tab-item:hover { color: var(--gray-11); }
+.tab-item.active { color: var(--gray-12); border-bottom-color: var(--gray-12); font-weight: 600; }
+.tab-count {
+  font-size: 10px; font-weight: 600; padding: 1px 6px;
+  border-radius: 10px; background: var(--gray-3); color: var(--gray-9);
+}
+.tab-item.active .tab-count { background: var(--gray-12); color: #fff; }
+
+/* ─── 19. Breadcrumb ─────────────────────────────────── */
+.breadcrumb { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.bc-item { font-size: 13px; color: var(--gray-10); cursor: pointer; }
+.bc-item:hover { color: var(--gray-12); text-decoration: underline; }
+.bc-item.current { color: var(--gray-12); font-weight: 600; cursor: default; }
+.bc-item.current:hover { text-decoration: none; }
+.bc-sep { font-size: 12px; color: var(--gray-7); user-select: none; }
+
+/* ─── Utility ────────────────────────────────────────── */
+.chip {
+  display: inline-flex; align-items: center;
+  background: var(--gray-3); border: 1px solid var(--gray-4);
+  border-radius: 4px; padding: 2px 6px;
+  font-size: 10px; font-weight: 600; letter-spacing: .04em;
+  color: var(--gray-10); font-family: 'JetBrains Mono', monospace;
+}
+.section-divider { height: 1px; background: #F3F4F6; margin: 28px 0; }
+.text-muted { color: var(--gray-9); font-size: 12px; }
+</style>
+</head>
+<body>
+
+<!-- ═══ TOP HEADER BAR ══════════════════════════════════════════ -->
+<header class="topbar">
+  <div class="topbar-logo">
+    <div class="topbar-logo-dot">N</div>
+    NearGo OMS
+  </div>
+  <span class="topbar-badge">Design System v4.0</span>
+  <div class="topbar-spacer"></div>
+  <span class="topbar-subtitle">Component Library Reference</span>
+</header>
+
+<!-- ═══ LEFT SIDEBAR ════════════════════════════════════════════ -->
+<nav class="sidebar" id="sidebar">
+  <div class="toc-group-label">设计基础</div>
+  <a class="toc-link" href="#colors">颜色系统</a>
+  <a class="toc-link" href="#typography">排版</a>
+
+  <div class="toc-group-label">UI 组件</div>
+  <a class="toc-link" href="#button">按钮</a>
+  <a class="toc-link" href="#badge">Badge</a>
+  <a class="toc-link" href="#input">输入框</a>
+  <a class="toc-link" href="#form">表单元素</a>
+  <a class="toc-link" href="#status">状态指示</a>
+  <a class="toc-link" href="#card">卡片</a>
+  <a class="toc-link" href="#progress">进度条</a>
+
+  <div class="toc-group-label">数据展示</div>
+  <a class="toc-link" href="#table">表格</a>
+  <a class="toc-link" href="#kpi">KPI 卡片</a>
+  <a class="toc-link" href="#timeline">时间线</a>
+  <a class="toc-link" href="#steps">步骤条</a>
+
+  <div class="toc-group-label">交互组件</div>
+  <a class="toc-link" href="#upload">文件上传</a>
+  <a class="toc-link" href="#dialog">弹窗</a>
+  <a class="toc-link" href="#toast">通知</a>
+  <a class="toc-link" href="#tabs">导航标签</a>
+  <a class="toc-link" href="#breadcrumb">面包屑</a>
+
+  <div class="toc-group-label">布局系统</div>
+  <a class="toc-link" href="#layout">布局结构</a>
+  <a class="toc-link" href="#sidebar">侧边栏 Sidebar</a>
+
+  <div class="toc-group-label">设计 Token</div>
+  <a class="toc-link" href="#border-tokens">边框变量 Border</a>
+</nav>
+
+<!-- ═══ MAIN CONTENT ════════════════════════════════════════════ -->
+<main class="main">
+
+  <!-- ─── 1. Color System ─── -->
+  <section class="section" id="colors">
+    <div class="section-title">颜色系统 Color System</div>
+    <p class="section-subtitle">设计 token — CSS 变量定义品牌色彩语义，确保界面一致性</p>
+
+    <div class="sub-label">Amber — 品牌主色</div>
+    <div class="swatch-row" style="margin-bottom:8px;">
+      <div class="swatch" style="background:#fdfaf0;"><span class="swatch-step" style="color:#b0adaa;">1</span></div>
+      <div class="swatch" style="background:#fff8d6;"><span class="swatch-step" style="color:#b0adaa;">2</span></div>
+      <div class="swatch" style="background:#ffeea8;"><span class="swatch-step" style="color:#b0adaa;">3</span></div>
+      <div class="swatch" style="background:#ffdf6e;"><span class="swatch-step" style="color:#8c5c00;">4</span></div>
+      <div class="swatch" style="background:#ffd23a;"><span class="swatch-step" style="color:#8c5c00;">5</span></div>
+      <div class="swatch" style="background:#ffbd0a;"><span class="swatch-step" style="color:#8c5c00;">6</span></div>
+      <div class="swatch" style="background:#f5ab00;"><span class="swatch-step" style="color:#fff;">7</span></div>
+      <div class="swatch" style="background:#e89c00;"><span class="swatch-step" style="color:#fff;">8</span></div>
+      <div class="swatch featured" style="background:#FFA902;" data-label="BRAND">
+        <span class="swatch-step" style="color:#fff;">9</span>
+        <span class="swatch-hex" style="color:rgba(255,255,255,.7);">#FFA902</span>
+      </div>
+      <div class="swatch" style="background:#f09a00;"><span class="swatch-step" style="color:#fff;">10</span></div>
+      <div class="swatch" style="background:#8c5c00;"><span class="swatch-step" style="color:#fff;">11</span></div>
+      <div class="swatch" style="background:#4e3200;"><span class="swatch-step" style="color:rgba(255,255,255,.6);">12</span></div>
+    </div>
+
+    <div class="sub-label" style="margin-top:20px;">Gray — 中性色</div>
+    <div class="swatch-row" style="margin-bottom:8px;">
+      <div class="swatch" style="background:#fdfdfc; border:1px solid #eceae7;"><span class="swatch-step" style="color:#b0adaa;">1</span></div>
+      <div class="swatch" style="background:#f9f9f8; border:1px solid #eceae7;"><span class="swatch-step" style="color:#b0adaa;">2</span></div>
+      <div class="swatch" style="background:#f2f1ef;"><span class="swatch-step" style="color:#807e7b;">3</span></div>
+      <div class="swatch" style="background:#eceae7;"><span class="swatch-step" style="color:#807e7b;">4</span></div>
+      <div class="swatch" style="background:#e5e3e0;"><span class="swatch-step" style="color:#807e7b;">5</span></div>
+      <div class="swatch" style="background:#dddbd8;"><span class="swatch-step" style="color:#4a4846;">6</span></div>
+      <div class="swatch" style="background:#cac8c4;"><span class="swatch-step" style="color:#4a4846;">7</span></div>
+      <div class="swatch" style="background:#b0adaa;"><span class="swatch-step" style="color:#4a4846;">8</span></div>
+      <div class="swatch" style="background:#8c8a87;"><span class="swatch-step" style="color:#fff;">9</span></div>
+      <div class="swatch" style="background:#807e7b;"><span class="swatch-step" style="color:#fff;">10</span></div>
+      <div class="swatch" style="background:#4a4846;"><span class="swatch-step" style="color:#fff;">11</span></div>
+      <div class="swatch featured" style="background:#1F1D1C;" data-label="PRIMARY">
+        <span class="swatch-step" style="color:#fff;">12</span>
+        <span class="swatch-hex" style="color:rgba(255,255,255,.6);">#1F1D1C</span>
+      </div>
+    </div>
+
+    <div class="sub-label" style="margin-top:20px;">Semantic 语义色阶</div>
+
+    <!-- Green -->
+    <div style="margin-bottom:6px;"><span class="chip">Green</span></div>
+    <div class="semantic-row" style="margin-bottom:14px;">
+      <div class="semantic-swatch" style="background:#edfbf4; border-color:#cdf4ea;">
+        <div class="semantic-name" style="color:#107060;">BG</div>
+        <div class="semantic-hex" style="color:#107060;">#edfbf4</div>
+      </div>
+      <div class="semantic-swatch" style="background:#cdf4ea; border-color:#9ee8d3;">
+        <div class="semantic-name" style="color:#107060;">Border</div>
+        <div class="semantic-hex" style="color:#107060;">#cdf4ea</div>
+      </div>
+      <div class="semantic-swatch" style="background:#29a383;">
+        <div class="semantic-name" style="color:#fff;">Solid</div>
+        <div class="semantic-hex" style="color:rgba(255,255,255,.8);">#29a383</div>
+      </div>
+      <div class="semantic-swatch" style="background:#edfbf4; border-color:#cdf4ea;">
+        <div class="semantic-name" style="color:#107060;">Text</div>
+        <div class="semantic-hex" style="color:#107060;">#107060</div>
+      </div>
+    </div>
+
+    <!-- Red -->
+    <div style="margin-bottom:6px;"><span class="chip">Red</span></div>
+    <div class="semantic-row" style="margin-bottom:14px;">
+      <div class="semantic-swatch" style="background:#fff5f5; border-color:#ffe0e0;">
+        <div class="semantic-name" style="color:#ce2c31;">BG</div>
+        <div class="semantic-hex" style="color:#ce2c31;">#fff5f5</div>
+      </div>
+      <div class="semantic-swatch" style="background:#ffe0e0; border-color:#ffc5c5;">
+        <div class="semantic-name" style="color:#ce2c31;">Border</div>
+        <div class="semantic-hex" style="color:#ce2c31;">#ffe0e0</div>
+      </div>
+      <div class="semantic-swatch" style="background:#e5484d;">
+        <div class="semantic-name" style="color:#fff;">Solid</div>
+        <div class="semantic-hex" style="color:rgba(255,255,255,.8);">#e5484d</div>
+      </div>
+      <div class="semantic-swatch" style="background:#fff5f5; border-color:#ffe0e0;">
+        <div class="semantic-name" style="color:#ce2c31;">Text</div>
+        <div class="semantic-hex" style="color:#ce2c31;">#ce2c31</div>
+      </div>
+    </div>
+
+    <!-- Blue -->
+    <div style="margin-bottom:6px;"><span class="chip">Blue</span></div>
+    <div class="semantic-row" style="margin-bottom:14px;">
+      <div class="semantic-swatch" style="background:#f0f8ff; border-color:#d5efff;">
+        <div class="semantic-name" style="color:#0060cf;">BG</div>
+        <div class="semantic-hex" style="color:#0060cf;">#f0f8ff</div>
+      </div>
+      <div class="semantic-swatch" style="background:#d5efff; border-color:#aad5ff;">
+        <div class="semantic-name" style="color:#0060cf;">Border</div>
+        <div class="semantic-hex" style="color:#0060cf;">#d5efff</div>
+      </div>
+      <div class="semantic-swatch" style="background:#0090ff;">
+        <div class="semantic-name" style="color:#fff;">Solid</div>
+        <div class="semantic-hex" style="color:rgba(255,255,255,.8);">#0090ff</div>
+      </div>
+      <div class="semantic-swatch" style="background:#f0f8ff; border-color:#d5efff;">
+        <div class="semantic-name" style="color:#0060cf;">Text</div>
+        <div class="semantic-hex" style="color:#0060cf;">#0060cf</div>
+      </div>
+    </div>
+
+    <!-- Orange -->
+    <div style="margin-bottom:6px;"><span class="chip">Orange</span></div>
+    <div class="semantic-row" style="margin-bottom:14px;">
+      <div class="semantic-swatch" style="background:#fff6f0; border-color:#ffe8d7;">
+        <div class="semantic-name" style="color:#bd4b00;">BG</div>
+        <div class="semantic-hex" style="color:#bd4b00;">#fff6f0</div>
+      </div>
+      <div class="semantic-swatch" style="background:#ffe8d7; border-color:#ffd4b0;">
+        <div class="semantic-name" style="color:#bd4b00;">Border</div>
+        <div class="semantic-hex" style="color:#bd4b00;">#ffe8d7</div>
+      </div>
+      <div class="semantic-swatch" style="background:#f76b15;">
+        <div class="semantic-name" style="color:#fff;">Solid</div>
+        <div class="semantic-hex" style="color:rgba(255,255,255,.8);">#f76b15</div>
+      </div>
+      <div class="semantic-swatch" style="background:#fff6f0; border-color:#ffe8d7;">
+        <div class="semantic-name" style="color:#bd4b00;">Text</div>
+        <div class="semantic-hex" style="color:#bd4b00;">#bd4b00</div>
+      </div>
+    </div>
+
+    <!-- Purple -->
+    <div style="margin-bottom:6px;"><span class="chip">Purple</span></div>
+    <div class="semantic-row">
+      <div class="semantic-swatch" style="background:#faf5ff; border-color:#ecdcfe;">
+        <div class="semantic-name" style="color:#793aaf;">BG</div>
+        <div class="semantic-hex" style="color:#793aaf;">#faf5ff</div>
+      </div>
+      <div class="semantic-swatch" style="background:#ecdcfe; border-color:#d8bafd;">
+        <div class="semantic-name" style="color:#793aaf;">Border</div>
+        <div class="semantic-hex" style="color:#793aaf;">#ecdcfe</div>
+      </div>
+      <div class="semantic-swatch" style="background:#8e4ec6;">
+        <div class="semantic-name" style="color:#fff;">Solid</div>
+        <div class="semantic-hex" style="color:rgba(255,255,255,.8);">#8e4ec6</div>
+      </div>
+      <div class="semantic-swatch" style="background:#faf5ff; border-color:#ecdcfe;">
+        <div class="semantic-name" style="color:#793aaf;">Text</div>
+        <div class="semantic-hex" style="color:#793aaf;">#793aaf</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 2. Typography ─── -->
+  <section class="section" id="typography">
+    <div class="section-title">排版 Typography</div>
+    <p class="section-subtitle">Inter 字体系统 — 6 层级视觉层次</p>
+
+    <div class="type-stack">
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-name">Dashboard H1</div>
+          <div class="type-spec">28px / 700 / -0.04em</div>
+        </div>
+        <div style="font-size:28px;font-weight:700;letter-spacing:-0.04em;color:var(--gray-12);">数据总览</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-name">Page H1</div>
+          <div class="type-spec">20px / 700 / -0.03em</div>
+        </div>
+        <div style="font-size:20px;font-weight:700;letter-spacing:-0.03em;color:var(--gray-12);">订单管理</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-name">Section H2</div>
+          <div class="type-spec">15px / 600 / -0.02em / gray-12</div>
+        </div>
+        <div style="font-size:15px;font-weight:600;letter-spacing:-0.02em;color:var(--gray-12);">近7日订单趋势</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-name">Body Regular</div>
+          <div class="type-spec">13px / 400 / normal / gray-11</div>
+        </div>
+        <div style="font-size:13px;font-weight:400;color:var(--gray-11);">门店提交的订单将在此处显示，审批流程可在设置中配置。</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-name">Caption</div>
+          <div class="type-spec">12px / 400 / normal / gray-9</div>
+        </div>
+        <div style="font-size:12px;font-weight:400;color:var(--gray-9);">最后更新：2024-01-15 14:30</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-name">Mono Code</div>
+          <div class="type-spec">13px / JetBrains Mono / gray-12</div>
+        </div>
+        <div style="font-size:13px;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">ORD-20240115-001</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 3. Button ─── -->
+  <section class="section" id="button">
+    <div class="section-title">按钮 Button</div>
+    <p class="section-subtitle">6 种变体 · 3 种尺寸 · 禁用 · 加载状态</p>
+
+    <div class="sub-label">Variants</div>
+    <div class="row">
+      <button class="btn btn-md btn-primary">主要操作</button>
+      <button class="btn btn-md btn-secondary">次要操作</button>
+      <button class="btn btn-md btn-outline">线框按钮</button>
+      <button class="btn btn-md btn-ghost">幽灵按钮</button>
+      <button class="btn btn-md btn-brand">品牌按钮</button>
+      <button class="btn btn-md btn-destructive">危险操作</button>
+    </div>
+
+    <div class="sub-label" style="margin-top:8px;">Sizes — Primary</div>
+    <div class="row" style="align-items:center;">
+      <button class="btn btn-sm btn-primary">小按钮 SM</button>
+      <button class="btn btn-md btn-primary">中按钮 MD</button>
+      <button class="btn btn-lg btn-primary">大按钮 LG</button>
+    </div>
+
+    <div class="sub-label" style="margin-top:8px;">States</div>
+    <div class="row">
+      <button class="btn btn-md btn-disabled" disabled>已禁用</button>
+      <button class="btn btn-md btn-loading">
+        <span class="spinner"></span>处理中…
+      </button>
+    </div>
+  </section>
+
+  <!-- ─── 4. Badge ─── -->
+  <section class="section" id="badge">
+    <div class="section-title">Badge 标签</div>
+    <p class="section-subtitle">状态标签 — 点状指示器 + 文字</p>
+    <div class="row" style="flex-wrap:wrap;">
+      <span class="badge badge-default">
+        <span class="badge-dot" style="background:var(--gray-8);"></span>默认
+      </span>
+      <span class="badge badge-success">
+        <span class="badge-dot" style="background:var(--green-solid);"></span>成功
+      </span>
+      <span class="badge badge-warning">
+        <span class="badge-dot" style="background:var(--amber-9);"></span>警告
+      </span>
+      <span class="badge badge-danger">
+        <span class="badge-dot" style="background:var(--red-solid);"></span>危险
+      </span>
+      <span class="badge badge-info">
+        <span class="badge-dot" style="background:var(--blue-solid);"></span>信息
+      </span>
+      <span class="badge badge-urgent">
+        <span class="badge-dot" style="background:var(--orange-solid);"></span>紧急
+      </span>
+      <span class="badge badge-brand">品牌</span>
+      <span class="badge badge-outline">轮廓</span>
+      <span class="badge badge-purple">
+        <span class="badge-dot" style="background:var(--purple-solid);"></span>处理中
+      </span>
+    </div>
+  </section>
+
+  <!-- ─── 5. Input ─── -->
+  <section class="section" id="input">
+    <div class="section-title">输入框 Input</div>
+    <p class="section-subtitle">6 种状态 — 默认 / 聚焦 / 错误 / 禁用 / 前缀图标 / 清除按钮</p>
+
+    <div style="display:flex;flex-direction:column;gap:18px;max-width:320px;">
+
+      <div>
+        <div class="input-label">默认 Default</div>
+        <input class="input" placeholder="请输入订单编号…" />
+      </div>
+
+      <div>
+        <div class="input-label">聚焦 Focused</div>
+        <input class="input input-focused" value="ORD-2024" />
+      </div>
+
+      <div>
+        <div class="input-label">错误 Error</div>
+        <input class="input input-error" value="invalid-value" />
+        <div class="input-error-text">⚠ 订单编号格式不正确，请重新输入</div>
+      </div>
+
+      <div>
+        <div class="input-label">禁用 Disabled</div>
+        <input class="input input-disabled" value="只读数据" disabled />
+      </div>
+
+      <div>
+        <div class="input-label">前缀图标 Icon Prefix</div>
+        <div class="input-prefix-wrap">
+          <span class="input-prefix-icon">🔍</span>
+          <input class="input input-with-prefix" placeholder="搜索门店名称…" />
+        </div>
+      </div>
+
+      <div>
+        <div class="input-label">清除按钮 Clearable</div>
+        <div class="input-wrap" style="width:100%;">
+          <input class="input" value="已输入文字内容" style="padding-right:30px;" />
+          <button class="input-clear-btn">✕</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── 6. Form Elements ─── -->
+  <section class="section" id="form">
+    <div class="section-title">表单元素 Form Elements</div>
+    <p class="section-subtitle">Checkbox · Radio · Switch · Select</p>
+
+    <div class="sub-label">Checkbox</div>
+    <div class="row" style="gap:24px; margin-bottom:24px;">
+      <div class="checkbox-wrap">
+        <div class="checkbox"></div>
+        <span class="checkbox-label">未选中</span>
+      </div>
+      <div class="checkbox-wrap">
+        <div class="checkbox checked">
+          <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
+            <path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="checkbox-label">已选中</span>
+      </div>
+      <div class="checkbox-wrap">
+        <div class="checkbox indeterminate">
+          <svg width="8" height="2" viewBox="0 0 8 2" fill="none">
+            <rect x="0" y="0.5" width="8" height="1" rx="0.5" fill="white"/>
+          </svg>
+        </div>
+        <span class="checkbox-label">半选</span>
+      </div>
+      <div class="checkbox-wrap">
+        <div class="checkbox disabled"></div>
+        <span class="checkbox-label disabled">禁用</span>
+      </div>
+    </div>
+
+    <div class="sub-label">Radio — 审批决定</div>
+    <div class="radio-group" style="margin-bottom:24px;">
+      <div class="radio-wrap">
+        <div class="radio selected"></div>
+        <span class="radio-label" style="color:var(--green-text);font-weight:500;">✓ 通过 — 申请符合条件，批准放款</span>
+      </div>
+      <div class="radio-wrap">
+        <div class="radio"></div>
+        <span class="radio-label">拒绝 — 申请不符合条件</span>
+      </div>
+      <div class="radio-wrap">
+        <div class="radio"></div>
+        <span class="radio-label">待定 — 需要补充材料</span>
+      </div>
+    </div>
+
+    <div class="sub-label">Switch</div>
+    <div class="row" style="gap:32px; margin-bottom:24px;">
+      <div class="switch-wrap">
+        <button class="switch"></button>
+        <span class="switch-label">邮件通知</span>
+      </div>
+      <div class="switch-wrap">
+        <button class="switch on"></button>
+        <span class="switch-label" style="font-weight:500;color:var(--gray-12);">短信通知（已开启）</span>
+      </div>
+    </div>
+
+    <div class="sub-label">Select Dropdown</div>
+    <div class="row" style="gap:32px; align-items:flex-start;">
+      <div>
+        <div style="font-size:11px;color:var(--gray-8);margin-bottom:6px;">收起状态</div>
+        <div class="select-wrap">
+          <div class="select-trigger">请选择门店类型</div>
+          <span class="select-arrow">▾</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--gray-8);margin-bottom:6px;">展开状态</div>
+        <div class="select-wrap" style="position:relative;">
+          <div class="select-trigger" style="border-color:var(--gray-7);box-shadow:0 0 0 2px #eceae7;">旗舰门店</div>
+          <span class="select-arrow">▴</span>
+          <div class="select-dropdown" style="position:absolute;">
+            <div class="select-option">标准门店</div>
+            <div class="select-option selected">旗舰门店</div>
+            <div class="select-option">加盟门店</div>
+            <div class="select-option">合作门店</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 7. Status Indicator ─── -->
+  <section class="section" id="status">
+    <div class="section-title">状态指示 Status Indicator</div>
+    <p class="section-subtitle">6px 语义点 + 文字 + 背景色块，统一状态可读性</p>
+    <div class="status-grid">
+      <div class="status-badge" style="background:var(--gray-2);border-color:var(--gray-4);color:var(--gray-10);">
+        <span class="badge-dot" style="background:var(--gray-8);"></span>待处理
+      </div>
+      <div class="status-badge" style="background:var(--green-bg);border-color:var(--green-border);color:var(--green-text);">
+        <span class="badge-dot" style="background:var(--green-solid);"></span>已审批
+      </div>
+      <div class="status-badge" style="background:var(--red-bg);border-color:var(--red-border);color:var(--red-text);">
+        <span class="badge-dot" style="background:var(--red-solid);"></span>已拒绝
+      </div>
+      <div class="status-badge" style="background:var(--blue-bg);border-color:var(--blue-border);color:var(--blue-text);">
+        <span class="badge-dot" style="background:var(--blue-solid);"></span>进行中
+      </div>
+      <div class="status-badge" style="background:var(--gray-2);border-color:var(--gray-4);color:var(--gray-9);">
+        <span class="badge-dot" style="background:var(--gray-7);"></span>已取消
+      </div>
+      <div class="status-badge" style="background:var(--orange-bg);border-color:var(--orange-border);color:var(--orange-text);">
+        <span class="badge-dot" style="background:var(--orange-solid);"></span>搁置中
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 8. Card ─── -->
+  <section class="section" id="card">
+    <div class="section-title">卡片 Card</div>
+    <p class="section-subtitle">基础卡片 · Dashboard KPI · 警告卡片</p>
+    <div class="row" style="align-items:flex-start; gap:16px;">
+
+      <!-- Default card -->
+      <div class="card" style="width:220px;">
+        <div class="card-header">
+          <div class="card-title">门店详情</div>
+          <div class="card-desc">最近更新 2 分钟前</div>
+        </div>
+        <div class="card-body">
+          <div style="font-size:12px;color:var(--gray-9);margin-bottom:4px;">门店编号</div>
+          <div style="font-size:13px;font-family:'JetBrains Mono',monospace;color:var(--gray-12);margin-bottom:12px;">STR-00342</div>
+          <div style="font-size:12px;color:var(--gray-9);margin-bottom:4px;">状态</div>
+          <span class="badge badge-success"><span class="badge-dot" style="background:var(--green-solid);"></span>正常营业</span>
+        </div>
+      </div>
+
+      <!-- KPI card -->
+      <div class="kpi-mini">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+          <div>
+            <div class="kpi-mini-label">今日成交额</div>
+            <div class="kpi-mini-value">¥12,480</div>
+            <div class="kpi-mini-trend trend-up">↑ 18.4% 较昨日</div>
+          </div>
+          <div class="kpi-mini-icon" style="background:var(--blue-bg);">💰</div>
+        </div>
+      </div>
+
+      <!-- Warning card -->
+      <div class="card-alert" style="width:220px;">
+        <div class="card-alert-title">⚠ 审批超时提醒</div>
+        <div class="card-alert-body">订单 ORD-0342 已超过 48 小时未处理，请尽快完成审批操作。</div>
+        <div style="margin-top:12px;">
+          <button class="btn btn-sm" style="background:var(--orange-solid);color:#fff;border:none;">立即处理</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── 9. Progress ─── -->
+  <section class="section" id="progress">
+    <div class="section-title">进度条 Progress</div>
+    <p class="section-subtitle">5 种语义颜色进度条</p>
+    <div style="max-width:520px;">
+      <div class="progress-wrap">
+        <div class="progress-header">
+          <span class="progress-title">默认进度</span>
+          <span class="progress-pct">20%</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:20%;background:var(--gray-11);"></div></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-header">
+          <span class="progress-title">成功 Success</span>
+          <span class="progress-pct">45%</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:45%;background:var(--green-solid);"></div></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-header">
+          <span class="progress-title">警告 Warning</span>
+          <span class="progress-pct">65%</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:65%;background:var(--amber-9);"></div></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-header">
+          <span class="progress-title">危险 Danger</span>
+          <span class="progress-pct">80%</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:80%;background:var(--red-solid);"></div></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-header">
+          <span class="progress-title">信息 Info</span>
+          <span class="progress-pct">95%</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:95%;background:var(--blue-solid);"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 10. Table ─── -->
+  <section class="section" id="table">
+    <div class="section-title">表格 Table</div>
+    <p class="section-subtitle">数据表格 — 可悬停行 · 状态列 · 分页栏</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>订单号</th>
+            <th>门店</th>
+            <th>金额</th>
+            <th>状态</th>
+            <th>创建时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="mono">ORD-20240115-001</span></td>
+            <td>朝阳旗舰店</td>
+            <td style="font-weight:600;color:var(--gray-12);">¥4,280</td>
+            <td><span class="badge badge-success"><span class="badge-dot" style="background:var(--green-solid);"></span>已通过</span></td>
+            <td style="color:var(--gray-9);">2024-01-15 09:30</td>
+            <td><a href="#" style="font-size:12px;color:var(--blue-text);text-decoration:none;">查看详情</a></td>
+          </tr>
+          <tr class="hover">
+            <td><span class="mono">ORD-20240115-002</span></td>
+            <td>海淀科技店</td>
+            <td style="font-weight:600;color:var(--gray-12);">¥1,960</td>
+            <td><span class="badge badge-warning"><span class="badge-dot" style="background:var(--amber-9);"></span>待审批</span></td>
+            <td style="color:var(--gray-9);">2024-01-15 10:14</td>
+            <td><a href="#" style="font-size:12px;color:var(--blue-text);text-decoration:none;">查看详情</a></td>
+          </tr>
+          <tr>
+            <td><span class="mono">ORD-20240115-003</span></td>
+            <td>浦东联营店</td>
+            <td style="font-weight:600;color:var(--gray-12);">¥8,530</td>
+            <td><span class="badge badge-danger"><span class="badge-dot" style="background:var(--red-solid);"></span>已拒绝</span></td>
+            <td style="color:var(--gray-9);">2024-01-15 11:05</td>
+            <td><a href="#" style="font-size:12px;color:var(--blue-text);text-decoration:none;">查看详情</a></td>
+          </tr>
+          <tr>
+            <td><span class="mono">ORD-20240115-004</span></td>
+            <td>西湖旗舰店</td>
+            <td style="font-weight:600;color:var(--gray-12);">¥3,120</td>
+            <td><span class="badge badge-info"><span class="badge-dot" style="background:var(--blue-solid);"></span>进行中</span></td>
+            <td style="color:var(--gray-9);">2024-01-15 12:40</td>
+            <td><a href="#" style="font-size:12px;color:var(--blue-text);text-decoration:none;">查看详情</a></td>
+          </tr>
+          <tr>
+            <td><span class="mono">ORD-20240115-005</span></td>
+            <td>天河加盟店</td>
+            <td style="font-weight:600;color:var(--gray-12);">¥660</td>
+            <td><span class="badge badge-default"><span class="badge-dot" style="background:var(--gray-8);"></span>待处理</span></td>
+            <td style="color:var(--gray-9);">2024-01-15 14:22</td>
+            <td><a href="#" style="font-size:12px;color:var(--blue-text);text-decoration:none;">查看详情</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination">
+        <span class="page-info">共 234 条记录</span>
+        <button class="page-btn">‹</button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <span class="page-ellipsis">…</span>
+        <button class="page-btn">12</button>
+        <button class="page-btn">›</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 10-B. Table Loading（Skeleton 行） ─── -->
+  <section class="section" id="table-loading">
+    <div class="section-title">表格加载态 Table Loading</div>
+    <p class="section-subtitle">Skeleton 行替换真实数据行；列宽比例与正式列一致</p>
+    <div class="table-wrap">
+      <table class="table-loading">
+        <thead>
+          <tr>
+            <th>订单号</th>
+            <th>门店</th>
+            <th>金额</th>
+            <th>状态</th>
+            <th>创建时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 5 skeleton rows — copy & repeat for any row count -->
+          <tr>
+            <td><span class="skeleton-cell" style="width:130px;"></span></td>
+            <td><span class="skeleton-cell" style="width:72px;"></span></td>
+            <td><span class="skeleton-cell" style="width:48px;"></span></td>
+            <td><span class="skeleton-cell" style="width:56px;border-radius:20px;"></span></td>
+            <td><span class="skeleton-cell" style="width:110px;"></span></td>
+            <td><span class="skeleton-cell" style="width:48px;"></span></td>
+          </tr>
+          <tr>
+            <td><span class="skeleton-cell" style="width:130px;"></span></td>
+            <td><span class="skeleton-cell" style="width:60px;"></span></td>
+            <td><span class="skeleton-cell" style="width:40px;"></span></td>
+            <td><span class="skeleton-cell" style="width:56px;border-radius:20px;"></span></td>
+            <td><span class="skeleton-cell" style="width:110px;"></span></td>
+            <td><span class="skeleton-cell" style="width:48px;"></span></td>
+          </tr>
+          <tr>
+            <td><span class="skeleton-cell" style="width:130px;"></span></td>
+            <td><span class="skeleton-cell" style="width:80px;"></span></td>
+            <td><span class="skeleton-cell" style="width:52px;"></span></td>
+            <td><span class="skeleton-cell" style="width:56px;border-radius:20px;"></span></td>
+            <td><span class="skeleton-cell" style="width:110px;"></span></td>
+            <td><span class="skeleton-cell" style="width:48px;"></span></td>
+          </tr>
+          <tr>
+            <td><span class="skeleton-cell" style="width:130px;"></span></td>
+            <td><span class="skeleton-cell" style="width:68px;"></span></td>
+            <td><span class="skeleton-cell" style="width:44px;"></span></td>
+            <td><span class="skeleton-cell" style="width:56px;border-radius:20px;"></span></td>
+            <td><span class="skeleton-cell" style="width:110px;"></span></td>
+            <td><span class="skeleton-cell" style="width:48px;"></span></td>
+          </tr>
+          <tr>
+            <td><span class="skeleton-cell" style="width:130px;"></span></td>
+            <td><span class="skeleton-cell" style="width:76px;"></span></td>
+            <td><span class="skeleton-cell" style="width:36px;"></span></td>
+            <td><span class="skeleton-cell" style="width:56px;border-radius:20px;"></span></td>
+            <td><span class="skeleton-cell" style="width:110px;"></span></td>
+            <td><span class="skeleton-cell" style="width:48px;"></span></td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- pagination skeleton -->
+      <div class="pagination">
+        <span class="page-info"><span class="skeleton-cell" style="width:80px;"></span></span>
+        <span class="skeleton-cell" style="width:28px;height:28px;border-radius:6px;"></span>
+        <span class="skeleton-cell" style="width:28px;height:28px;border-radius:6px;"></span>
+        <span class="skeleton-cell" style="width:28px;height:28px;border-radius:6px;"></span>
+        <span class="skeleton-cell" style="width:28px;height:28px;border-radius:6px;"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 10-C. Table Error 态 ─── -->
+  <section class="section" id="table-error">
+    <div class="section-title">表格错误态 Table Error</div>
+    <p class="section-subtitle">顶部错误横幅 + 保留表头 + 空 body 提示；禁止清空整个表格容器</p>
+
+    <!-- Error variant A: banner + empty rows -->
+    <div class="sub-label" style="margin-bottom:10px;">变体 A · 错误横幅 + 空表</div>
+    <div class="table-wrap" style="margin-bottom:24px;">
+      <div class="table-error-banner" role="alert" aria-live="polite">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        数据加载失败，请检查网络连接后重试
+        <div class="table-error-banner-actions">
+          <button class="btn btn-sm btn-outline" style="border-color:var(--red-border);color:var(--red-text);font-size:12px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+            重新加载
+          </button>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>订单号</th><th>门店</th><th>金额</th><th>状态</th><th>创建时间</th><th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="table-empty-body">
+            <td colspan="6">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--red-border)" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <span style="color:var(--gray-9);font-size:13px;">加载失败，暂无数据</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Error variant B: inline row error -->
+    <div class="sub-label" style="margin-bottom:10px;">变体 B · 局部行错误（批量操作失败反馈）</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>订单号</th><th>门店</th><th>金额</th><th>状态</th><th>创建时间</th><th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="mono">ORD-20240115-001</span></td>
+            <td>朝阳旗舰店</td>
+            <td style="font-weight:600;color:var(--gray-12);">¥4,280</td>
+            <td><span class="badge badge-success"><span class="badge-dot" style="background:var(--green-solid);"></span>已通过</span></td>
+            <td style="color:var(--gray-9);">2024-01-15 09:30</td>
+            <td><a href="#" style="font-size:12px;color:var(--blue-text);text-decoration:none;">查看详情</a></td>
+          </tr>
+          <!-- 行级错误：红色背景 + 错误提示列 -->
+          <tr style="background:var(--red-bg);">
+            <td><span class="mono" style="color:var(--red-text);">ORD-20240115-002</span></td>
+            <td style="color:var(--red-text);">海淀科技店</td>
+            <td style="font-weight:600;color:var(--red-text);">¥1,960</td>
+            <td>
+              <span class="badge badge-danger">
+                <span class="badge-dot" style="background:var(--red-solid);"></span>操作失败
+              </span>
+            </td>
+            <td style="color:var(--red-text);opacity:.7;">2024-01-15 10:14</td>
+            <td>
+              <span style="font-size:11px;color:var(--red-text);display:flex;align-items:center;gap:4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                余额不足
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="mono">ORD-20240115-003</span></td>
+            <td>浦东联营店</td>
+            <td style="font-weight:600;color:var(--gray-12);">¥8,530</td>
+            <td><span class="badge badge-info"><span class="badge-dot" style="background:var(--blue-solid);"></span>进行中</span></td>
+            <td style="color:var(--gray-9);">2024-01-15 11:05</td>
+            <td><a href="#" style="font-size:12px;color:var(--blue-text);text-decoration:none;">查看详情</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ─── 11. KPI Cards ─── -->
+  <section class="section" id="kpi">
+    <div class="section-title">KPI 卡片 Dashboard</div>
+    <p class="section-subtitle">4 列 Dashboard 指标卡 — 数值 · 趋势 · 图标</p>
+    <div class="kpi-grid">
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-label">今日订单</div>
+          <div class="kpi-icon" style="background:var(--blue-bg);">🛒</div>
+        </div>
+        <div class="kpi-value">1,284</div>
+        <div class="kpi-trend trend-up">↑ 12% <span style="color:var(--gray-8);font-weight:400;">vs 昨日</span></div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-label">活跃门店</div>
+          <div class="kpi-icon" style="background:var(--green-bg);">🏪</div>
+        </div>
+        <div class="kpi-value">342</div>
+        <div class="kpi-trend trend-up">↑ 3% <span style="color:var(--gray-8);font-weight:400;">vs 昨日</span></div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-label">待审批</div>
+          <div class="kpi-icon" style="background:var(--orange-bg);">⏱</div>
+        </div>
+        <div class="kpi-value">28</div>
+        <div class="kpi-trend trend-down">↓ 5% <span style="color:var(--gray-8);font-weight:400;">需紧急处理</span></div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-label">今日营收</div>
+          <div class="kpi-icon" style="background:var(--purple-bg);">💴</div>
+        </div>
+        <div class="kpi-value">¥48,620</div>
+        <div class="kpi-trend trend-up">↑ 18% <span style="color:var(--gray-8);font-weight:400;">vs 昨日</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── 12. Timeline ─── -->
+  <section class="section" id="timeline">
+    <div class="section-title">时间线 Timeline</div>
+    <p class="section-subtitle">审批流程追踪 — 完成 / 进行中 / 待处理</p>
+    <div class="timeline" style="max-width:480px;">
+
+      <div class="tl-item">
+        <div class="tl-line-wrap">
+          <div class="tl-icon done">✓</div>
+          <div style="position:absolute;left:50%;top:28px;bottom:0;width:1.5px;background:var(--gray-4);transform:translateX(-50%);"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-title">提交申请</div>
+          <div class="tl-meta">张三 · 2024-01-15 09:30</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-line-wrap">
+          <div class="tl-icon done">✓</div>
+          <div style="position:absolute;left:50%;top:28px;bottom:0;width:1.5px;background:var(--gray-4);transform:translateX(-50%);"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-title">初审通过</div>
+          <div class="tl-meta">李四 · 2024-01-15 11:20</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-line-wrap">
+          <div class="tl-icon active">●</div>
+          <div style="position:absolute;left:50%;top:28px;bottom:0;width:1.5px;background:var(--gray-4);transform:translateX(-50%);"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-title" style="color:var(--amber-11);">终审中</div>
+          <div class="tl-meta">等待终审负责人处理…</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-line-wrap">
+          <div class="tl-icon pending">○</div>
+          <div style="position:absolute;left:50%;top:28px;bottom:0;width:1.5px;background:var(--gray-4);transform:translateX(-50%);"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-title" style="color:var(--gray-8);">财务审核</div>
+          <div class="tl-meta" style="color:var(--gray-7);">待处理</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-line-wrap">
+          <div class="tl-icon pending">○</div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-title" style="color:var(--gray-8);">完成放款</div>
+          <div class="tl-meta" style="color:var(--gray-7);">待处理</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── 13. Steps ─── -->
+  <section class="section" id="steps">
+    <div class="section-title">步骤条 Steps</div>
+    <p class="section-subtitle">水平步进器 — 完成 / 进行中 / 待处理</p>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:28px 32px;max-width:640px;">
+      <div class="steps">
+
+        <div class="step-node">
+          <div class="step-circle done">✓</div>
+          <div class="step-label done">提交申请</div>
+        </div>
+        <div class="step-connector done"></div>
+
+        <div class="step-node">
+          <div class="step-circle done">✓</div>
+          <div class="step-label done">初审</div>
+        </div>
+        <div class="step-connector done"></div>
+
+        <div class="step-node">
+          <div class="step-circle active">3</div>
+          <div class="step-label active">终审</div>
+        </div>
+        <div class="step-connector"></div>
+
+        <div class="step-node">
+          <div class="step-circle pending">4</div>
+          <div class="step-label pending">财务</div>
+        </div>
+        <div class="step-connector"></div>
+
+        <div class="step-node">
+          <div class="step-circle pending">5</div>
+          <div class="step-label pending">完成</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 14. File Upload ─── -->
+  <section class="section" id="upload">
+    <div class="section-title">文件上传 File Upload</div>
+    <p class="section-subtitle">拖拽上传区 + 已上传文件列表</p>
+    <div style="max-width:440px;">
+      <div class="upload-zone">
+        <div class="upload-icon">📁</div>
+        <div class="upload-text">拖拽文件到此处，或 <span class="upload-btn-txt">点击上传</span></div>
+        <div class="upload-hint">支持 PDF / JPG / PNG / XLSX，单文件最大 20MB</div>
+      </div>
+      <div class="file-item">
+        <span class="file-icon">📄</span>
+        <span class="file-name">合同扫描件.pdf</span>
+        <span class="file-size">2.4 MB</span>
+        <button class="file-remove">✕</button>
+      </div>
+      <div class="file-item">
+        <span class="file-icon">🖼️</span>
+        <span class="file-name">营业执照.jpg</span>
+        <span class="file-size">856 KB</span>
+        <button class="file-remove">✕</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 15. Layout System ─── -->
+  <section class="section" id="layout">
+    <div class="section-title">布局系统 Layout System</div>
+    <p class="section-subtitle">OMS 整体布局线框图 — Topbar + Sidebar + Main + Right Panel</p>
+    <div class="layout-diagram" style="max-width:720px;">
+      <div class="ld-topbar">
+        <div class="ld-logo">NearGo OMS</div>
+        <div style="flex:1;margin:0 12px;">
+          <div style="height:18px;background:var(--gray-2);border:1px solid var(--border);border-radius:4px;max-width:200px;display:flex;align-items:center;padding:0 8px;">
+            <span style="font-size:9px;color:var(--gray-9);">🔍 搜索订单、门店…</span>
+          </div>
+        </div>
+        <div class="ld-topbar-icon">🔔</div>
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--amber-9);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700;margin-left:6px;">Z</div>
+      </div>
+      <div class="ld-body">
+        <div class="ld-sidebar">
+          <div style="padding:8px 8px 4px;font-size:8px;color:var(--gray-7);letter-spacing:.06em;text-transform:uppercase;font-weight:600;">导航菜单</div>
+          <div class="ld-nav-item">📊 数据总览</div>
+          <div class="ld-nav-item active">📋 订单管理</div>
+          <div class="ld-nav-item">🏪 门店管理</div>
+          <div class="ld-nav-item">✅ 审批流程</div>
+          <div class="ld-nav-item">💰 财务报表</div>
+          <div class="ld-nav-item">⚙️ 系统设置</div>
+        </div>
+        <div class="ld-main">
+          <div class="ld-page-header">订单管理 · 全部订单</div>
+          <div class="ld-table">
+            <div class="ld-table-row">
+              <div class="ld-cell sm" style="background:var(--gray-6);"></div>
+              <div class="ld-cell" style="background:var(--gray-6);"></div>
+              <div class="ld-cell sm" style="background:var(--gray-6);"></div>
+              <div class="ld-cell sm" style="background:var(--gray-6);"></div>
+            </div>
+            <div class="ld-table-row">
+              <div class="ld-cell sm"></div>
+              <div class="ld-cell"></div>
+              <div class="ld-cell sm"></div>
+              <div class="ld-cell sm" style="background:var(--green-border);"></div>
+            </div>
+            <div class="ld-table-row" style="background:var(--amber-1);">
+              <div class="ld-cell sm"></div>
+              <div class="ld-cell"></div>
+              <div class="ld-cell sm"></div>
+              <div class="ld-cell sm" style="background:var(--amber-3);"></div>
+            </div>
+            <div class="ld-table-row">
+              <div class="ld-cell sm"></div>
+              <div class="ld-cell"></div>
+              <div class="ld-cell sm"></div>
+              <div class="ld-cell sm" style="background:var(--red-border);"></div>
+            </div>
+            <div class="ld-table-row">
+              <div class="ld-cell sm"></div>
+              <div class="ld-cell"></div>
+              <div class="ld-cell sm"></div>
+              <div class="ld-cell sm" style="background:var(--blue-border);"></div>
+            </div>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:4px;align-items:center;">
+            <div style="height:20px;background:var(--gray-3);border-radius:4px;width:20px;"></div>
+            <div style="height:20px;background:var(--gray-12);border-radius:4px;width:20px;display:flex;align-items:center;justify-content:center;"><span style="color:#fff;font-size:8px;">1</span></div>
+            <div style="height:20px;background:var(--gray-3);border-radius:4px;width:20px;"></div>
+            <div style="height:20px;background:var(--gray-3);border-radius:4px;width:20px;"></div>
+            <span style="font-size:8px;color:var(--gray-8);margin-left:4px;">共 234 条</span>
+          </div>
+        </div>
+        <div class="ld-panel">
+          <div class="ld-panel-label">详情面板</div>
+          <div style="height:28px;background:var(--gray-2);border-radius:5px;margin-bottom:8px;display:flex;align-items:center;padding:0 8px;"><span style="font-size:8px;color:var(--gray-9);font-family:'JetBrains Mono',monospace;">ORD-20240115-002</span></div>
+          <div class="ld-panel-row"></div>
+          <div class="ld-panel-row sm"></div>
+          <div class="ld-panel-row"></div>
+          <div class="ld-panel-row sm"></div>
+          <div style="margin-top:12px;height:1px;background:var(--gray-3);"></div>
+          <div style="margin-top:10px;">
+            <div style="height:24px;background:var(--gray-12);border-radius:4px;display:flex;align-items:center;justify-content:center;">
+              <span style="font-size:8px;color:#fff;font-weight:600;">审批通过</span>
+            </div>
+            <div style="height:24px;background:var(--gray-2);border:1px solid var(--gray-4);border-radius:4px;display:flex;align-items:center;justify-content:center;margin-top:6px;">
+              <span style="font-size:8px;color:var(--gray-9);">拒绝</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:20px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:2px;background:var(--surface);border:1px solid var(--border);"></div><span class="text-muted">Topbar 54px (white)</span></div>
+      <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:2px;background:var(--surface);border:1px solid var(--gray-4);"></div><span class="text-muted">Sidebar 232px</span></div>
+      <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:2px;background:var(--gray-1);border:1px solid var(--gray-4);"></div><span class="text-muted">Main Content</span></div>
+      <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:2px;background:var(--surface);border:1px solid var(--amber-3);"></div><span class="text-muted">Right Panel 320px</span></div>
+    </div>
+  </section>
+
+  <!-- ─── 16. Dialog ─── -->
+  <section class="section" id="dialog">
+    <div class="section-title">弹窗 Dialog</div>
+    <p class="section-subtitle">Modal 预览 — 半透明遮罩 + 对话框卡片</p>
+    <div class="dialog-overlay">
+      <div class="dialog">
+        <div class="dialog-header">
+          <div class="dialog-title">确认审批通过</div>
+        </div>
+        <div class="dialog-body">
+          请确认您已仔细核查该申请的所有资料。此操作不可撤销，审批通过后系统将自动通知申请人并启动放款流程。
+        </div>
+        <div class="dialog-footer">
+          <button class="btn btn-md btn-outline">取消</button>
+          <button class="btn btn-md btn-primary">确认通过</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 17. Toast ─── -->
+  <section class="section" id="toast">
+    <div class="section-title">通知 Toast</div>
+    <p class="section-subtitle">3 种语义通知条 — 左侧彩色边框</p>
+    <div class="toast-stack">
+      <div class="toast toast-success">
+        <div class="toast-icon">✅</div>
+        <div class="toast-text">
+          <div class="toast-title">审批已通过</div>
+          <div class="toast-msg">订单 ORD-20240115-001 已成功完成审批，放款流程已启动。</div>
+        </div>
+      </div>
+      <div class="toast toast-warning">
+        <div class="toast-icon">⚠️</div>
+        <div class="toast-text">
+          <div class="toast-title">操作即将超时</div>
+          <div class="toast-msg">当前审批操作即将超过 48 小时，请尽快处理以避免自动拒绝。</div>
+        </div>
+      </div>
+      <div class="toast toast-error">
+        <div class="toast-icon">❌</div>
+        <div class="toast-text">
+          <div class="toast-title">网络请求失败</div>
+          <div class="toast-msg">服务器响应超时，请检查网络连接后重试。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 18. Tabs ─── -->
+  <section class="section" id="tabs">
+    <div class="section-title">导航标签 Section Tabs</div>
+    <p class="section-subtitle">下划线激活指示 + 数字计数 Badge</p>
+    <div style="background:var(--surface);border:1px solid #F3F4F6;border-radius:10px;overflow:hidden;max-width:560px;">
+      <div class="tabs-bar" style="padding:0 8px;">
+        <div class="tab-item">全部 <span class="tab-count">234</span></div>
+        <div class="tab-item active">待审批 <span class="tab-count">28</span></div>
+        <div class="tab-item">已通过 <span class="tab-count">186</span></div>
+        <div class="tab-item">已拒绝 <span class="tab-count">20</span></div>
+      </div>
+      <div style="padding:16px;font-size:12px;color:var(--gray-9);">
+        显示 28 条待审批记录 · 按优先级排序
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 19. Breadcrumb ─── -->
+  <section class="section" id="breadcrumb">
+    <div class="section-title">面包屑 Breadcrumb</div>
+    <p class="section-subtitle">层级导航 — 斜杠分隔 · 末项加粗</p>
+    <div style="background:var(--surface);border:1px solid #F3F4F6;border-radius:10px;padding:16px 20px;max-width:560px;">
+      <div class="breadcrumb">
+        <span class="bc-item">首页</span>
+        <span class="bc-sep">›</span>
+        <span class="bc-item">订单管理</span>
+        <span class="bc-sep">›</span>
+        <span class="bc-item">订单详情</span>
+        <span class="bc-sep">›</span>
+        <span class="bc-item current">
+          <span class="mono" style="font-size:13px;">#ORD-20240115-001</span>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 20. Sidebar ─── -->
+  <section class="section" id="sidebar">
+    <div class="section-title">侧边栏 Sidebar</div>
+    <p class="section-subtitle">基于 shadcn/ui Sidebar 规范适配 NearGo OMS — 支持展开 / 图标收起 / 浮动三种形态</p>
+
+    <style>
+    /* ─── Sidebar Component Tokens ───────────────────────── */
+    .ns-sidebar {
+      --ns-sb-w:       220px;
+      --ns-sb-w-icon:  52px;
+      --ns-sb-dur:     200ms;
+      --ns-sb-ease:    cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* ─── Sidebar Shell ─────────────────────────────────── */
+    .ns-sidebar-provider {
+      display: flex;
+      width: 100%;
+      border: 1px solid var(--gray-4);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--gray-1);
+      box-shadow: var(--shadow-popup);
+    }
+
+    /* ─── Sidebar Root ──────────────────────────────────── */
+    .ns-sidebar {
+      width: var(--ns-sb-w);
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      height: 420px;
+      transition: width var(--ns-sb-dur) var(--ns-sb-ease);
+      overflow: hidden;
+    }
+    .ns-sidebar[data-state="collapsed"] {
+      width: var(--ns-sb-w-icon);
+    }
+    /* Floating variant */
+    .ns-sidebar[data-variant="floating"] {
+      margin: 8px 0 8px 8px;
+      height: calc(100% - 16px);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-4);
+    }
+    /* Inset variant */
+    .ns-sidebar[data-variant="inset"] {
+      background: var(--gray-2);
+      border-right: none;
+    }
+
+    /* ─── Sidebar Header ────────────────────────────────── */
+    .ns-sb-header {
+      display: flex;
+      align-items: center;
+      height: 54px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--border);
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .ns-sb-logo {
+      width: 26px; height: 26px; border-radius: 6px;
+      background: var(--amber-9);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; color: #fff;
+      flex-shrink: 0;
+    }
+    .ns-sb-brand {
+      font-size: 14px; font-weight: 700;
+      color: var(--gray-12); letter-spacing: -0.03em;
+      white-space: nowrap; overflow: hidden;
+      transition: opacity var(--ns-sb-dur), width var(--ns-sb-dur);
+    }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-brand { opacity: 0; width: 0; }
+    .ns-sb-trigger {
+      margin-left: auto;
+      width: 26px; height: 26px; border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gray-9); cursor: pointer; flex-shrink: 0;
+      background: none; border: none; font-family: inherit;
+      transition: background var(--dur-fast), color var(--dur-fast);
+    }
+    .ns-sb-trigger:hover { background: var(--gray-3); color: var(--gray-12); }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-trigger { margin-left: 0; }
+
+    /* ─── Sidebar Content (scroll area) ────────────────── */
+    .ns-sb-content {
+      flex: 1; overflow-y: auto; padding: 8px 0;
+    }
+    .ns-sb-content::-webkit-scrollbar { width: 3px; }
+    .ns-sb-content::-webkit-scrollbar-thumb { background: var(--gray-4); border-radius: 4px; }
+
+    /* ─── Sidebar Group ─────────────────────────────────── */
+    .ns-sb-group { padding: 0 0 4px; }
+    .ns-sb-group-label {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--gray-8); padding: 12px 16px 5px;
+      white-space: nowrap; overflow: hidden;
+      transition: opacity var(--ns-sb-dur);
+    }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-group-label { opacity: 0; height: 0; padding: 0; }
+
+    /* ─── Sidebar Menu ──────────────────────────────────── */
+    .ns-sb-menu { list-style: none; padding: 0 8px; }
+    .ns-sb-menu-item { position: relative; }
+
+    /* ─── SidebarMenuButton ─────────────────────────────── */
+    .ns-sb-btn {
+      display: flex; align-items: center; gap: 9px;
+      width: 100%; height: 34px; padding: 0 8px;
+      border-radius: 6px; border: none; background: none;
+      font-family: inherit; font-size: 13px;
+      color: var(--gray-10); cursor: pointer;
+      transition: background var(--dur-fast), color var(--dur-fast);
+      text-align: left; white-space: nowrap; overflow: hidden;
+    }
+    .ns-sb-btn:hover { background: var(--gray-2); color: var(--gray-12); }
+    .ns-sb-btn[data-active="true"] {
+      background: var(--amber-2); color: var(--gray-12); font-weight: 600;
+      border-left: 2.5px solid var(--amber-9);
+      padding-left: 5.5px;
+    }
+    .ns-sb-btn svg {
+      width: 15px; height: 15px; flex-shrink: 0; opacity: .7;
+    }
+    .ns-sb-btn[data-active="true"] svg { opacity: 1; }
+    .ns-sb-btn-label {
+      flex: 1; overflow: hidden; text-overflow: ellipsis;
+      transition: opacity var(--ns-sb-dur), width var(--ns-sb-dur);
+    }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-btn-label { opacity: 0; width: 0; overflow: hidden; }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-btn { justify-content: center; padding: 0; border-left: none; }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-btn[data-active="true"] { background: var(--amber-2); }
+
+    /* ─── SidebarMenuBadge ──────────────────────────────── */
+    .ns-sb-badge {
+      margin-left: auto; font-size: 10px; font-weight: 600;
+      padding: 1px 6px; border-radius: 9999px;
+      background: var(--gray-3); color: var(--gray-9);
+      flex-shrink: 0;
+      transition: opacity var(--ns-sb-dur);
+    }
+    .ns-sb-badge.urgent { background: var(--red-bg); color: var(--red-text); }
+    .ns-sb-badge.brand  { background: var(--amber-9); color: #fff; }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-badge { opacity: 0; width: 0; padding: 0; overflow: hidden; }
+
+    /* ─── Collapsible Sub-menu ──────────────────────────── */
+    .ns-sb-sub-trigger .ns-sb-chevron {
+      margin-left: auto; flex-shrink: 0;
+      transition: transform var(--ns-sb-dur) var(--ns-sb-ease), opacity var(--ns-sb-dur);
+      color: var(--gray-8);
+    }
+    .ns-sb-sub-trigger[aria-expanded="true"] .ns-sb-chevron { transform: rotate(90deg); }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-chevron { opacity: 0; }
+
+    .ns-sb-sub {
+      list-style: none;
+      padding: 2px 0 2px 28px;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height var(--ns-sb-dur) var(--ns-sb-ease);
+    }
+    .ns-sb-sub.open { max-height: 200px; }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-sub { max-height: 0 !important; }
+
+    .ns-sb-sub-btn {
+      display: flex; align-items: center; gap: 6px;
+      width: 100%; height: 30px; padding: 0 8px;
+      border-radius: 5px; border: none; background: none;
+      font-family: inherit; font-size: 12px;
+      color: var(--gray-9); cursor: pointer;
+      transition: background var(--dur-fast), color var(--dur-fast);
+      white-space: nowrap;
+    }
+    .ns-sb-sub-btn:hover { background: var(--gray-2); color: var(--gray-12); }
+    .ns-sb-sub-btn[data-active="true"] { color: var(--gray-12); font-weight: 500; }
+    .ns-sb-sub-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--gray-6); flex-shrink: 0;
+    }
+    .ns-sb-sub-btn[data-active="true"] .ns-sb-sub-dot { background: var(--amber-9); }
+
+    /* ─── Sidebar Footer ────────────────────────────────── */
+    .ns-sb-footer {
+      border-top: 1px solid var(--border);
+      padding: 10px 10px;
+      flex-shrink: 0;
+    }
+    .ns-sb-user {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 8px; border-radius: 7px;
+      cursor: pointer; transition: background var(--dur-fast);
+      overflow: hidden;
+    }
+    .ns-sb-user:hover { background: var(--gray-2); }
+    .ns-sb-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--amber-2); border: 1.5px solid var(--amber-6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; color: var(--amber-11);
+      flex-shrink: 0;
+    }
+    .ns-sb-user-info {
+      flex: 1; overflow: hidden;
+      transition: opacity var(--ns-sb-dur), width var(--ns-sb-dur);
+    }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-user-info { opacity: 0; width: 0; }
+    .ns-sb-user-name { font-size: 12px; font-weight: 600; color: var(--gray-12); white-space: nowrap; }
+    .ns-sb-user-role { font-size: 10px; color: var(--gray-9); }
+    .ns-sb-user-action {
+      flex-shrink: 0; color: var(--gray-8);
+      transition: opacity var(--ns-sb-dur);
+    }
+    .ns-sidebar[data-state="collapsed"] .ns-sb-user-action { opacity: 0; }
+
+    /* ─── Main Inset ────────────────────────────────────── */
+    .ns-sb-main {
+      flex: 1; padding: 16px; overflow: hidden;
+      background: var(--gray-1);
+    }
+    .ns-sb-page-hint {
+      height: 100%; border-radius: 8px;
+      background: var(--surface); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 8px;
+      color: var(--gray-8); font-size: 13px;
+    }
+
+    /* ─── Sidebar Rail ──────────────────────────────────── */
+    .ns-sb-rail {
+      position: absolute; top: 0; bottom: 0; right: -4px;
+      width: 8px; cursor: ew-resize; z-index: 10;
+    }
+    .ns-sb-rail::after {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 2px; height: 32px; border-radius: 2px;
+      background: var(--gray-5);
+      transition: background var(--dur-fast);
+    }
+    .ns-sb-rail:hover::after { background: var(--amber-9); }
+    </style>
+
+    <!-- ── Demo 1: Expanded (default) ── -->
+    <div class="sub-label">展开状态（默认）</div>
+    <div class="ns-sidebar-provider" style="height:420px; margin-bottom:24px;">
+      <div class="ns-sidebar ns-sidebar" id="sb-demo-1" data-state="expanded">
+        <!-- Header -->
+        <div class="ns-sb-header">
+          <div class="ns-sb-logo">N</div>
+          <span class="ns-sb-brand">NearGo OMS</span>
+          <button class="ns-sb-trigger" onclick="toggleSidebar('sb-demo-1')" title="收起">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+        <!-- Content -->
+        <div class="ns-sb-content">
+          <!-- Group: 主菜单 -->
+          <div class="ns-sb-group">
+            <div class="ns-sb-group-label">主菜单</div>
+            <ul class="ns-sb-menu">
+              <li class="ns-sb-menu-item">
+                <button class="ns-sb-btn" data-active="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                  <span class="ns-sb-btn-label">数据总览</span>
+                </button>
+              </li>
+              <li class="ns-sb-menu-item">
+                <button class="ns-sb-btn ns-sb-sub-trigger" aria-expanded="true" onclick="toggleSub(this)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                  <span class="ns-sb-btn-label">订单管理</span>
+                  <span class="ns-sb-badge urgent">24</span>
+                  <svg class="ns-sb-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+                <ul class="ns-sb-sub open">
+                  <li><button class="ns-sb-sub-btn" data-active="true"><span class="ns-sb-sub-dot"></span>全部订单</button></li>
+                  <li><button class="ns-sb-sub-btn"><span class="ns-sb-sub-dot"></span>待确认</button></li>
+                  <li><button class="ns-sb-sub-btn"><span class="ns-sb-sub-dot"></span>退款管理</button></li>
+                </ul>
+              </li>
+              <li class="ns-sb-menu-item">
+                <button class="ns-sb-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  <span class="ns-sb-btn-label">门店管理</span>
+                  <span class="ns-sb-badge">86</span>
+                </button>
+              </li>
+              <li class="ns-sb-menu-item">
+                <button class="ns-sb-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                  <span class="ns-sb-btn-label">商品管理</span>
+                </button>
+              </li>
+              <li class="ns-sb-menu-item">
+                <button class="ns-sb-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <span class="ns-sb-btn-label">活动管理</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+          <!-- Group: 分析 -->
+          <div class="ns-sb-group">
+            <div class="ns-sb-group-label">数据分析</div>
+            <ul class="ns-sb-menu">
+              <li class="ns-sb-menu-item">
+                <button class="ns-sb-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                  <span class="ns-sb-btn-label">经营报表</span>
+                </button>
+              </li>
+              <li class="ns-sb-menu-item">
+                <button class="ns-sb-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                  <span class="ns-sb-btn-label">用户分析</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+          <!-- Group: 系统 -->
+          <div class="ns-sb-group">
+            <div class="ns-sb-group-label">系统</div>
+            <ul class="ns-sb-menu">
+              <li class="ns-sb-menu-item">
+                <button class="ns-sb-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+                  <span class="ns-sb-btn-label">系统设置</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- Footer -->
+        <div class="ns-sb-footer">
+          <div class="ns-sb-user">
+            <div class="ns-sb-avatar">ZX</div>
+            <div class="ns-sb-user-info">
+              <div class="ns-sb-user-name">Xuewan Zou</div>
+              <div class="ns-sb-user-role">超级管理员</div>
+            </div>
+            <svg class="ns-sb-user-action" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+          </div>
+        </div>
+      </div>
+      <!-- Page Inset -->
+      <div class="ns-sb-main">
+        <div class="ns-sb-page-hint">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gray-6)" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          主内容区域
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Demo 2: Variants row ── -->
+    <div class="sub-label" style="margin-bottom:10px;">三种形态对比</div>
+    <div class="row" style="align-items:stretch;gap:16px;margin-bottom:28px;">
+
+      <!-- Collapsed icon-only -->
+      <div style="flex:0 0 auto;">
+        <div style="font-size:11px;color:var(--gray-9);margin-bottom:6px;text-align:center;">图标收起 <span class="chip">collapsible="icon"</span></div>
+        <div class="ns-sidebar-provider" style="height:360px;width:fit-content;">
+          <div class="ns-sidebar" data-state="collapsed" style="height:360px;">
+            <div class="ns-sb-header" style="justify-content:center;">
+              <div class="ns-sb-logo">N</div>
+            </div>
+            <div class="ns-sb-content">
+              <ul class="ns-sb-menu" style="padding:4px 6px;">
+                <li><button class="ns-sb-btn" data-active="true" style="justify-content:center;padding:0;border-left:none;background:var(--amber-2);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button></li>
+                <li><button class="ns-sb-btn" style="justify-content:center;padding:0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></button></li>
+                <li><button class="ns-sb-btn" style="justify-content:center;padding:0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></button></li>
+                <li><button class="ns-sb-btn" style="justify-content:center;padding:0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></button></li>
+                <li><button class="ns-sb-btn" style="justify-content:center;padding:0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></button></li>
+                <li><button class="ns-sb-btn" style="justify-content:center;padding:0;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg></button></li>
+              </ul>
+            </div>
+            <div class="ns-sb-footer">
+              <div class="ns-sb-user" style="justify-content:center;padding:6px 4px;">
+                <div class="ns-sb-avatar">ZX</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating variant -->
+      <div style="flex:1;">
+        <div style="font-size:11px;color:var(--gray-9);margin-bottom:6px;text-align:center;">浮动形态 <span class="chip">variant="floating"</span></div>
+        <div class="ns-sidebar-provider" style="height:360px;background:var(--gray-2);">
+          <div class="ns-sidebar" data-variant="floating" style="height:calc(360px - 16px);">
+            <div class="ns-sb-header">
+              <div class="ns-sb-logo">N</div>
+              <span class="ns-sb-brand">NearGo OMS</span>
+            </div>
+            <div class="ns-sb-content">
+              <ul class="ns-sb-menu">
+                <li><button class="ns-sb-btn" data-active="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="ns-sb-btn-label">数据总览</span></button></li>
+                <li><button class="ns-sb-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/></svg><span class="ns-sb-btn-label">订单管理</span></button></li>
+                <li><button class="ns-sb-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg><span class="ns-sb-btn-label">门店管理</span></button></li>
+                <li><button class="ns-sb-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span class="ns-sb-btn-label">经营报表</span></button></li>
+              </ul>
+            </div>
+          </div>
+          <div class="ns-sb-main" style="background:var(--gray-2);">
+            <div class="ns-sb-page-hint" style="background:var(--surface);">主内容区域</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inset variant -->
+      <div style="flex:1;">
+        <div style="font-size:11px;color:var(--gray-9);margin-bottom:6px;text-align:center;">内嵌形态 <span class="chip">variant="inset"</span></div>
+        <div class="ns-sidebar-provider" style="height:360px;">
+          <div class="ns-sidebar" data-variant="inset" style="height:360px;">
+            <div class="ns-sb-header" style="background:var(--gray-2);">
+              <div class="ns-sb-logo">N</div>
+              <span class="ns-sb-brand">NearGo OMS</span>
+            </div>
+            <div class="ns-sb-content" style="background:var(--gray-2);">
+              <ul class="ns-sb-menu">
+                <li><button class="ns-sb-btn" data-active="true" style="background:var(--surface);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="ns-sb-btn-label">数据总览</span></button></li>
+                <li><button class="ns-sb-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/></svg><span class="ns-sb-btn-label">订单管理</span></button></li>
+                <li><button class="ns-sb-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg><span class="ns-sb-btn-label">门店管理</span></button></li>
+                <li><button class="ns-sb-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span class="ns-sb-btn-label">经营报表</span></button></li>
+              </ul>
+            </div>
+            <div class="ns-sb-footer" style="background:var(--gray-2);border-top:1px solid var(--gray-4);">
+              <div class="ns-sb-user">
+                <div class="ns-sb-avatar">ZX</div>
+                <div class="ns-sb-user-info">
+                  <div class="ns-sb-user-name">Xuewan Zou</div>
+                  <div class="ns-sb-user-role">超级管理员</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ns-sb-main" style="padding:12px;background:var(--gray-1);">
+            <div class="ns-sb-page-hint">主内容区域</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Token 参考 ── -->
+    <div class="sub-label">CSS 变量 / 尺寸规范</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:0;">
+      <div style="background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;padding:16px;">
+        <div style="font-size:11px;font-weight:600;color:var(--gray-9);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">尺寸 Token</div>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <tr style="border-bottom:1px solid #f2f1ef;"><td style="padding:6px 0;color:var(--gray-9);">展开宽度</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">--ns-sb-w: 220px</td></tr>
+          <tr style="border-bottom:1px solid #f2f1ef;"><td style="padding:6px 0;color:var(--gray-9);">图标收起宽度</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">--ns-sb-w-icon: 52px</td></tr>
+          <tr style="border-bottom:1px solid #f2f1ef;"><td style="padding:6px 0;color:var(--gray-9);">展开/收起时长</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">--ns-sb-dur: 200ms</td></tr>
+          <tr style="border-bottom:1px solid #f2f1ef;"><td style="padding:6px 0;color:var(--gray-9);">菜单项高度</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">34px</td></tr>
+          <tr><td style="padding:6px 0;color:var(--gray-9);">子菜单项高度</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">30px</td></tr>
+        </table>
+      </div>
+      <div style="background:var(--surface);border:1px solid #F3F4F6;border-radius:8px;padding:16px;">
+        <div style="font-size:11px;font-weight:600;color:var(--gray-9);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">data-* 属性</div>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <tr style="border-bottom:1px solid #f2f1ef;"><td style="padding:6px 0;color:var(--gray-9);">展开/收起</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">data-state="expanded|collapsed"</td></tr>
+          <tr style="border-bottom:1px solid #f2f1ef;"><td style="padding:6px 0;color:var(--gray-9);">形态变体</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">data-variant="sidebar|floating|inset"</td></tr>
+          <tr style="border-bottom:1px solid #f2f1ef;"><td style="padding:6px 0;color:var(--gray-9);">侧边</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">data-side="left|right"</td></tr>
+          <tr style="border-bottom:1px solid #f2f1ef;"><td style="padding:6px 0;color:var(--gray-9);">激活菜单项</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">data-active="true"</td></tr>
+          <tr><td style="padding:6px 0;color:var(--gray-9);">子菜单展开</td><td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--gray-12);">aria-expanded="true|false"</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+  <script>
+  function toggleSidebar(id) {
+    const sb = document.getElementById(id);
+    if (!sb) return;
+    sb.dataset.state = sb.dataset.state === 'expanded' ? 'collapsed' : 'expanded';
+  }
+  function toggleSub(btn) {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', !expanded);
+    const sub = btn.parentElement.querySelector('.ns-sb-sub');
+    if (sub) sub.classList.toggle('open', !expanded);
+  }
+  </script>
+
+
+  <!-- ─── 21. Border Token Variables ─── -->
+  <section class="section" id="border-tokens">
+    <div class="section-title">边框变量 Border Tokens</div>
+    <p class="section-subtitle">按使用场景语义化分层 — 统一管理所有组件的边框色，避免硬编码</p>
+
+    <!-- 基础层 -->
+    <div class="sub-label">基础层 — Structure &amp; Divider</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;">
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--gray-1);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray-11);margin-bottom:2px;">--border-subtle</div>
+        <code class="chip">#F3F4F6</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">卡片内分隔、列表行间</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1px solid var(--border-default);border-radius:5px;background:var(--gray-1);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray-11);margin-bottom:2px;">--border-default</div>
+        <code class="chip">gray-6 · #dddbd8</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">输入框、卡片、面板默认边框</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1px solid var(--border-strong);border-radius:5px;background:var(--gray-1);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray-11);margin-bottom:2px;">--border-strong</div>
+        <code class="chip">gray-7 · #cac8c4</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">下拉面板、Popover、分隔加重</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1px solid var(--border-divider);border-radius:5px;background:var(--gray-1);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray-11);margin-bottom:2px;">--border-divider</div>
+        <code class="chip">gray-5 · #e5e3e0</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">区域分隔线（略重于 subtle）</div>
+      </div>
+
+    </div>
+
+    <!-- 交互状态 -->
+    <div class="sub-label">交互状态 — Interaction States</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:28px;">
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-hover);border-radius:5px;background:var(--gray-1);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray-11);margin-bottom:2px;">--border-hover</div>
+        <code class="chip">gray-7</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">鼠标悬停时加深</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-focus);border-radius:5px;box-shadow:0 0 0 3px var(--border-focus-ring);background:var(--gray-1);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray-11);margin-bottom:2px;">--border-focus</div>
+        <code class="chip">gray-7</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">键盘聚焦边框</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-focus-ring);border-radius:5px;background:var(--border-focus-ring);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray-11);margin-bottom:2px;">--border-focus-ring</div>
+        <code class="chip">#eceae7</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">聚焦光晕 box-shadow 色</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:2px solid var(--border-active);border-radius:5px;background:var(--gray-1);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray-11);margin-bottom:2px;">--border-active</div>
+        <code class="chip">gray-12</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">选中 / Checkbox checked</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1px dashed var(--border-disabled);border-radius:5px;background:var(--gray-2);margin-bottom:10px;opacity:.7;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--gray-11);margin-bottom:2px;">--border-disabled</div>
+        <code class="chip">gray-4</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">禁用态控件边框</div>
+      </div>
+
+    </div>
+
+    <!-- 语义反馈 -->
+    <div class="sub-label">语义反馈 — Semantic Feedback</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;">
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-error);border-radius:5px;box-shadow:0 0 0 3px var(--border-error-focus);background:var(--red-bg);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--red-text);margin-bottom:2px;">--border-error</div>
+        <code class="chip">red-solid · #e5484d</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">表单校验失败</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-success);border-radius:5px;background:var(--green-bg);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--green-text);margin-bottom:2px;">--border-success</div>
+        <code class="chip">green-border · #cdf4ea</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">通过 / 成功状态</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-warning);border-radius:5px;background:var(--amber-2);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--amber-11);margin-bottom:2px;">--border-warning</div>
+        <code class="chip">amber-3 · #ffeea8</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">警告提示框</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-info);border-radius:5px;background:var(--blue-bg);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--blue-text);margin-bottom:2px;">--border-info</div>
+        <code class="chip">blue-border · #d5efff</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">信息提示</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-danger);border-radius:5px;background:var(--red-bg);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--red-text);margin-bottom:2px;">--border-danger</div>
+        <code class="chip">red-border · #ffe0e0</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">危险操作提示</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-orange);border-radius:5px;background:var(--orange-bg);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--orange-text);margin-bottom:2px;">--border-orange</div>
+        <code class="chip">orange-border · #ffe8d7</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">紧急提示卡片</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-purple);border-radius:5px;background:var(--purple-bg);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--purple-text);margin-bottom:2px;">--border-purple</div>
+        <code class="chip">purple-border · #ecdcfe</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">特殊标签</div>
+      </div>
+
+    </div>
+
+    <!-- 品牌 & 强调 -->
+    <div class="sub-label">品牌 &amp; 强调 — Brand &amp; Selected</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;">
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:2px solid var(--border-brand);border-radius:5px;background:var(--amber-1);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--amber-11);margin-bottom:2px;">--border-brand</div>
+        <code class="chip">amber-9 · #FFA902</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">品牌高亮：选中 Tab、激活导航</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:1.5px solid var(--border-brand-subtle);border-radius:5px;background:var(--amber-2);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--amber-11);margin-bottom:2px;">--border-brand-subtle</div>
+        <code class="chip">amber-3 · #ffeea8</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">品牌浅边框：卡片装饰、Banner</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;padding:14px 16px;">
+        <div style="height:32px;border:2px solid var(--border-selected);border-radius:5px;background:var(--green-bg);margin-bottom:10px;"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--green-text);margin-bottom:2px;">--border-selected</div>
+        <code class="chip">green-solid · #29a383</code>
+        <div style="font-size:11px;color:var(--gray-8);margin-top:6px;">Radio 选中 / 绿勾选确认</div>
+      </div>
+
+    </div>
+
+    <!-- 特殊用途 -->
+    <div class="sub-label">语义别名 — Semantic Aliases</div>
+    <div style="background:var(--surface);border:1px solid var(--gray-5);border-radius:8px;overflow:hidden;margin-bottom:28px;">
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <thead>
+          <tr style="background:var(--gray-2);">
+            <th style="text-align:left;padding:10px 16px;font-size:11px;font-weight:600;color:var(--gray-9);letter-spacing:.04em;text-transform:uppercase;border-bottom:1px solid var(--gray-4);">变量名</th>
+            <th style="text-align:left;padding:10px 16px;font-size:11px;font-weight:600;color:var(--gray-9);letter-spacing:.04em;text-transform:uppercase;border-bottom:1px solid var(--gray-4);">映射值</th>
+            <th style="text-align:left;padding:10px 16px;font-size:11px;font-weight:600;color:var(--gray-9);letter-spacing:.04em;text-transform:uppercase;border-bottom:1px solid var(--gray-4);">使用场景</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--gray-3);">
+            <td style="padding:10px 16px;"><code class="chip">--border-input</code></td>
+            <td style="padding:10px 16px;color:var(--gray-9);">→ gray-6 · #dddbd8</td>
+            <td style="padding:10px 16px;color:var(--gray-10);">Input / Textarea / Select 边框</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--gray-3);">
+            <td style="padding:10px 16px;"><code class="chip">--border-card</code></td>
+            <td style="padding:10px 16px;color:var(--gray-9);">→ gray-5 · #e5e3e0</td>
+            <td style="padding:10px 16px;color:var(--gray-10);">Card / Panel 容器外边框</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--gray-3);">
+            <td style="padding:10px 16px;"><code class="chip">--border-table</code></td>
+            <td style="padding:10px 16px;color:var(--gray-9);">→ gray-4 · #eceae7</td>
+            <td style="padding:10px 16px;color:var(--gray-10);">Table 行间分隔线</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--gray-3);">
+            <td style="padding:10px 16px;"><code class="chip">--border-popup</code></td>
+            <td style="padding:10px 16px;color:var(--gray-9);">→ gray-6 · #dddbd8</td>
+            <td style="padding:10px 16px;color:var(--gray-10);">Dialog / Dropdown / Tooltip 容器</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--gray-3);">
+            <td style="padding:10px 16px;"><code class="chip">--border-dashed</code></td>
+            <td style="padding:10px 16px;color:var(--gray-9);">→ gray-6 · #dddbd8</td>
+            <td style="padding:10px 16px;color:var(--gray-10);">文件上传区虚线边框（默认）</td>
+          </tr>
+          <tr>
+            <td style="padding:10px 16px;"><code class="chip">--border-dashed-hover</code></td>
+            <td style="padding:10px 16px;color:var(--gray-9);">→ gray-7 · #cac8c4</td>
+            <td style="padding:10px 16px;color:var(--gray-10);">文件上传区虚线边框（悬停）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Live Demo -->
+    <div class="sub-label">交互演示 — Live Demo</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+
+      <!-- Input states -->
+      <div style="background:var(--surface);border:1px solid var(--border-card);border-radius:8px;padding:16px;">
+        <div style="font-size:11px;font-weight:600;color:var(--gray-9);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">Input 状态</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <input style="height:34px;padding:0 12px;border:1px solid var(--border-input);border-radius:6px;outline:none;font-size:13px;font-family:inherit;background:var(--surface);color:var(--gray-12);" placeholder="Default — border-input">
+          <input style="height:34px;padding:0 12px;border:1.5px solid var(--border-focus);border-radius:6px;box-shadow:0 0 0 3px var(--border-focus-ring);outline:none;font-size:13px;font-family:inherit;background:var(--surface);color:var(--gray-12);" placeholder="Focus — border-focus + ring" value="聚焦状态">
+          <input style="height:34px;padding:0 12px;border:1.5px solid var(--border-error);border-radius:6px;box-shadow:0 0 0 3px var(--border-error-focus);outline:none;font-size:13px;font-family:inherit;background:var(--red-bg);color:var(--gray-12);" placeholder="Error — border-error" value="格式不正确">
+          <input style="height:34px;padding:0 12px;border:1px solid var(--border-disabled);border-radius:6px;outline:none;font-size:13px;font-family:inherit;background:var(--gray-2);color:var(--gray-8);cursor:not-allowed;" placeholder="Disabled — border-disabled" disabled>
+        </div>
+      </div>
+
+      <!-- Card states -->
+      <div style="background:var(--surface);border:1px solid var(--border-card);border-radius:8px;padding:16px;">
+        <div style="font-size:11px;font-weight:600;color:var(--gray-9);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">Card / Alert 状态</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="padding:10px 12px;border:1px solid var(--border-default);border-radius:6px;font-size:12px;color:var(--gray-11);">Default 卡片 — border-default</div>
+          <div style="padding:10px 12px;border:1.5px solid var(--border-success);border-radius:6px;background:var(--green-bg);font-size:12px;color:var(--green-text);">✓ 成功提示 — border-success</div>
+          <div style="padding:10px 12px;border:1.5px solid var(--border-warning);border-radius:6px;background:var(--amber-2);font-size:12px;color:var(--amber-11);">⚠ 警告提示 — border-warning</div>
+          <div style="padding:10px 12px;border:1.5px solid var(--border-error);border-radius:6px;background:var(--red-bg);font-size:12px;color:var(--red-text);">✕ 错误提示 — border-error</div>
+        </div>
+      </div>
+
+      <!-- Brand & selected states -->
+      <div style="background:var(--surface);border:1px solid var(--border-card);border-radius:8px;padding:16px;">
+        <div style="font-size:11px;font-weight:600;color:var(--gray-9);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">品牌 &amp; 选中状态</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="padding:10px 12px;border:2px solid var(--border-brand);border-radius:6px;background:var(--amber-1);font-size:12px;color:var(--amber-11);font-weight:500;">品牌高亮 — border-brand</div>
+          <div style="padding:10px 12px;border:1.5px solid var(--border-brand-subtle);border-radius:6px;background:var(--amber-2);font-size:12px;color:var(--amber-11);">品牌浅框 — border-brand-subtle</div>
+          <div style="padding:10px 12px;border:2px solid var(--border-selected);border-radius:6px;background:var(--green-bg);font-size:12px;color:var(--green-text);font-weight:500;">✓ 已选中 — border-selected</div>
+          <div style="padding:10px 12px;border:2px dashed var(--border-dashed);border-radius:6px;font-size:12px;color:var(--gray-9);text-align:center;">虚线上传区 — border-dashed</div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+<!-- ─── Active TOC Highlight Script ─── -->
+<script>
+(function() {
+  const links = document.querySelectorAll('.toc-link');
+  const sections = Array.from(links).map(l => document.querySelector(l.getAttribute('href')));
+
+  function onScroll() {
+    const scrollY = window.scrollY + 80;
+    let active = 0;
+    sections.forEach((s, i) => {
+      if (s && s.offsetTop <= scrollY) active = i;
+    });
+    links.forEach((l, i) => {
+      l.classList.toggle('active', i === active);
+    });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+
+</body>
+</html>

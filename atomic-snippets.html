@@ -1,0 +1,2191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>NearGo OMS — Atomic HTML Snippets</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+/* ════════════════════════════════════════════════════════
+   COPY THIS <style> BLOCK INTO YOUR PROJECT
+   OR LINK src/styles/globals.css + tailwind.config.ts
+   ════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; scroll-behavior: smooth; }
+body { font-family: 'Inter','Noto Sans SC',system-ui,sans-serif; background: var(--bg); color: var(--text-hi); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+/* ── Design Tokens ── */
+:root {
+  --amber-1:#fdfaf0; --amber-2:#fff8d6; --amber-3:#ffeea8; --amber-4:#ffe37c;
+  --amber-9:#FFA902; --amber-10:#f09a00; --amber-11:#8c5c00; --amber-12:#3c2500;
+  --gray-1:#fdfdfc; --gray-2:#f9f9f8; --gray-3:#f2f1ef; --gray-4:#eceae7;
+  --gray-5:#e5e3e0; --gray-6:#dddbd8; --gray-7:#cac8c4; --gray-8:#b0adaa;
+  --gray-9:#8c8a87; --gray-10:#807e7b; --gray-11:#4a4846; --gray-12:#1F1D1C;
+  --green-bg:#edfbf4; --green-border:#cdf4ea; --green-solid:#29a383; --green-text:#107060;
+  --red-bg:#fff5f5; --red-border:#ffe0e0; --red-solid:#e5484d; --red-text:#ce2c31;
+  --blue-bg:#f0f8ff; --blue-border:#d5efff; --blue-solid:#0090ff; --blue-text:#0060cf;
+  --orange-bg:#fff6f0; --orange-border:#ffe8d7; --orange-solid:#f76b15; --orange-text:#bd4b00;
+  --purple-bg:#faf5ff; --purple-border:#ecdcfe; --purple-solid:#8e4ec6; --purple-text:#793aaf;
+  --surface:#ffffff; --bg:#F4F5F7; --border:var(--gray-6);
+  --border-subtle:#F3F4F6; --border-error:var(--red-solid);
+  --text-hi:var(--gray-12); --text-mid:var(--gray-11); --text-low:var(--gray-9); --text-disabled:var(--gray-8);
+  --shadow-1:0 1px 2px rgba(0,0,0,.04);
+  --shadow-2:0 1px 3px rgba(0,0,0,.05),0 1px 2px rgba(0,0,0,.03);
+  --shadow-4:0 4px 12px rgba(0,0,0,.06),0 2px 4px rgba(0,0,0,.03);
+  --shadow-popup:0 8px 24px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.04);
+  --radius-1:3px; --radius-2:4px; --radius-3:6px; --radius-4:8px; --radius-5:12px; --radius-6:9999px;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:24px; --space-6:32px;
+  --topbar-h:54px; --sidebar-w:220px;
+  --font-mono:'JetBrains Mono','Roboto Mono',monospace;
+  --focus-ring:0 0 0 2px var(--gray-4);
+  --focus-ring-error:0 0 0 2px var(--red-border);
+  --z-dropdown:100; --z-sticky:200; --z-modal:400; --z-toast:600; --z-tooltip:700;
+}
+:focus-visible { outline:none; box-shadow:var(--focus-ring); }
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-thumb { background:var(--gray-6); border-radius:var(--radius-6); }
+@keyframes spin { to { transform:rotate(360deg); } }
+@keyframes shimmer { 0%{background-position:-400px 0} 100%{background-position:400px 0} }
+@media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation-duration:0ms !important; transition-duration:0ms !important; } }
+
+/* ── Page Shell (doc only) ── */
+.doc-topbar { position:fixed; top:0; left:0; right:0; height:var(--topbar-h); background:var(--surface); border-bottom:1px solid var(--border-subtle); display:flex; align-items:center; padding:0 24px; gap:12px; z-index:var(--z-sticky); }
+.doc-logo { font-size:14px; font-weight:700; letter-spacing:-.03em; color:var(--gray-12); display:flex; align-items:center; gap:8px; }
+.doc-logo-dot { width:22px; height:22px; border-radius:6px; background:var(--amber-9); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:#fff; }
+.doc-version { font-size:11px; font-weight:600; color:var(--gray-10); background:var(--gray-2); border:1px solid var(--border-subtle); border-radius:20px; padding:2px 8px; }
+.doc-spacer { flex:1; }
+.doc-sidebar { position:fixed; top:var(--topbar-h); left:0; bottom:0; width:200px; background:var(--surface); border-right:1px solid var(--border-subtle); padding:16px 0 32px; overflow-y:auto; z-index:90; }
+.doc-sidebar::-webkit-scrollbar { width:3px; }
+.doc-nav-group { font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--gray-8); padding:16px 14px 6px; }
+.doc-nav-link { display:block; padding:6px 14px; font-size:12px; color:var(--gray-10); text-decoration:none; border-left:2px solid transparent; transition:all .12s; }
+.doc-nav-link:hover { background:var(--gray-2); color:var(--gray-12); }
+.doc-nav-link.active { background:var(--amber-2); color:var(--gray-12); border-left-color:var(--amber-9); font-weight:500; }
+.doc-main { margin-top:var(--topbar-h); margin-left:200px; padding:40px 48px 120px; }
+.doc-section { margin-bottom:64px; scroll-margin-top:calc(var(--topbar-h) + 24px); }
+.doc-section-title { font-size:16px; font-weight:700; color:var(--gray-12); letter-spacing:-.03em; padding-bottom:12px; border-bottom:1px solid var(--border-subtle); margin-bottom:8px; }
+.doc-section-desc { font-size:12px; color:var(--gray-9); margin-bottom:24px; }
+.doc-subsection { margin-bottom:28px; }
+.doc-sublabel { font-size:10px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--gray-8); margin-bottom:10px; }
+.doc-row { display:flex; flex-wrap:wrap; gap:10px; align-items:flex-start; margin-bottom:16px; }
+.doc-col { display:flex; flex-direction:column; gap:10px; }
+.doc-divider { height:1px; background:var(--border-subtle); margin:24px 0; }
+.doc-snippet-note { font-size:11px; color:var(--gray-8); font-family:var(--font-mono); background:var(--gray-2); border:1px solid var(--border-subtle); border-radius:var(--radius-2); padding:4px 8px; margin-top:8px; display:inline-block; }
+.doc-source { display:inline-flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:20px; margin-top:4px; }
+.doc-src-file { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-family:var(--font-mono); color:var(--gray-9); background:var(--gray-2); border:1px solid var(--border-subtle); border-radius:var(--radius-2); padding:3px 8px; line-height:1.4; text-decoration:none; transition:border-color .1s,color .1s; }
+.doc-src-file:hover { border-color:var(--gray-7); color:var(--gray-12); }
+.doc-src-file svg { flex-shrink:0; color:var(--gray-7); }
+.doc-src-layout { border-color:var(--amber-3); background:var(--amber-2); }
+.doc-src-layout svg { color:var(--amber-9); }
+
+
+/* ════════════════════════════════════════════════════════
+   COMPONENT STYLES — COPY ONLY WHAT YOU NEED
+   ════════════════════════════════════════════════════════ */
+
+/* ── 01 Button ── */
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; font-family:inherit; font-weight:500; cursor:pointer; border-radius:var(--radius-1); border:1px solid transparent; transition:background .12s,border-color .12s,color .12s; text-decoration:none; white-space:nowrap; letter-spacing:-.01em; user-select:none; }
+.btn-sm  { height:28px; padding:0 10px; font-size:12px; }
+.btn-md  { height:34px; padding:0 14px; font-size:13px; }
+.btn-lg  { height:40px; padding:0 18px; font-size:14px; }
+.btn-primary     { background:var(--gray-12); color:#fff; border-color:var(--gray-12); }
+.btn-primary:hover    { background:#111; }
+.btn-secondary   { background:var(--gray-3); color:var(--gray-11); border-color:var(--gray-4); }
+.btn-secondary:hover  { background:var(--gray-4); }
+.btn-outline     { background:transparent; color:var(--gray-11); border-color:var(--gray-6); }
+.btn-outline:hover    { background:var(--gray-2); border-color:var(--gray-7); }
+.btn-ghost       { background:transparent; color:var(--gray-10); border-color:transparent; }
+.btn-ghost:hover      { background:var(--gray-2); color:var(--gray-12); }
+.btn-brand       { background:var(--amber-9); color:#fff; border-color:var(--amber-10); }
+.btn-brand:hover      { background:var(--amber-10); }
+.btn-destructive { background:var(--red-solid); color:#fff; border-color:var(--red-solid); }
+.btn-destructive:hover{ filter:brightness(.9); }
+.btn[disabled],.btn-disabled { background:var(--gray-3); color:var(--gray-8); border-color:var(--gray-4); cursor:not-allowed; pointer-events:none; }
+.btn-loading     { background:var(--gray-12); color:rgba(255,255,255,.6); border-color:var(--gray-12); cursor:wait; pointer-events:none; }
+.btn-icon-only   { padding:0; aspect-ratio:1; }
+.btn .spinner    { width:12px; height:12px; border:2px solid rgba(255,255,255,.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; flex-shrink:0; }
+
+/* ── 02 Badge ── */
+.badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:500; letter-spacing:.02em; border-radius:var(--radius-6); padding:2px 8px; border:1px solid transparent; white-space:nowrap; }
+.badge-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.badge-default   { background:var(--gray-3);    color:var(--gray-11);    border-color:var(--gray-4);      }
+.badge-success   { background:var(--green-bg);  color:var(--green-text); border-color:var(--green-border); }
+.badge-warning   { background:var(--amber-2);   color:var(--amber-11);   border-color:var(--amber-3);     }
+.badge-danger    { background:var(--red-bg);    color:var(--red-text);   border-color:var(--red-border);  }
+.badge-info      { background:var(--blue-bg);   color:var(--blue-text);  border-color:var(--blue-border); }
+.badge-urgent    { background:var(--orange-bg); color:var(--orange-text);border-color:var(--orange-border);}
+.badge-brand     { background:var(--amber-9);   color:#fff;              border-color:var(--amber-10);    }
+.badge-outline   { background:transparent;      color:var(--gray-11);    border-color:var(--gray-6);      }
+.badge-purple    { background:var(--purple-bg); color:var(--purple-text);border-color:var(--purple-border);}
+
+/* ── 03 Input ── */
+.input-group { display:flex; flex-direction:column; gap:5px; }
+.input-label { font-size:12px; font-weight:500; color:var(--gray-11); }
+.input-label .required { color:var(--red-solid); margin-left:2px; }
+.input-wrap { position:relative; }
+.input { width:100%; height:34px; padding:0 12px; font-family:inherit; font-size:13px; color:var(--gray-12); background:var(--surface); border:1px solid var(--gray-6); border-radius:var(--radius-3); outline:none; transition:border-color .12s,box-shadow .12s; }
+.input::placeholder { color:var(--gray-8); }
+.input:hover:not(:disabled) { border-color:var(--gray-7); }
+.input:focus { border-color:var(--gray-7); box-shadow:var(--focus-ring); }
+.input--error { border-color:var(--red-solid) !important; }
+.input--error:focus { box-shadow:var(--focus-ring-error) !important; }
+.input:disabled,.input--disabled { background:var(--gray-2); color:var(--gray-8); cursor:not-allowed; border-color:var(--gray-4); }
+.input--loading { background:var(--gray-2); color:var(--gray-8); cursor:wait; }
+.input-hint { font-size:11px; color:var(--gray-9); }
+.input-error-msg { font-size:11px; color:var(--red-text); }
+.input-prefix { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--gray-8); pointer-events:none; display:flex; align-items:center; font-size:13px; }
+.input-suffix { position:absolute; right:10px; top:50%; transform:translateY(-50%); color:var(--gray-8); display:flex; align-items:center; font-size:13px; }
+.input--has-prefix { padding-left:32px; }
+.input--has-suffix { padding-right:32px; }
+.input-clear { position:absolute; right:8px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--gray-7); font-size:14px; padding:2px; line-height:1; border-radius:50%; }
+.input-clear:hover { color:var(--gray-11); background:var(--gray-3); }
+
+/* ── 04 Textarea ── */
+.textarea { width:100%; padding:8px 12px; font-family:inherit; font-size:13px; color:var(--gray-12); background:var(--surface); border:1px solid var(--gray-6); border-radius:var(--radius-3); outline:none; resize:vertical; min-height:80px; line-height:1.6; transition:border-color .12s,box-shadow .12s; }
+.textarea::placeholder { color:var(--gray-8); }
+.textarea:hover:not(:disabled) { border-color:var(--gray-7); }
+.textarea:focus { border-color:var(--gray-7); box-shadow:var(--focus-ring); }
+.textarea--error { border-color:var(--red-solid) !important; }
+.textarea:disabled { background:var(--gray-2); color:var(--gray-8); cursor:not-allowed; }
+.textarea-counter { display:flex; justify-content:flex-end; font-size:11px; color:var(--gray-8); margin-top:4px; font-family:var(--font-mono); }
+.textarea-counter--near { color:var(--orange-solid); }
+.textarea-counter--over { color:var(--red-solid); }
+
+/* ── 05 Select ── */
+.select-wrap { position:relative; }
+.select-trigger { width:100%; height:34px; padding:0 32px 0 12px; font-family:inherit; font-size:13px; color:var(--gray-11); background:var(--surface); border:1px solid var(--gray-6); border-radius:var(--radius-3); cursor:pointer; text-align:left; display:flex; align-items:center; outline:none; transition:border-color .12s,box-shadow .12s; }
+.select-trigger:hover { border-color:var(--gray-7); }
+.select-trigger:focus { border-color:var(--gray-7); box-shadow:var(--focus-ring); }
+.select-trigger--placeholder { color:var(--gray-8); }
+.select-chevron { position:absolute; right:10px; top:50%; transform:translateY(-50%); color:var(--gray-8); pointer-events:none; }
+.select-chevron svg { width:14px; height:14px; }
+.select-dropdown { position:absolute; top:calc(100% + 4px); left:0; right:0; background:var(--surface); border:1px solid var(--gray-5); border-radius:var(--radius-4); box-shadow:var(--shadow-popup); z-index:var(--z-dropdown); overflow:hidden; padding:4px; }
+.select-option { padding:8px 10px; font-size:13px; color:var(--gray-11); cursor:pointer; border-radius:var(--radius-2); display:flex; align-items:center; gap:8px; }
+.select-option:hover { background:var(--gray-2); }
+.select-option--selected { background:var(--amber-2); color:var(--gray-12); font-weight:500; }
+.select-option--disabled { color:var(--gray-8); cursor:not-allowed; pointer-events:none; }
+.select-divider { height:1px; background:var(--border-subtle); margin:4px 0; }
+
+/* ── 06 Checkbox ── */
+.checkbox-wrap { display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; }
+.checkbox { width:16px; height:16px; border-radius:var(--radius-2); border:1.5px solid var(--gray-6); background:var(--surface); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .12s; }
+.checkbox:hover { border-color:var(--gray-8); }
+.checkbox--checked { background:var(--gray-12); border-color:var(--gray-12); }
+.checkbox--indeterminate { background:var(--gray-12); border-color:var(--gray-12); }
+.checkbox--disabled { background:var(--gray-3); border-color:var(--gray-5); cursor:not-allowed; }
+.checkbox--focused  { border-color:var(--gray-7); box-shadow:0 0 0 2px var(--gray-4); outline:none; }
+.checkbox--focused.checkbox--checked { box-shadow:0 0 0 2px var(--gray-4); }
+.checkbox:focus-visible { border-color:var(--gray-7); box-shadow:0 0 0 2px var(--gray-4); outline:none; }
+.checkbox svg { width:10px; height:10px; color:#fff; flex-shrink:0; }
+.checkbox-label { font-size:13px; color:var(--gray-11); }
+.checkbox-label--disabled { color:var(--gray-8); }
+.checkbox-sublabel { font-size:11px; color:var(--gray-9); margin-top:1px; }
+
+/* ── 07 Radio ── */
+.radio-group { display:flex; flex-direction:column; gap:10px; }
+.radio-wrap { display:flex; align-items:flex-start; gap:8px; cursor:pointer; user-select:none; }
+.radio { width:16px; height:16px; border-radius:50%; border:1.5px solid var(--gray-6); background:var(--surface); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px; transition:all .12s; }
+.radio:hover { border-color:var(--gray-8); }
+.radio--selected { border-color:var(--green-solid); }
+.radio--selected::after { content:''; width:8px; height:8px; border-radius:50%; background:var(--green-solid); }
+.radio--disabled { background:var(--gray-3); border-color:var(--gray-5); cursor:not-allowed; }
+.radio-label { font-size:13px; color:var(--gray-11); line-height:1.4; }
+.radio-desc { font-size:11px; color:var(--gray-9); margin-top:2px; }
+
+/* ── 08 Switch ── */
+.switch-wrap { display:flex; align-items:center; gap:10px; cursor:pointer; user-select:none; }
+.switch { width:36px; height:20px; border-radius:10px; background:var(--gray-5); border:none; cursor:pointer; position:relative; transition:background .2s; flex-shrink:0; }
+.switch--on { background:var(--gray-12); }
+.switch--disabled { background:var(--gray-4); cursor:not-allowed; }
+.switch::after { content:''; position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:#fff; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.15); }
+.switch--on::after { transform:translateX(16px); }
+.switch-label { font-size:13px; color:var(--gray-11); }
+.switch-label--disabled { color:var(--gray-8); }
+
+/* ── 09 Status Indicator ── */
+.status { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:500; }
+.status-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.status--active    .status-dot { background:var(--green-solid); }
+.status--inactive  .status-dot { background:var(--gray-7); }
+.status--pending   .status-dot { background:var(--orange-solid); }
+.status--error     .status-dot { background:var(--red-solid); }
+.status--info      .status-dot { background:var(--blue-solid); }
+.status--warning   .status-dot { background:var(--amber-9); }
+.status--purple    .status-dot { background:var(--purple-solid); }
+.status--active    { color:var(--green-text); }
+.status--inactive  { color:var(--gray-9); }
+.status--pending   { color:var(--orange-text); }
+.status--error     { color:var(--red-text); }
+.status--info      { color:var(--blue-text); }
+.status--warning   { color:var(--amber-11); }
+.status--purple    { color:var(--purple-text); }
+/* Status as pill badge */
+.status-pill { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:4px 10px; border-radius:var(--radius-3); border:1px solid transparent; }
+.status-pill--active  { background:var(--green-bg);  color:var(--green-text);  border-color:var(--green-border);  }
+.status-pill--pending { background:var(--orange-bg); color:var(--orange-text); border-color:var(--orange-border); }
+.status-pill--error   { background:var(--red-bg);    color:var(--red-text);    border-color:var(--red-border);    }
+.status-pill--inactive{ background:var(--gray-3);    color:var(--gray-9);      border-color:var(--gray-4);        }
+.status-pill--warning { background:var(--amber-2);   color:var(--amber-11);    border-color:var(--amber-3);       }
+.status-pill--info    { background:var(--blue-bg);   color:var(--blue-text);   border-color:var(--blue-border);   }
+
+/* ── 10 Avatar ── */
+.avatar { border-radius:50%; background:var(--gray-4); display:flex; align-items:center; justify-content:center; font-weight:600; color:var(--gray-10); overflow:hidden; flex-shrink:0; }
+.avatar img { width:100%; height:100%; object-fit:cover; }
+.avatar-xs { width:24px; height:24px; font-size:10px; }
+.avatar-sm { width:32px; height:32px; font-size:12px; }
+.avatar-md { width:40px; height:40px; font-size:14px; }
+.avatar-lg { width:48px; height:48px; font-size:16px; }
+.avatar-group { display:flex; }
+.avatar-group .avatar { border:2px solid var(--surface); margin-left:-8px; }
+.avatar-group .avatar:first-child { margin-left:0; }
+
+/* ── 11 Card ── */
+.card { background:var(--surface); border:1px solid var(--border-subtle); border-radius:var(--radius-4); overflow:hidden; }
+.card-header { padding:14px 16px 12px; border-bottom:1px solid var(--border-subtle); display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.card-title { font-size:14px; font-weight:600; color:var(--gray-12); }
+.card-desc { font-size:12px; color:var(--gray-9); margin-top:2px; }
+.card-body { padding:16px; }
+.card-footer { padding:12px 16px; border-top:1px solid var(--border-subtle); display:flex; align-items:center; justify-content:flex-end; gap:8px; }
+/* Alert card variants */
+.card--warning { background:var(--orange-bg); border-color:var(--orange-border); }
+.card--warning .card-title { color:var(--orange-text); }
+.card--danger  { background:var(--red-bg);    border-color:var(--red-border);    }
+.card--danger .card-title  { color:var(--red-text);    }
+.card--success { background:var(--green-bg);  border-color:var(--green-border);  }
+.card--success .card-title { color:var(--green-text);  }
+.card--info    { background:var(--blue-bg);   border-color:var(--blue-border);   }
+.card--info .card-title    { color:var(--blue-text);   }
+
+/* ── 12 KPI Card ── */
+.kpi-card { background:var(--surface); border:1px solid var(--border-subtle); border-radius:var(--radius-4); padding:18px; }
+.kpi-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
+.kpi-label { font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--gray-9); }
+.kpi-icon { width:38px; height:38px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.kpi-value { font-size:26px; font-weight:700; letter-spacing:-.04em; color:var(--gray-12); line-height:1; margin-bottom:8px; } /* 26px ENFORCED */
+.kpi-trend { font-size:11px; font-weight:500; display:flex; align-items:center; gap:4px; }
+.kpi-trend--up   { color:var(--green-solid); }
+.kpi-trend--down { color:var(--red-solid); }
+.kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+
+/* ── 13 Progress ── */
+.progress-wrap { }
+.progress-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+.progress-label { font-size:12px; color:var(--gray-11); font-weight:500; }
+.progress-pct { font-size:11px; color:var(--gray-9); font-family:var(--font-mono); }
+.progress-track { height:6px; background:var(--gray-3); border-radius:var(--radius-6); overflow:hidden; }
+.progress-fill { height:100%; border-radius:var(--radius-6); transition:width .3s ease; }
+.progress-fill--default { background:var(--gray-12); }
+.progress-fill--success { background:var(--green-solid); }
+.progress-fill--warning { background:var(--amber-9); }
+.progress-fill--danger  { background:var(--red-solid); }
+.progress-fill--info    { background:var(--blue-solid); }
+
+/* ── 14 Table ── */
+.table-wrap { background:var(--surface); border:1px solid var(--border-subtle); border-radius:var(--radius-4); overflow:hidden; }
+.table-toolbar { padding:12px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border-subtle); }
+table { width:100%; border-collapse:collapse; }
+thead th { background:var(--gray-2); color:var(--gray-9); font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; padding:10px 14px; text-align:left; border-bottom:1px solid var(--border-subtle); white-space:nowrap; }
+thead th.sortable { cursor:pointer; user-select:none; }
+thead th.sortable:hover { color:var(--gray-12); }
+tbody td { padding:12px 14px; font-size:13px; color:var(--gray-11); border-bottom:1px solid var(--border-subtle); }
+tbody tr:last-child td { border-bottom:none; }
+tbody tr:hover td { background:var(--gray-2); }
+tbody tr.selected td { background:var(--amber-2); }
+.td-mono { font-family:var(--font-mono); font-size:12px; color:var(--gray-12); }
+.td-actions { display:flex; gap:6px; }
+.sort-icon { opacity:.4; margin-left:4px; vertical-align:middle; }
+.sort-icon--asc, .sort-icon--desc { opacity:1; }
+
+/* ── 15 Pagination ── */
+.pagination { display:flex; align-items:center; gap:6px; padding:12px 16px; border-top:1px solid var(--border-subtle); background:var(--surface); }
+.pagination-info { font-size:12px; color:var(--gray-9); flex:1; }
+.page-btn { width:28px; height:28px; border-radius:var(--radius-3); border:1px solid var(--gray-5); background:var(--surface); font-size:12px; color:var(--gray-10); cursor:pointer; display:flex; align-items:center; justify-content:center; font-family:inherit; transition:all .12s; }
+.page-btn:hover { border-color:var(--gray-7); color:var(--gray-12); }
+.page-btn--active { background:var(--gray-12); color:#fff; border-color:var(--gray-12); }
+.page-btn--prev,.page-btn--next { width:auto; padding:0 10px; gap:4px; font-size:12px; }
+.page-btn:disabled { opacity:.4; cursor:not-allowed; }
+.page-ellipsis { font-size:12px; color:var(--gray-8); padding:0 2px; }
+.page-size-select { height:28px; padding:0 24px 0 8px; font-size:12px; color:var(--gray-11); background:var(--surface); border:1px solid var(--gray-5); border-radius:var(--radius-3); cursor:pointer; appearance:none; font-family:inherit; }
+
+/* ── 29 File Upload ── */
+.upload-zone { border:2px dashed var(--gray-6); border-radius:var(--radius-4); padding:28px 20px; text-align:center; background:var(--gray-1); transition:border-color .15s,background .15s; cursor:pointer; }
+.upload-zone:hover,.upload-zone--drag { border-color:var(--gray-9); background:var(--gray-2); }
+.upload-zone--error { border-color:var(--red-solid); background:var(--red-bg); }
+.upload-zone-icon { font-size:28px; margin-bottom:10px; color:var(--gray-7); }
+.upload-zone-text { font-size:13px; font-weight:500; color:var(--gray-11); }
+.upload-zone-hint { font-size:11px; color:var(--gray-8); margin-top:4px; }
+.upload-zone-link { color:var(--blue-solid); text-decoration:underline; cursor:pointer; }
+.upload-file-list { display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+.upload-file-item { display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--surface); border:1px solid var(--gray-4); border-radius:var(--radius-4); }
+.upload-file-item--error { border-color:var(--red-border); background:var(--red-bg); }
+.upload-file-icon { font-size:20px; flex-shrink:0; }
+.upload-file-info { flex:1; min-width:0; }
+.upload-file-name { font-size:13px; font-weight:500; color:var(--gray-12); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.upload-file-meta { font-size:11px; color:var(--gray-9); margin-top:2px; display:flex; gap:8px; }
+.upload-file-error { font-size:11px; color:var(--red-text); margin-top:2px; }
+.upload-file-remove { background:none; border:none; cursor:pointer; color:var(--gray-7); font-size:16px; padding:2px; flex-shrink:0; border-radius:var(--radius-2); transition:color .1s,background .1s; }
+.upload-file-remove:hover { color:var(--gray-12); background:var(--gray-3); }
+.upload-progress-bar { height:3px; background:var(--gray-3); border-radius:var(--radius-6); margin-top:6px; overflow:hidden; }
+.upload-progress-fill { height:100%; background:var(--blue-solid); border-radius:var(--radius-6); transition:width .3s ease; }
+
+/* ── 30 Tooltip ── */
+.tooltip-wrap { position:relative; display:inline-flex; }
+.tooltip-box {
+  position:absolute; z-index:var(--z-tooltip);
+  background:var(--gray-12); color:#fff;
+  font-size:12px; font-weight:400; line-height:1.5;
+  padding:5px 10px; border-radius:var(--radius-2);
+  white-space:nowrap; pointer-events:none;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+  max-width:240px; white-space:normal;
+}
+/* placement variants */
+.tooltip-box--top    { bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); }
+.tooltip-box--bottom { top:calc(100% + 6px);    left:50%; transform:translateX(-50%); }
+.tooltip-box--left   { right:calc(100% + 6px);  top:50%;  transform:translateY(-50%); }
+.tooltip-box--right  { left:calc(100% + 6px);   top:50%;  transform:translateY(-50%); }
+/* arrow */
+.tooltip-box::after {
+  content:''; position:absolute; border:5px solid transparent;
+}
+.tooltip-box--top::after    { top:100%;  left:50%; transform:translateX(-50%); border-top-color:var(--gray-12); }
+.tooltip-box--bottom::after { bottom:100%; left:50%; transform:translateX(-50%); border-bottom-color:var(--gray-12); }
+.tooltip-box--left::after   { left:100%; top:50%;  transform:translateY(-50%); border-left-color:var(--gray-12); }
+.tooltip-box--right::after  { right:100%; top:50%; transform:translateY(-50%); border-right-color:var(--gray-12); }
+
+</style>
+</head>
+<body>
+
+<header class="doc-topbar">
+  <div class="doc-logo">
+    <div class="doc-logo-dot">N</div>
+    NearGo OMS
+  </div>
+  <span class="doc-version">Atomic Snippets v1.0</span>
+  <div class="doc-spacer"></div>
+  <span style="font-size:12px;color:var(--gray-9)">Copy any block below — all tokens included in &lt;style&gt;</span>
+</header>
+
+<nav class="doc-sidebar">
+  <div class="doc-nav-group">基础</div>
+  <a class="doc-nav-link" href="#btn">01 Button</a>
+  <a class="doc-nav-link" href="#badge">02 Badge</a>
+  <a class="doc-nav-link" href="#avatar">03 Avatar</a>
+  <a class="doc-nav-group">表单</a>
+  <a class="doc-nav-link" href="#input">04 Input</a>
+  <a class="doc-nav-link" href="#textarea">05 Textarea</a>
+  <a class="doc-nav-link" href="#select">06 Select</a>
+  <a class="doc-nav-link" href="#checkbox">07 Checkbox</a>
+  <a class="doc-nav-link" href="#radio">08 Radio</a>
+  <a class="doc-nav-link" href="#switch">09 Switch</a>
+  <div class="doc-nav-group">数据展示</div>
+  <a class="doc-nav-link" href="#status">10 Status</a>
+  <a class="doc-nav-link" href="#card">11 Card</a>
+  <a class="doc-nav-link" href="#kpi">12 KPI Card</a>
+  <a class="doc-nav-link" href="#progress">13 Progress</a>
+  <a class="doc-nav-link" href="#table">14 Table</a>
+  <a class="doc-nav-link" href="#pagination">15 Pagination</a>
+  <a class="doc-nav-link" href="#skeleton">16 Skeleton</a>
+  <a class="doc-nav-link" href="#empty">17 Empty State</a>
+  <div class="doc-nav-group">反馈</div>
+  <a class="doc-nav-link" href="#toast">18 Toast</a>
+  <a class="doc-nav-link" href="#dialog">19 Dialog</a>
+  <a class="doc-nav-link" href="#loading">20 Loading</a>
+  <div class="doc-nav-group">导航</div>
+  <a class="doc-nav-link" href="#tabs">21 Tabs</a>
+  <a class="doc-nav-link" href="#breadcrumb">22 Breadcrumb</a>
+  <a class="doc-nav-link" href="#timeline">23 Timeline</a>
+  <a class="doc-nav-link" href="#steps">24 Steps</a>
+  <div class="doc-nav-group">布局</div>
+  <a class="doc-nav-link" href="#page-header">25 Page Header</a>
+  <a class="doc-nav-link" href="#filter-bar">26 Filter Bar</a>
+  <a class="doc-nav-link" href="#form-section">27 Form Section</a>
+  <a class="doc-nav-link" href="#layout-shell">28 App Shell</a>
+  <div class="doc-nav-group">高频补全</div>
+  <a class="doc-nav-link" href="#file-upload">29 File Upload</a>
+  <a class="doc-nav-link" href="#tooltip">30 Tooltip</a>
+</nav>
+
+<main class="doc-main">
+
+<!-- ═══════════════════════════════════════
+  01 BUTTON
+  ═══════════════════════════════════════ -->
+<section id="btn" class="doc-section">
+  <div class="doc-section-title">01 · Button</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/button.tsx" target="_blank" title="src/components/ui/button.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>button.tsx</a></div>
+  <div class="doc-section-desc">每个操作域内 primary 最多 1 个。危险操作弹 Dialog 确认，不直接显示 destructive 按钮。</div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">变体 · md</div>
+    <div class="doc-row">
+      <button class="btn btn-md btn-primary">Primary</button>
+      <button class="btn btn-md btn-secondary">Secondary</button>
+      <button class="btn btn-md btn-outline">Outline</button>
+      <button class="btn btn-md btn-ghost">Ghost</button>
+      <button class="btn btn-md btn-brand">Brand</button>
+      <button class="btn btn-md btn-destructive">Destructive</button>
+    </div>
+    <!-- SNIPPET ↓
+    <button class="btn btn-md btn-primary">确认</button>
+    <button class="btn btn-md btn-secondary">取消</button>
+    <button class="btn btn-md btn-outline">导出</button>
+    <button class="btn btn-md btn-ghost">更多</button>
+    <button class="btn btn-md btn-brand">品牌动作</button>
+    <button class="btn btn-md btn-destructive">删除</button>
+    -->
+  </div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">尺寸</div>
+    <div class="doc-row" style="align-items:center">
+      <button class="btn btn-sm btn-primary">Small</button>
+      <button class="btn btn-md btn-primary">Medium</button>
+      <button class="btn btn-lg btn-primary">Large</button>
+    </div>
+  </div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">状态</div>
+    <div class="doc-row">
+      <button class="btn btn-md btn-primary btn-disabled" disabled>Disabled</button>
+      <button class="btn btn-md btn-loading" aria-busy="true" aria-disabled="true">
+        <span class="spinner"></span>处理中…
+      </button>
+    </div>
+    <!-- SNIPPET: 加载态 ↓
+    <button class="btn btn-md btn-loading" aria-busy="true" aria-disabled="true">
+      <span class="spinner"></span>提交中…
+    </button>
+    -->
+  </div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">带图标</div>
+    <div class="doc-row">
+      <button class="btn btn-md btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        新建订单
+      </button>
+      <button class="btn btn-md btn-outline">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        导出
+      </button>
+      <button class="btn btn-md btn-outline btn-icon-only btn-sm" title="设置" style="width:34px;height:34px;border-radius:var(--radius-3)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  02 BADGE
+  ═══════════════════════════════════════ -->
+<section id="badge" class="doc-section">
+  <div class="doc-section-title">02 · Badge</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/badge.tsx" target="_blank" title="src/components/ui/badge.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>badge.tsx</a></div>
+  <div class="doc-section-desc">状态类 badge 必须带 dot + 文字双通道，不得单独用颜色。</div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">语义色</div>
+    <div class="doc-row">
+      <span class="badge badge-success"><span class="badge-dot" style="background:var(--green-solid)"></span>已完成</span>
+      <span class="badge badge-warning"><span class="badge-dot" style="background:var(--amber-9)"></span>待审核</span>
+      <span class="badge badge-danger"><span class="badge-dot" style="background:var(--red-solid)"></span>已拒绝</span>
+      <span class="badge badge-info"><span class="badge-dot" style="background:var(--blue-solid)"></span>处理中</span>
+      <span class="badge badge-urgent"><span class="badge-dot" style="background:var(--orange-solid)"></span>紧急</span>
+      <span class="badge badge-purple"><span class="badge-dot" style="background:var(--purple-solid)"></span>草稿</span>
+    </div>
+    <!-- SNIPPET ↓
+    <span class="badge badge-success"><span class="badge-dot" style="background:var(--green-solid)"></span>已完成</span>
+    <span class="badge badge-danger"><span class="badge-dot" style="background:var(--red-solid)"></span>已拒绝</span>
+    <span class="badge badge-warning"><span class="badge-dot" style="background:var(--amber-9)"></span>待审核</span>
+    <span class="badge badge-info"><span class="badge-dot" style="background:var(--blue-solid)"></span>处理中</span>
+    -->
+  </div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">其他变体</div>
+    <div class="doc-row">
+      <span class="badge badge-default">默认</span>
+      <span class="badge badge-brand">品牌</span>
+      <span class="badge badge-outline">轮廓</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  03 AVATAR
+  ═══════════════════════════════════════ -->
+<section id="avatar" class="doc-section">
+  <div class="doc-section-title">03 · Avatar</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/avatar.tsx" target="_blank" title="src/components/ui/avatar.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>avatar.tsx</a></div>
+  <div class="doc-section-desc">4 种尺寸。图片加载失败时必须有文字 fallback。</div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">尺寸</div>
+    <div class="doc-row" style="align-items:center">
+      <div class="avatar avatar-xs">王</div>
+      <div class="avatar avatar-sm">李</div>
+      <div class="avatar avatar-md">张</div>
+      <div class="avatar avatar-lg">赵</div>
+    </div>
+    <!-- SNIPPET ↓
+    <div class="avatar avatar-sm">王</div>  <!-- 文字 fallback -->
+    <div class="avatar avatar-md"><img src="/avatar.jpg" alt="用户名" onerror="this.parentElement.textContent='王'"/></div>
+    -->
+  </div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">头像组</div>
+    <div class="doc-row">
+      <div class="avatar-group">
+        <div class="avatar avatar-sm" style="background:var(--blue-bg);color:var(--blue-text)">王</div>
+        <div class="avatar avatar-sm" style="background:var(--green-bg);color:var(--green-text)">李</div>
+        <div class="avatar avatar-sm" style="background:var(--orange-bg);color:var(--orange-text)">张</div>
+        <div class="avatar avatar-sm" style="background:var(--purple-bg);color:var(--purple-text)">+3</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  04 INPUT
+  ═══════════════════════════════════════ -->
+<section id="input" class="doc-section">
+  <div class="doc-section-title">04 · Input</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/input.tsx" target="_blank" title="src/components/ui/input.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>input.tsx</a></div>
+  <div class="doc-section-desc">必须实现全部 6 态：默认 / 聚焦 / 已填 / 错误 / 禁用 / 加载。</div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">6 态完整示例</div>
+    <div class="doc-row" style="flex-direction:column;gap:14px;max-width:320px">
+
+      <div class="input-group">
+        <label class="input-label">默认态</label>
+        <input class="input" type="text" placeholder="请输入内容"/>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">聚焦态</label>
+        <input class="input" type="text" value="" placeholder="点击聚焦" style="border-color:var(--gray-7);box-shadow:var(--focus-ring)"/>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">已填</label>
+        <input class="input" type="text" value="已填写的内容"/>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">错误态<span class="required" style="color:var(--red-solid);margin-left:2px">*</span></label>
+        <input class="input input--error" type="text" value="错误内容" aria-invalid="true"/>
+        <span class="input-error-msg">格式不正确，请重新输入</span>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">禁用态</label>
+        <input class="input" type="text" value="不可编辑" disabled/>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">加载态</label>
+        <div class="input-wrap">
+          <input class="input input--loading" type="text" value="加载中…" readonly/>
+          <span class="input-suffix"><span class="spinner" style="border-color:rgba(0,0,0,.15);border-top-color:var(--gray-9);width:13px;height:13px;"></span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">前缀 / 后缀 / 清除</div>
+    <div class="doc-row" style="flex-direction:column;gap:14px;max-width:320px">
+      <div class="input-wrap">
+        <span class="input-prefix">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input class="input input--has-prefix" type="text" placeholder="搜索订单号"/>
+      </div>
+      <div class="input-wrap">
+        <input class="input input--has-suffix" type="text" placeholder="0.00"/>
+        <span class="input-suffix" style="font-size:12px;color:var(--gray-9)">CNY</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  05 TEXTAREA
+  ═══════════════════════════════════════ -->
+<section id="textarea" class="doc-section">
+  <div class="doc-section-title">05 · Textarea</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/textarea.tsx" target="_blank" title="src/components/ui/textarea.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>textarea.tsx</a></div>
+  <div class="doc-section-desc">必须包含字符计数器和错误态。</div>
+
+  <div class="doc-row" style="flex-direction:column;gap:14px;max-width:400px">
+    <div class="input-group">
+      <label class="input-label">备注</label>
+      <textarea class="textarea" placeholder="请输入备注内容（选填）" rows="3"></textarea>
+      <div class="textarea-counter"><span>0</span> / 200</div>
+    </div>
+
+    <div class="input-group">
+      <label class="input-label">原因 <span style="color:var(--red-solid)">*</span></label>
+      <textarea class="textarea textarea--error" rows="3">内容过长内容过长内容过长内容过长内容过长</textarea>
+      <div class="textarea-counter textarea-counter--over">205 / 200</div>
+      <span class="input-error-msg">已超出最大字数限制</span>
+    </div>
+  </div>
+  <!-- SNIPPET ↓
+  <div class="input-group">
+    <label class="input-label">备注</label>
+    <textarea class="textarea" placeholder="请输入…" rows="3"></textarea>
+    <div class="textarea-counter"><span id="count">0</span> / 200</div>
+  </div>
+  <script>
+    document.querySelector('.textarea').addEventListener('input', e =>
+      document.querySelector('#count').textContent = e.target.value.length);
+  </script>
+  -->
+</section>
+
+<!-- ═══════════════════════════════════════
+  06 SELECT
+  ═══════════════════════════════════════ -->
+<section id="select" class="doc-section">
+  <div class="doc-section-title">06 · Select</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/select.tsx" target="_blank" title="src/components/ui/select.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>select.tsx</a></div>
+
+  <div class="doc-row" style="flex-direction:column;gap:14px;max-width:280px">
+    <!-- 原生 select（推荐用于 HTML-only） -->
+    <div class="input-group">
+      <label class="input-label">状态</label>
+      <div class="select-wrap">
+        <select class="input" style="appearance:none;padding-right:32px;cursor:pointer">
+          <option value="" disabled selected>请选择状态</option>
+          <option value="active">进行中</option>
+          <option value="pending">待处理</option>
+          <option value="done">已完成</option>
+          <option value="cancelled">已取消</option>
+        </select>
+        <span class="select-chevron">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <!-- 自定义 dropdown 展开态展示 -->
+    <div class="input-group">
+      <label class="input-label">自定义 Select（展开态）</label>
+      <div class="select-wrap" style="position:relative">
+        <button class="select-trigger" style="border-color:var(--gray-7);box-shadow:var(--focus-ring)">进行中</button>
+        <span class="select-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+        <div class="select-dropdown" style="display:block">
+          <div class="select-option">待处理</div>
+          <div class="select-option select-option--selected">进行中</div>
+          <div class="select-option">已完成</div>
+          <div class="select-divider"></div>
+          <div class="select-option select-option--disabled">已归档（不可选）</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  07 CHECKBOX
+  ═══════════════════════════════════════ -->
+<section id="checkbox" class="doc-section">
+  <div class="doc-section-title">07 · Checkbox</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/checkbox.tsx" target="_blank" title="src/components/ui/checkbox.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>checkbox.tsx</a></div>
+
+  <div class="doc-row" style="flex-direction:column;gap:12px">
+    <label class="checkbox-wrap">
+      <span class="checkbox"><!-- 未勾选 --></span>
+      <span class="checkbox-label">未选中</span>
+    </label>
+    <label class="checkbox-wrap">
+      <span class="checkbox checkbox--checked">
+        <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg>
+      </span>
+      <span class="checkbox-label">已选中</span>
+    </label>
+    <label class="checkbox-wrap">
+      <span class="checkbox checkbox--indeterminate">
+        <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2"><line x1="2" y1="5" x2="8" y2="5"/></svg>
+      </span>
+      <span class="checkbox-label">不确定（全选中间态）</span>
+    </label>
+    <label class="checkbox-wrap" style="cursor:not-allowed">
+      <span class="checkbox checkbox--disabled"></span>
+      <span class="checkbox-label checkbox-label--disabled">禁用</span>
+    </label>
+    <!-- 带副文本 -->
+    <label class="checkbox-wrap" style="align-items:flex-start">
+      <span class="checkbox checkbox--checked" style="margin-top:2px">
+        <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg>
+      </span>
+      <span>
+        <div class="checkbox-label">接受服务条款</div>
+        <div class="checkbox-sublabel">包含隐私政策与用户协议</div>
+      </span>
+    </label>
+    <!-- focus ring: 未勾选 -->
+    <label class="checkbox-wrap">
+      <span class="checkbox checkbox--focused" tabindex="0" aria-label="键盘聚焦示例（未勾选）"></span>
+      <span class="checkbox-label">
+        键盘聚焦 · 未勾选
+        <span style="font-size:11px;color:var(--gray-8);margin-left:6px;font-family:var(--font-mono)">box-shadow: 0 0 0 2px var(--gray-4)</span>
+      </span>
+    </label>
+
+    <!-- focus ring: 已勾选 -->
+    <label class="checkbox-wrap">
+      <span class="checkbox checkbox--checked checkbox--focused" tabindex="0" aria-label="键盘聚焦示例（已勾选）">
+        <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg>
+      </span>
+      <span class="checkbox-label">键盘聚焦 · 已勾选</span>
+    </label>
+  </div>
+
+  <div style="margin-top:4px;padding:10px 12px;background:var(--gray-2);border-radius:var(--radius-3);font-size:12px;color:var(--gray-9);max-width:540px">
+    <strong style="color:var(--gray-12)">规范说明</strong>：键盘 Tab 聚焦时必须显示焦点环，由
+    <code style="font-family:var(--font-mono);background:var(--surface);padding:1px 5px;border-radius:3px;border:1px solid var(--border-subtle)">:focus-visible</code>
+    自动触发，不需要 JS。鼠标点击不触发（符合 WCAG 2.4.7）。
+    焦点环样式统一使用 <code style="font-family:var(--font-mono);background:var(--surface);padding:1px 5px;border-radius:3px;border:1px solid var(--border-subtle)">var(--focus-ring)</code>。
+  </div>
+
+  <!-- SNIPPET ↓
+  <label class="checkbox-wrap">
+    <span class="checkbox checkbox--checked">
+      <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg>
+    </span>
+    <span class="checkbox-label">已选中</span>
+  </label>
+  <!-- focus ring 由 :focus-visible 自动处理，CSS 中已定义 .checkbox:focus-visible -->
+  -->
+</section>
+
+<!-- ═══════════════════════════════════════
+  08 RADIO
+  ═══════════════════════════════════════ -->
+<section id="radio" class="doc-section">
+  <div class="doc-section-title">08 · Radio Group</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/radio-group.tsx" target="_blank" title="src/components/ui/radio-group.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>radio-group.tsx</a></div>
+
+  <div class="radio-group" style="max-width:320px">
+    <label class="radio-wrap">
+      <span class="radio"></span>
+      <span>
+        <div class="radio-label">标准配送</div>
+        <div class="radio-desc">3–5 个工作日，免运费</div>
+      </span>
+    </label>
+    <label class="radio-wrap">
+      <span class="radio radio--selected"></span>
+      <span>
+        <div class="radio-label">加急配送</div>
+        <div class="radio-desc">次日达，¥15 运费</div>
+      </span>
+    </label>
+    <label class="radio-wrap" style="cursor:not-allowed;opacity:.6">
+      <span class="radio radio--disabled"></span>
+      <span>
+        <div class="radio-label">同城配送（暂不可用）</div>
+      </span>
+    </label>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  09 SWITCH
+  ═══════════════════════════════════════ -->
+<section id="switch" class="doc-section">
+  <div class="doc-section-title">09 · Switch</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/switch.tsx" target="_blank" title="src/components/ui/switch.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>switch.tsx</a></div>
+
+  <div class="doc-col" style="max-width:280px">
+    <label class="switch-wrap">
+      <button class="switch" role="switch" aria-checked="false"></button>
+      <span class="switch-label">关闭</span>
+    </label>
+    <label class="switch-wrap">
+      <button class="switch switch--on" role="switch" aria-checked="true"></button>
+      <span class="switch-label">开启通知</span>
+    </label>
+    <label class="switch-wrap" style="cursor:not-allowed">
+      <button class="switch switch--disabled" disabled role="switch" aria-checked="false" aria-disabled="true"></button>
+      <span class="switch-label switch-label--disabled">禁用</span>
+    </label>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  10 STATUS INDICATOR
+  ═══════════════════════════════════════ -->
+<section id="status" class="doc-section">
+  <div class="doc-section-title">10 · Status Indicator</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/status-indicator.tsx" target="_blank" title="src/components/ui/status-indicator.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>status-indicator.tsx</a></div>
+  <div class="doc-section-desc">强制「6px 圆点 + 文字」双通道，禁止纯色标识。</div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">内联文字型</div>
+    <div class="doc-row" style="flex-wrap:wrap;gap:16px">
+      <span class="status status--active"><span class="status-dot"></span>运营中</span>
+      <span class="status status--inactive"><span class="status-dot"></span>已停用</span>
+      <span class="status status--pending"><span class="status-dot"></span>待处理</span>
+      <span class="status status--error"><span class="status-dot"></span>异常</span>
+      <span class="status status--info"><span class="status-dot"></span>处理中</span>
+      <span class="status status--warning"><span class="status-dot"></span>警告</span>
+    </div>
+  </div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">Pill 型（用于表格单元格）</div>
+    <div class="doc-row" style="flex-wrap:wrap;gap:8px">
+      <span class="status-pill status-pill--active"><span class="status-dot" style="background:var(--green-solid)"></span>进行中</span>
+      <span class="status-pill status-pill--pending"><span class="status-dot" style="background:var(--orange-solid)"></span>待审核</span>
+      <span class="status-pill status-pill--error"><span class="status-dot" style="background:var(--red-solid)"></span>已拒绝</span>
+      <span class="status-pill status-pill--inactive"><span class="status-dot" style="background:var(--gray-7)"></span>已关闭</span>
+      <span class="status-pill status-pill--warning"><span class="status-dot" style="background:var(--amber-9)"></span>临期</span>
+      <span class="status-pill status-pill--info"><span class="status-dot" style="background:var(--blue-solid)"></span>同步中</span>
+    </div>
+    <!-- SNIPPET: 表格状态列 ↓
+    <span class="status-pill status-pill--active">
+      <span class="status-dot" style="background:var(--green-solid)"></span>进行中
+    </span>
+    -->
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  11 CARD
+  ═══════════════════════════════════════ -->
+<section id="card" class="doc-section">
+  <div class="doc-section-title">11 · Card</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/card.tsx" target="_blank" title="src/components/ui/card.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>card.tsx</a></div>
+  <div class="doc-section-desc">各区块用 Card 隔离，不得合并。radius 8px，shadow-1。</div>
+
+  <div class="doc-row" style="flex-wrap:wrap;gap:16px;align-items:flex-start">
+    <!-- 基础 Card -->
+    <div class="card" style="width:280px">
+      <div class="card-header">
+        <div>
+          <div class="card-title">订单信息</div>
+          <div class="card-desc">ORD-2024-00128</div>
+        </div>
+        <span class="badge badge-success"><span class="badge-dot" style="background:var(--green-solid)"></span>已完成</span>
+      </div>
+      <div class="card-body">
+        <p style="font-size:13px;color:var(--gray-11);line-height:1.6">卡片内容区域。每个业务区块独立封装在 Card 中，不与其他区块合并。</p>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-sm btn-outline">查看详情</button>
+        <button class="btn btn-sm btn-primary">处理</button>
+      </div>
+    </div>
+
+    <!-- 警告 Card -->
+    <div class="card card--warning" style="width:280px">
+      <div class="card-header">
+        <div>
+          <div class="card-title" style="display:flex;align-items:center;gap:6px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            库存预警
+          </div>
+          <div class="card-desc" style="color:var(--orange-text)">3 个 SKU 库存不足</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p style="font-size:13px;color:var(--orange-text);opacity:.85">建议立即补货，当前库存量低于安全库存线。</p>
+      </div>
+    </div>
+
+    <!-- 危险 Card -->
+    <div class="card card--danger" style="width:280px">
+      <div class="card-header">
+        <div class="card-title" style="display:flex;align-items:center;gap:6px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          支付失败
+        </div>
+      </div>
+      <div class="card-body">
+        <p style="font-size:13px;color:var(--red-text);opacity:.85">交易 #TX-9920 支付异常，请检查账户余额。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  12 KPI CARD
+  ═══════════════════════════════════════ -->
+<section id="kpi" class="doc-section">
+  <div class="doc-section-title">12 · KPI Card</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/kpi-card.tsx" target="_blank" title="src/components/ui/kpi-card.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>kpi-card.tsx</a></div>
+  <div class="doc-section-desc">数值强制 26px/700。每行最多 4 个（col-6）。必须带语义色图标。</div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span class="kpi-label">今日订单</span>
+        <div class="kpi-icon" style="background:var(--blue-bg)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue-solid)" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value">1,284</div>
+      <div class="kpi-trend kpi-trend--up">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+        +12.4% 较昨日
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span class="kpi-label">销售额</span>
+        <div class="kpi-icon" style="background:var(--green-bg)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green-solid)" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value">¥86,420</div>
+      <div class="kpi-trend kpi-trend--up">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+        +8.2% 较上周
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span class="kpi-label">待处理</span>
+        <div class="kpi-icon" style="background:var(--orange-bg)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--orange-solid)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value">43</div>
+      <div class="kpi-trend kpi-trend--down">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 9 12 15 6 9"/></svg>
+        -5 较昨日
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span class="kpi-label">退款率</span>
+        <div class="kpi-icon" style="background:var(--red-bg)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--red-solid)" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value">2.1%</div>
+      <div class="kpi-trend kpi-trend--down">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 9 12 15 6 9"/></svg>
+        -0.3% 较上月
+      </div>
+    </div>
+  </div>
+  <!-- SNIPPET ↓
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span class="kpi-label">指标名称</span>
+        <div class="kpi-icon" style="background:var(--blue-bg)"><!-- icon svg --></div>
+      </div>
+      <div class="kpi-value">1,284</div>  <!-- 26px enforced via CSS -->
+      <div class="kpi-trend kpi-trend--up">↑ +12.4%</div>
+    </div>
+  </div>
+  -->
+</section>
+
+<!-- ═══════════════════════════════════════
+  13 PROGRESS
+  ═══════════════════════════════════════ -->
+<section id="progress" class="doc-section">
+  <div class="doc-section-title">13 · Progress</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/progress.tsx" target="_blank" title="src/components/ui/progress.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>progress.tsx</a></div>
+
+  <div class="doc-col" style="max-width:400px;gap:14px">
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <span class="progress-label">默认</span>
+        <span class="progress-pct">68%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill progress-fill--default" style="width:68%"></div></div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <span class="progress-label">成功</span>
+        <span class="progress-pct">100%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill progress-fill--success" style="width:100%"></div></div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <span class="progress-label">警告</span>
+        <span class="progress-pct">85%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill progress-fill--warning" style="width:85%"></div></div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <span class="progress-label">危险</span>
+        <span class="progress-pct">95%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill progress-fill--danger" style="width:95%"></div></div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <span class="progress-label">信息</span>
+        <span class="progress-pct">42%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill progress-fill--info" style="width:42%"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  14 TABLE
+  ═══════════════════════════════════════ -->
+<section id="table" class="doc-section">
+  <div class="doc-section-title">14 · Table</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/table.tsx" target="_blank" title="src/components/ui/table.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>table.tsx</a><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/data-table/index.tsx" target="_blank" title="src/components/ui/data-table/index.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>index.tsx</a><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/data-table/toolbar.tsx" target="_blank" title="src/components/ui/data-table/toolbar.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>toolbar.tsx</a><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/data-table/column-header.tsx" target="_blank" title="src/components/ui/data-table/column-header.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>column-header.tsx</a><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/data-table/bulk-actions.tsx" target="_blank" title="src/components/ui/data-table/bulk-actions.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>bulk-actions.tsx</a></div>
+  <div class="doc-section-desc">必须包含排序、筛选、分页。表头 gray-2 背景，行 hover gray-2，选中行 amber-2。</div>
+
+  <div class="table-wrap">
+    <!-- Toolbar -->
+    <div class="table-toolbar">
+      <div class="input-wrap" style="flex:1;max-width:240px">
+        <span class="input-prefix"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+        <input class="input input--has-prefix" type="text" placeholder="搜索订单号、客户名…"/>
+      </div>
+      <div class="select-wrap" style="width:120px">
+        <select class="input" style="appearance:none;padding-right:28px;cursor:pointer">
+          <option>全部状态</option>
+          <option>进行中</option>
+          <option>已完成</option>
+          <option>已取消</option>
+        </select>
+        <span class="select-chevron"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div style="flex:1"></div>
+      <button class="btn btn-sm btn-outline">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        导出
+      </button>
+      <button class="btn btn-sm btn-primary">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        新建
+      </button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width:40px"><span class="checkbox checkbox--indeterminate" style="display:inline-flex"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" style="width:10px;height:10px"><line x1="2" y1="5" x2="8" y2="5"/></svg></span></th>
+          <th class="sortable">订单号 <svg class="sort-icon sort-icon--asc" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg></th>
+          <th>客户名称</th>
+          <th class="sortable">金额 <svg class="sort-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></th>
+          <th>状态</th>
+          <th>下单时间</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="selected">
+          <td><span class="checkbox checkbox--checked"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" style="width:10px;height:10px"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg></span></td>
+          <td><span class="td-mono">ORD-2024-0128</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="avatar avatar-xs" style="background:var(--blue-bg);color:var(--blue-text)">王</div>
+              王小明
+            </div>
+          </td>
+          <td><span class="td-mono">¥2,580.00</span></td>
+          <td><span class="status-pill status-pill--active"><span class="status-dot" style="background:var(--green-solid)"></span>进行中</span></td>
+          <td style="color:var(--gray-9);font-size:12px">2024-05-28 14:32</td>
+          <td>
+            <div class="td-actions">
+              <button class="btn btn-sm btn-ghost">查看</button>
+              <button class="btn btn-sm btn-outline">处理</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="checkbox"></span></td>
+          <td><span class="td-mono">ORD-2024-0127</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="avatar avatar-xs" style="background:var(--green-bg);color:var(--green-text)">李</div>
+              李华
+            </div>
+          </td>
+          <td><span class="td-mono">¥980.00</span></td>
+          <td><span class="status-pill status-pill--inactive"><span class="status-dot" style="background:var(--gray-7)"></span>已完成</span></td>
+          <td style="color:var(--gray-9);font-size:12px">2024-05-28 11:10</td>
+          <td>
+            <div class="td-actions">
+              <button class="btn btn-sm btn-ghost">查看</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="checkbox"></span></td>
+          <td><span class="td-mono">ORD-2024-0126</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="avatar avatar-xs" style="background:var(--orange-bg);color:var(--orange-text)">张</div>
+              张伟
+            </div>
+          </td>
+          <td><span class="td-mono">¥4,200.00</span></td>
+          <td><span class="status-pill status-pill--error"><span class="status-dot" style="background:var(--red-solid)"></span>已拒绝</span></td>
+          <td style="color:var(--gray-9);font-size:12px">2024-05-27 09:45</td>
+          <td>
+            <div class="td-actions">
+              <button class="btn btn-sm btn-ghost">查看</button>
+              <button class="btn btn-sm btn-outline">重新申请</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  15 PAGINATION
+  ═══════════════════════════════════════ -->
+<section id="pagination" class="doc-section">
+  <div class="doc-section-title">15 · Pagination</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/pagination.tsx" target="_blank" title="src/components/ui/pagination.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>pagination.tsx</a><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/data-table/pagination.tsx" target="_blank" title="src/components/ui/data-table/pagination.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>pagination.tsx</a></div>
+
+  <div class="table-wrap" style="max-width:640px">
+    <div class="pagination">
+      <span class="pagination-info">共 128 条，每页</span>
+      <select class="page-size-select">
+        <option>10</option>
+        <option selected>20</option>
+        <option>50</option>
+      </select>
+      <span class="pagination-info">条</span>
+      <div style="flex:1"></div>
+      <button class="page-btn page-btn--prev" disabled>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        上一页
+      </button>
+      <button class="page-btn page-btn--active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <span class="page-ellipsis">…</span>
+      <button class="page-btn">7</button>
+      <button class="page-btn page-btn--next">
+        下一页
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+<!-- ═══════════════════════════════════════
+  16 SKELETON
+  ═══════════════════════════════════════ -->
+<section id="skeleton" class="doc-section">
+  <div class="doc-section-title">16 · Skeleton</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/skeleton.tsx" target="_blank" title="src/components/ui/skeleton.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>skeleton.tsx</a></div>
+  <div class="doc-section-desc">异步区域必须用 Skeleton，禁止单独使用 Spinner。</div>
+
+<style>
+.skeleton { background:linear-gradient(90deg,var(--gray-3) 25%,var(--gray-2) 50%,var(--gray-3) 75%); background-size:800px 100%; animation:shimmer 1.4s ease-in-out infinite; border-radius:var(--radius-2); }
+.skeleton-line { height:14px; border-radius:var(--radius-6) !important; }
+.skeleton-circle { border-radius:50% !important; }
+.skeleton-block { border-radius:var(--radius-4) !important; }
+</style>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">文字行</div>
+    <div class="doc-col" style="max-width:320px;gap:8px">
+      <div class="skeleton skeleton-line" style="width:60%"></div>
+      <div class="skeleton skeleton-line" style="width:100%"></div>
+      <div class="skeleton skeleton-line" style="width:85%"></div>
+      <div class="skeleton skeleton-line" style="width:50%"></div>
+    </div>
+  </div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">卡片骨架</div>
+    <div class="card" style="max-width:320px">
+      <div class="card-body" style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="skeleton skeleton-circle" style="width:40px;height:40px;flex-shrink:0"></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+            <div class="skeleton skeleton-line" style="width:50%"></div>
+            <div class="skeleton skeleton-line" style="width:70%"></div>
+          </div>
+        </div>
+        <div class="skeleton skeleton-block" style="height:80px;width:100%"></div>
+        <div class="skeleton skeleton-line" style="width:40%"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">表格骨架</div>
+    <div class="table-wrap" style="max-width:600px">
+      <table>
+        <thead>
+          <tr>
+            <th><div class="skeleton skeleton-line" style="width:60px"></div></th>
+            <th><div class="skeleton skeleton-line" style="width:80px"></div></th>
+            <th><div class="skeleton skeleton-line" style="width:50px"></div></th>
+            <th><div class="skeleton skeleton-line" style="width:60px"></div></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 重复 4 行 -->
+          <tr><td><div class="skeleton skeleton-line" style="width:100%"></div></td><td><div class="skeleton skeleton-line" style="width:90%"></div></td><td><div class="skeleton skeleton-line" style="width:60px"></div></td><td><div class="skeleton skeleton-line" style="width:50px"></div></td></tr>
+          <tr><td><div class="skeleton skeleton-line" style="width:100%"></div></td><td><div class="skeleton skeleton-line" style="width:75%"></div></td><td><div class="skeleton skeleton-line" style="width:60px"></div></td><td><div class="skeleton skeleton-line" style="width:50px"></div></td></tr>
+          <tr><td><div class="skeleton skeleton-line" style="width:100%"></div></td><td><div class="skeleton skeleton-line" style="width:85%"></div></td><td><div class="skeleton skeleton-line" style="width:60px"></div></td><td><div class="skeleton skeleton-line" style="width:50px"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- SNIPPET ↓
+  <div class="skeleton skeleton-line" style="width:60%"></div>
+  <div class="skeleton skeleton-line" style="width:100%"></div>
+  <div class="skeleton skeleton-line" style="width:80%"></div>
+  -->
+</section>
+
+<!-- ═══════════════════════════════════════
+  17 EMPTY STATE
+  ═══════════════════════════════════════ -->
+<section id="empty" class="doc-section">
+  <div class="doc-section-title">17 · Empty State</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/empty-state.tsx" target="_blank" title="src/components/ui/empty-state.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>empty-state.tsx</a></div>
+  <div class="doc-section-desc">无数据 / 无结果 / 无权限三种场景。</div>
+
+<style>
+.empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:48px 24px; text-align:center; }
+.empty-icon { width:56px; height:56px; border-radius:var(--radius-4); background:var(--gray-2); display:flex; align-items:center; justify-content:center; margin-bottom:16px; color:var(--gray-7); }
+.empty-title { font-size:14px; font-weight:600; color:var(--gray-12); margin-bottom:6px; }
+.empty-desc { font-size:13px; color:var(--gray-9); max-width:280px; line-height:1.6; margin-bottom:20px; }
+</style>
+
+  <div class="doc-row" style="flex-wrap:wrap;gap:16px;align-items:flex-start">
+    <!-- 无数据 -->
+    <div class="table-wrap" style="width:280px">
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="empty-title">暂无订单</div>
+        <div class="empty-desc">当前筛选条件下没有匹配的订单数据</div>
+        <button class="btn btn-sm btn-primary">新建订单</button>
+      </div>
+    </div>
+
+    <!-- 无搜索结果 -->
+    <div class="table-wrap" style="width:280px">
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div class="empty-title">未找到结果</div>
+        <div class="empty-desc">尝试调整搜索关键词或清除筛选条件</div>
+        <button class="btn btn-sm btn-outline">清除筛选</button>
+      </div>
+    </div>
+
+    <!-- 错误态 -->
+    <div class="table-wrap" style="width:280px">
+      <div class="empty-state">
+        <div class="empty-icon" style="background:var(--red-bg);color:var(--red-solid)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div class="empty-title">加载失败</div>
+        <div class="empty-desc">数据获取异常，请检查网络后重试</div>
+        <button class="btn btn-sm btn-outline">重新加载</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  18 TOAST
+  ═══════════════════════════════════════ -->
+<section id="toast" class="doc-section">
+  <div class="doc-section-title">18 · Toast</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/toast.tsx" target="_blank" title="src/components/ui/toast.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>toast.tsx</a></div>
+  <div class="doc-section-desc">z-index: 600。右上角定位，自动消失 3s。必须有图标 + 文字双通道。</div>
+
+<style>
+.toast-stack { display:flex; flex-direction:column; gap:8px; max-width:360px; }
+.toast { display:flex; align-items:flex-start; gap:10px; background:var(--surface); border:1px solid var(--border-subtle); border-radius:var(--radius-4); padding:12px 14px; box-shadow:0 2px 6px rgba(0,0,0,.05),0 1px 3px rgba(0,0,0,.03); }
+.toast-icon { font-size:16px; flex-shrink:0; margin-top:1px; }
+.toast-content { flex:1; }
+.toast-title { font-size:13px; font-weight:600; color:var(--gray-12); }
+.toast-msg { font-size:12px; color:var(--gray-9); margin-top:2px; }
+.toast-close { background:none; border:none; cursor:pointer; color:var(--gray-7); font-size:16px; padding:0; line-height:1; flex-shrink:0; }
+.toast-close:hover { color:var(--gray-11); }
+.toast--success { border-left:3px solid var(--green-solid); }
+.toast--danger  { border-left:3px solid var(--red-solid); }
+.toast--warning { border-left:3px solid var(--amber-9); }
+.toast--info    { border-left:3px solid var(--blue-solid); }
+/* 实际使用时固定到右上角 */
+.toast-container { position:fixed; top:calc(var(--topbar-h, 54px) + 12px); right:20px; z-index:600; display:flex; flex-direction:column; gap:8px; }
+</style>
+
+  <div class="toast-stack">
+    <div class="toast toast--success" role="alert">
+      <span class="toast-icon">✅</span>
+      <div class="toast-content">
+        <div class="toast-title">操作成功</div>
+        <div class="toast-msg">订单 ORD-0128 已成功提交审核</div>
+      </div>
+      <button class="toast-close" aria-label="关闭">✕</button>
+    </div>
+    <div class="toast toast--danger" role="alert">
+      <span class="toast-icon">❌</span>
+      <div class="toast-content">
+        <div class="toast-title">操作失败</div>
+        <div class="toast-msg">网络异常，请稍后重试</div>
+      </div>
+      <button class="toast-close" aria-label="关闭">✕</button>
+    </div>
+    <div class="toast toast--warning" role="alert">
+      <span class="toast-icon">⚠️</span>
+      <div class="toast-content">
+        <div class="toast-title">注意</div>
+        <div class="toast-msg">库存不足，已自动调整为可用数量</div>
+      </div>
+      <button class="toast-close" aria-label="关闭">✕</button>
+    </div>
+    <div class="toast toast--info" role="alert">
+      <span class="toast-icon">ℹ️</span>
+      <div class="toast-content">
+        <div class="toast-title">数据同步中</div>
+        <div class="toast-msg">正在从 ERP 同步最新库存数据…</div>
+      </div>
+      <button class="toast-close" aria-label="关闭">✕</button>
+    </div>
+  </div>
+  <!-- SNIPPET: 实际页面使用 ↓
+  <div class="toast-container">
+    <div class="toast toast--success" role="alert">
+      <span class="toast-icon">✅</span>
+      <div class="toast-content">
+        <div class="toast-title">保存成功</div>
+        <div class="toast-msg">更改已自动保存</div>
+      </div>
+      <button class="toast-close" aria-label="关闭">✕</button>
+    </div>
+  </div>
+  -->
+</section>
+
+<!-- ═══════════════════════════════════════
+  19 DIALOG
+  ═══════════════════════════════════════ -->
+<section id="dialog" class="doc-section">
+  <div class="doc-section-title">19 · Dialog</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/dialog.tsx" target="_blank" title="src/components/ui/dialog.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>dialog.tsx</a><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/alert-dialog.tsx" target="_blank" title="src/components/ui/alert-dialog.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>alert-dialog.tsx</a></div>
+  <div class="doc-section-desc">宽度只能取 400 / 560 / 720 / 960px。必须有 role="dialog" + aria-modal="true"。</div>
+
+<style>
+.dialog-backdrop { background:rgba(31,29,28,.35); border-radius:var(--radius-4); padding:32px; display:flex; align-items:center; justify-content:center; min-height:220px; }
+.dialog { background:var(--surface); border-radius:var(--radius-5); box-shadow:0 8px 32px rgba(0,0,0,.12),0 2px 8px rgba(0,0,0,.06); overflow:hidden; }
+.dialog-w400 { width:400px; }
+.dialog-w560 { width:560px; }
+.dialog-header { padding:20px 20px 0; display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.dialog-title { font-size:15px; font-weight:700; color:var(--gray-12); letter-spacing:-.02em; }
+.dialog-desc { font-size:13px; color:var(--gray-9); margin-top:4px; }
+.dialog-close { background:none; border:none; cursor:pointer; color:var(--gray-8); padding:2px; border-radius:var(--radius-2); line-height:1; }
+.dialog-close:hover { background:var(--gray-3); color:var(--gray-12); }
+.dialog-body { padding:14px 20px 20px; font-size:13px; color:var(--gray-10); line-height:1.6; }
+.dialog-footer { padding:12px 20px; border-top:1px solid var(--border-subtle); display:flex; justify-content:flex-end; gap:8px; }
+.dialog--danger .dialog-title { color:var(--red-text); }
+</style>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">标准 Dialog（400px）</div>
+    <div class="dialog-backdrop">
+      <div class="dialog dialog-w400" role="dialog" aria-modal="true" aria-labelledby="dlg1-title">
+        <div class="dialog-header">
+          <div>
+            <div class="dialog-title" id="dlg1-title">编辑订单备注</div>
+            <div class="dialog-desc">修改将实时同步至客户记录</div>
+          </div>
+          <button class="dialog-close" aria-label="关闭">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="dialog-body">
+          <div class="input-group">
+            <label class="input-label">备注内容</label>
+            <textarea class="textarea" rows="3" placeholder="请输入…"></textarea>
+            <div class="textarea-counter">0 / 200</div>
+          </div>
+        </div>
+        <div class="dialog-footer">
+          <button class="btn btn-md btn-outline">取消</button>
+          <button class="btn btn-md btn-primary">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">危险确认 Dialog</div>
+    <div class="dialog-backdrop">
+      <div class="dialog dialog-w400 dialog--danger" role="dialog" aria-modal="true" aria-labelledby="dlg2-title">
+        <div class="dialog-header">
+          <div>
+            <div class="dialog-title" id="dlg2-title" style="display:flex;align-items:center;gap:6px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--red-solid)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              确认删除
+            </div>
+          </div>
+        </div>
+        <div class="dialog-body">
+          此操作将永久删除订单 <strong>ORD-2024-0128</strong>，且无法撤销。请确认是否继续？
+        </div>
+        <div class="dialog-footer">
+          <button class="btn btn-md btn-outline">取消</button>
+          <button class="btn btn-md btn-destructive">确认删除</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  20 LOADING OVERLAY
+  ═══════════════════════════════════════ -->
+<section id="loading" class="doc-section">
+  <div class="doc-section-title">20 · Loading Overlay</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/loading-overlay.tsx" target="_blank" title="src/components/ui/loading-overlay.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>loading-overlay.tsx</a></div>
+  <div class="doc-section-desc">页面级加载用全屏遮罩 + Spinner；局部加载用 Skeleton（见 16）。</div>
+
+<style>
+.spinner-sm { width:16px; height:16px; border:2px solid var(--gray-4); border-top-color:var(--gray-11); border-radius:50%; animation:spin .7s linear infinite; }
+.spinner-md { width:24px; height:24px; border:2.5px solid var(--gray-4); border-top-color:var(--gray-12); border-radius:50%; animation:spin .7s linear infinite; }
+.spinner-lg { width:36px; height:36px; border:3px solid var(--gray-4); border-top-color:var(--gray-12); border-radius:50%; animation:spin .7s linear infinite; }
+.loading-overlay { position:absolute; inset:0; background:rgba(255,255,255,.8); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; border-radius:inherit; z-index:var(--z-overlay); }
+.loading-text { font-size:13px; color:var(--gray-10); }
+</style>
+
+  <div class="doc-row" style="gap:24px;align-items:flex-end">
+    <div>
+      <div class="doc-sublabel">尺寸</div>
+      <div class="doc-row" style="align-items:center;gap:20px">
+        <span class="spinner-sm"></span>
+        <span class="spinner-md"></span>
+        <span class="spinner-lg"></span>
+      </div>
+    </div>
+
+    <div>
+      <div class="doc-sublabel">局部遮罩（卡片内）</div>
+      <div class="card" style="width:260px;position:relative">
+        <div class="card-header"><div class="card-title">数据加载中</div></div>
+        <div class="card-body" style="height:80px"></div>
+        <div class="loading-overlay">
+          <span class="spinner-md"></span>
+          <span class="loading-text">正在加载…</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- SNIPPET: 局部遮罩 ↓
+  <div style="position:relative">
+    <!-- 内容 -->
+    <div class="loading-overlay" id="overlay">
+      <span class="spinner-md"></span>
+      <span class="loading-text">加载中…</span>
+    </div>
+  </div>
+  -->
+</section>
+
+<!-- ═══════════════════════════════════════
+  21 TABS
+  ═══════════════════════════════════════ -->
+<section id="tabs" class="doc-section">
+  <div class="doc-section-title">21 · Tabs</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/tabs.tsx" target="_blank" title="src/components/ui/tabs.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>tabs.tsx</a></div>
+
+<style>
+.tabs-bar { border-bottom:1px solid var(--border-subtle); display:flex; gap:0; }
+.tab-item { padding:10px 16px; font-size:13px; color:var(--gray-9); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; display:flex; align-items:center; gap:6px; transition:color .12s; font-weight:500; user-select:none; }
+.tab-item:hover { color:var(--gray-11); }
+.tab-item.active { color:var(--gray-12); border-bottom-color:var(--gray-12); }
+.tab-item:focus-visible,.tab-item--focused { outline:none; box-shadow:inset 0 0 0 2px var(--gray-4); border-radius:var(--radius-2) var(--radius-2) 0 0; }
+.tab-item.active:focus-visible,.tab-item.active.tab-item--focused { box-shadow:inset 0 0 0 2px var(--gray-7); }
+.tab-count { font-size:10px; font-weight:600; padding:1px 6px; border-radius:10px; background:var(--gray-3); color:var(--gray-9); }
+.tab-item.active .tab-count { background:var(--gray-12); color:#fff; }
+.tab-content { padding:16px 0; font-size:13px; color:var(--gray-11); }
+</style>
+
+  <div>
+    <div class="tabs-bar" role="tablist">
+      <div class="tab-item active" role="tab" aria-selected="true">全部 <span class="tab-count">128</span></div>
+      <div class="tab-item" role="tab" aria-selected="false">进行中 <span class="tab-count">43</span></div>
+      <div class="tab-item" role="tab" aria-selected="false">待审核 <span class="tab-count">12</span></div>
+      <div class="tab-item" role="tab" aria-selected="false">已完成</div>
+      <div class="tab-item" role="tab" aria-selected="false">已取消</div>
+    </div>
+    <div class="tab-content" role="tabpanel">当前 Tab 内容区域</div>
+  </div>
+
+  <div class="doc-subsection" style="margin-top:24px">
+    <div class="doc-sublabel">键盘聚焦态（focus ring）</div>
+    <div>
+      <!-- 非激活 tab 聚焦 -->
+      <div class="tabs-bar" role="tablist" style="margin-bottom:16px">
+        <div class="tab-item active" role="tab" aria-selected="true" tabindex="0">全部 <span class="tab-count">128</span></div>
+        <div class="tab-item tab-item--focused" role="tab" aria-selected="false" tabindex="0" style="color:var(--gray-12)">
+          进行中
+          <span class="tab-count">43</span>
+        </div>
+        <div class="tab-item" role="tab" aria-selected="false" tabindex="-1">待审核</div>
+        <div class="tab-item" role="tab" aria-selected="false" tabindex="-1">已完成</div>
+      </div>
+
+      <!-- 激活 tab 聚焦 -->
+      <div class="tabs-bar" role="tablist">
+        <div class="tab-item active tab-item--focused" role="tab" aria-selected="true" tabindex="0">
+          全部 <span class="tab-count">128</span>
+        </div>
+        <div class="tab-item" role="tab" aria-selected="false" tabindex="-1">进行中</div>
+        <div class="tab-item" role="tab" aria-selected="false" tabindex="-1">待审核</div>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;padding:10px 12px;background:var(--gray-2);border-radius:var(--radius-3);font-size:12px;color:var(--gray-9);max-width:560px">
+      <strong style="color:var(--gray-12)">规范说明</strong>：
+      焦点环为 <strong>inset</strong>（内嵌），不破坏底部 2px 激活线布局。
+      非激活态：<code style="font-family:var(--font-mono);background:var(--surface);padding:1px 5px;border-radius:3px;border:1px solid var(--border-subtle)">inset 0 0 0 2px var(--gray-4)</code>；
+      激活态：<code style="font-family:var(--font-mono);background:var(--surface);padding:1px 5px;border-radius:3px;border:1px solid var(--border-subtle)">inset 0 0 0 2px var(--gray-7)</code>（加深以对比黑色底线）。
+      Tab 键顺序：激活项 <code style="font-family:var(--font-mono);background:var(--surface);padding:1px 5px;border-radius:3px;border:1px solid var(--border-subtle)">tabindex="0"</code>，
+      其余项 <code style="font-family:var(--font-mono);background:var(--surface);padding:1px 5px;border-radius:3px;border:1px solid var(--border-subtle)">tabindex="-1"</code>，方向键切换（roving tabindex 模式）。
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  22 BREADCRUMB
+  ═══════════════════════════════════════ -->
+<section id="breadcrumb" class="doc-section">
+  <div class="doc-section-title">22 · Breadcrumb</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/breadcrumb.tsx" target="_blank" title="src/components/ui/breadcrumb.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>breadcrumb.tsx</a></div>
+
+<style>
+.breadcrumb { display:flex; align-items:center; gap:4px; flex-wrap:wrap; }
+.bc-item { font-size:13px; color:var(--gray-10); cursor:pointer; text-decoration:none; }
+.bc-item:hover { color:var(--gray-12); text-decoration:underline; }
+.bc-item.current { color:var(--gray-12); font-weight:600; cursor:default; pointer-events:none; }
+.bc-sep { font-size:12px; color:var(--gray-7); user-select:none; }
+</style>
+
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a class="bc-item" href="#">首页</a>
+    <span class="bc-sep">/</span>
+    <a class="bc-item" href="#">订单管理</a>
+    <span class="bc-sep">/</span>
+    <span class="bc-item current" aria-current="page">订单详情</span>
+  </nav>
+  <!-- SNIPPET ↓
+  <nav aria-label="面包屑" class="breadcrumb">
+    <a class="bc-item" href="/dashboard">首页</a>
+    <span class="bc-sep">/</span>
+    <a class="bc-item" href="/orders">订单管理</a>
+    <span class="bc-sep">/</span>
+    <span class="bc-item current" aria-current="page">ORD-0128</span>
+  </nav>
+  -->
+</section>
+
+<!-- ═══════════════════════════════════════
+  23 TIMELINE
+  ═══════════════════════════════════════ -->
+<section id="timeline" class="doc-section">
+  <div class="doc-section-title">23 · Timeline</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/timeline.tsx" target="_blank" title="src/components/ui/timeline.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>timeline.tsx</a></div>
+  <div class="doc-section-desc">状态：done / active / pending。必须含时间戳和操作人。</div>
+
+<style>
+.timeline { display:flex; flex-direction:column; }
+.tl-item { display:flex; gap:14px; position:relative; }
+.tl-track { display:flex; flex-direction:column; align-items:center; width:24px; flex-shrink:0; }
+.tl-dot { width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; position:relative; z-index:1; }
+.tl-dot--done    { background:var(--green-bg);  color:var(--green-solid); border:1.5px solid var(--green-border); }
+.tl-dot--active  { background:var(--amber-2);   color:var(--amber-9);    border:1.5px solid var(--amber-3);      }
+.tl-dot--pending { background:var(--gray-2);    color:var(--gray-7);     border:1.5px solid var(--gray-4);       }
+.tl-line { flex:1; width:1.5px; background:var(--gray-4); min-height:16px; }
+.tl-line--done { background:var(--green-border); }
+.tl-content { padding-bottom:20px; flex:1; padding-top:2px; }
+.tl-title { font-size:13px; font-weight:600; color:var(--gray-12); }
+.tl-meta { font-size:11px; color:var(--gray-9); margin-top:2px; display:flex; gap:8px; }
+.tl-desc { font-size:12px; color:var(--gray-10); margin-top:6px; line-height:1.5; }
+</style>
+
+  <div class="timeline" style="max-width:400px">
+    <div class="tl-item">
+      <div class="tl-track">
+        <div class="tl-dot tl-dot--done">✓</div>
+        <div class="tl-line tl-line--done"></div>
+      </div>
+      <div class="tl-content">
+        <div class="tl-title">订单已创建</div>
+        <div class="tl-meta"><span>2024-05-28 09:12</span><span>操作人：王小明</span></div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-track">
+        <div class="tl-dot tl-dot--done">✓</div>
+        <div class="tl-line tl-line--done"></div>
+      </div>
+      <div class="tl-content">
+        <div class="tl-title">审核通过</div>
+        <div class="tl-meta"><span>2024-05-28 10:05</span><span>审核人：李经理</span></div>
+        <div class="tl-desc">备注：金额超 5000 元需财务二次确认，已完成。</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-track">
+        <div class="tl-dot tl-dot--active">⟳</div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-content">
+        <div class="tl-title">仓库拣货中 <span class="badge badge-warning" style="font-size:10px;padding:1px 6px">进行中</span></div>
+        <div class="tl-meta"><span>2024-05-28 11:30</span></div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-track">
+        <div class="tl-dot tl-dot--pending">○</div>
+      </div>
+      <div class="tl-content">
+        <div class="tl-title" style="color:var(--gray-8)">等待发货</div>
+        <div class="tl-meta">预计 2024-05-29</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  24 STEPS
+  ═══════════════════════════════════════ -->
+<section id="steps" class="doc-section">
+  <div class="doc-section-title">24 · Steps（流程步骤）</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/steps.tsx" target="_blank" title="src/components/ui/steps.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>steps.tsx</a></div>
+
+<style>
+.steps { display:flex; align-items:flex-start; }
+.step-node { display:flex; flex-direction:column; align-items:center; gap:6px; }
+.step-circle { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; flex-shrink:0; }
+.step-circle--done   { background:var(--green-solid); color:#fff; }
+.step-circle--active { background:var(--gray-12); color:#fff; }
+.step-circle--pending{ background:var(--gray-3); color:var(--gray-8); border:1.5px solid var(--gray-5); }
+.step-label { font-size:11px; font-weight:500; white-space:nowrap; }
+.step-label--done    { color:var(--green-text); }
+.step-label--active  { color:var(--gray-12); }
+.step-label--pending { color:var(--gray-8); }
+.step-connector { flex:1; height:1.5px; background:var(--gray-4); margin:0 6px; margin-top:14px; }
+.step-connector--done { background:var(--green-solid); }
+</style>
+
+  <div class="steps" style="max-width:560px">
+    <div class="step-node">
+      <div class="step-circle step-circle--done">✓</div>
+      <div class="step-label step-label--done">填写信息</div>
+    </div>
+    <div class="step-connector step-connector--done"></div>
+    <div class="step-node">
+      <div class="step-circle step-circle--done">✓</div>
+      <div class="step-label step-label--done">上传资料</div>
+    </div>
+    <div class="step-connector step-connector--done"></div>
+    <div class="step-node">
+      <div class="step-circle step-circle--active">3</div>
+      <div class="step-label step-label--active">审核中</div>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step-node">
+      <div class="step-circle step-circle--pending">4</div>
+      <div class="step-label step-label--pending">完成</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  25 PAGE HEADER
+  ═══════════════════════════════════════ -->
+<section id="page-header" class="doc-section">
+  <div class="doc-section-title">25 · Page Header</div>
+  <div class="doc-source"><a class="doc-src-file doc-src-layout" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/layout/page-header.tsx" target="_blank" title="src/components/layout/page-header.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>page-header.tsx</a></div>
+  <div class="doc-section-desc">面包屑 + 页面标题（20px/700）+ 右侧操作区。</div>
+
+<style>
+.page-header { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:24px; }
+.page-header-left { display:flex; flex-direction:column; gap:4px; }
+.page-title { font-size:20px; font-weight:700; color:var(--gray-12); letter-spacing:-.03em; }
+.page-subtitle { font-size:13px; color:var(--gray-9); }
+.page-header-actions { display:flex; align-items:center; gap:8px; flex-shrink:0; padding-top:4px; }
+</style>
+
+  <div style="background:var(--bg);padding:24px;border-radius:var(--radius-4)">
+    <div class="page-header">
+      <div class="page-header-left">
+        <nav class="breadcrumb">
+          <a class="bc-item" href="#">首页</a>
+          <span class="bc-sep">/</span>
+          <span class="bc-item current">订单管理</span>
+        </nav>
+        <h1 class="page-title">订单管理</h1>
+        <p class="page-subtitle">共 1,284 条订单，今日新增 128 条</p>
+      </div>
+      <div class="page-header-actions">
+        <button class="btn btn-md btn-outline">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          导出
+        </button>
+        <button class="btn btn-md btn-primary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          新建订单
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  26 FILTER BAR
+  ═══════════════════════════════════════ -->
+<section id="filter-bar" class="doc-section">
+  <div class="doc-section-title">26 · Filter Bar</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/filter-bar.tsx" target="_blank" title="src/components/ui/filter-bar.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>filter-bar.tsx</a></div>
+  <div class="doc-section-desc">搜索框 + 多个筛选项 + 重置。已激活的筛选项显示 active 样式。</div>
+
+<style>
+.filter-bar { display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:12px 0; }
+.filter-tag { display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 10px; font-size:12px; color:var(--gray-11); background:var(--surface); border:1px solid var(--gray-5); border-radius:var(--radius-3); cursor:pointer; white-space:nowrap; transition:all .12s; }
+.filter-tag:hover { border-color:var(--gray-7); }
+.filter-tag--active { background:var(--amber-2); color:var(--gray-12); border-color:var(--amber-3); font-weight:500; }
+.filter-tag--active .filter-tag-close { color:var(--amber-11); }
+.filter-tag-close { font-size:12px; color:var(--gray-7); cursor:pointer; }
+.filter-divider { width:1px; height:20px; background:var(--gray-5); margin:0 4px; }
+.filter-reset { font-size:12px; color:var(--blue-text); cursor:pointer; padding:0 4px; }
+.filter-reset:hover { text-decoration:underline; }
+</style>
+
+  <div class="filter-bar">
+    <div class="input-wrap" style="width:220px">
+      <span class="input-prefix"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+      <input class="input input--has-prefix" style="height:30px;font-size:12px" type="text" placeholder="搜索订单号、客户名…"/>
+    </div>
+    <div class="filter-divider"></div>
+    <div class="filter-tag">
+      状态
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="filter-tag filter-tag--active">
+      进行中
+      <span class="filter-tag-close">✕</span>
+    </div>
+    <div class="filter-tag filter-tag--active">
+      2024-05
+      <span class="filter-tag-close">✕</span>
+    </div>
+    <div class="filter-tag">
+      金额范围
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="filter-divider"></div>
+    <span class="filter-reset">重置筛选</span>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  27 FORM SECTION
+  ═══════════════════════════════════════ -->
+<section id="form-section" class="doc-section">
+  <div class="doc-section-title">27 · Form Section</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/form.tsx" target="_blank" title="src/components/ui/form.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>form.tsx</a><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/form-field.tsx" target="_blank" title="src/components/ui/form-field.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>form-field.tsx</a><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/label.tsx" target="_blank" title="src/components/ui/label.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>label.tsx</a></div>
+  <div class="doc-section-desc">每个区块独立 Card。默认 2 列。地址/备注独占整行。操作栏右对齐，sticky bottom。</div>
+
+<style>
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px 20px; }
+.form-grid .full-width { grid-column:1/-1; }
+.form-section-title { font-size:14px; font-weight:600; color:var(--gray-12); margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+.form-section-title::after { content:''; flex:1; height:1px; background:var(--border-subtle); }
+.form-action-bar { display:flex; justify-content:flex-end; gap:8px; padding-top:16px; border-top:1px solid var(--border-subtle); margin-top:8px; }
+</style>
+
+  <div style="display:flex;flex-direction:column;gap:16px;max-width:720px">
+    <!-- 基础信息 Card -->
+    <div class="card">
+      <div class="card-body">
+        <div class="form-section-title">基础信息</div>
+        <div class="form-grid">
+          <div class="input-group">
+            <label class="input-label">客户名称 <span style="color:var(--red-solid)">*</span></label>
+            <input class="input" type="text" placeholder="请输入客户名称"/>
+          </div>
+          <div class="input-group">
+            <label class="input-label">联系电话 <span style="color:var(--red-solid)">*</span></label>
+            <input class="input" type="tel" placeholder="请输入联系电话"/>
+          </div>
+          <div class="input-group">
+            <label class="input-label">订单类型</label>
+            <div class="select-wrap">
+              <select class="input" style="appearance:none;padding-right:32px;cursor:pointer">
+                <option>请选择</option><option>常规订单</option><option>紧急订单</option>
+              </select>
+              <span class="select-chevron"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+          </div>
+          <div class="input-group">
+            <label class="input-label">预计交期</label>
+            <input class="input" type="date"/>
+          </div>
+          <div class="input-group full-width">
+            <label class="input-label">收货地址</label>
+            <input class="input" type="text" placeholder="省 / 市 / 区 / 详细地址"/>
+          </div>
+          <div class="input-group full-width">
+            <label class="input-label">备注</label>
+            <textarea class="textarea" rows="3" placeholder="请输入备注（选填）"></textarea>
+            <div class="textarea-counter">0 / 200</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 商品信息 Card -->
+    <div class="card">
+      <div class="card-body">
+        <div class="form-section-title">商品信息</div>
+        <div class="form-grid">
+          <div class="input-group">
+            <label class="input-label">SKU 编码 <span style="color:var(--red-solid)">*</span></label>
+            <input class="input" type="text" placeholder="请输入 SKU"/>
+          </div>
+          <div class="input-group">
+            <label class="input-label">数量 <span style="color:var(--red-solid)">*</span></label>
+            <input class="input" type="number" placeholder="0" min="1"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 操作栏 -->
+    <div class="form-action-bar">
+      <button class="btn btn-md btn-outline">保存草稿</button>
+      <button class="btn btn-md btn-secondary">上一步</button>
+      <button class="btn btn-md btn-primary">提交审核</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  28 APP SHELL
+  ═══════════════════════════════════════ -->
+<section id="layout-shell" class="doc-section">
+  <div class="doc-section-title">28 · App Shell</div>
+  <div class="doc-source"><a class="doc-src-file doc-src-layout" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/layout/oms-layout.tsx" target="_blank" title="src/components/layout/oms-layout.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>oms-layout.tsx</a><a class="doc-src-file doc-src-layout" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/layout/oms-sidebar.tsx" target="_blank" title="src/components/layout/oms-sidebar.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>oms-sidebar.tsx</a><a class="doc-src-file doc-src-layout" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/layout/app-header.tsx" target="_blank" title="src/components/layout/app-header.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>app-header.tsx</a><a class="doc-src-file doc-src-layout" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/layout/nav-group.tsx" target="_blank" title="src/components/layout/nav-group.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>nav-group.tsx</a><a class="doc-src-file doc-src-layout" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/layout/nav-user.tsx" target="_blank" title="src/components/layout/nav-user.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>nav-user.tsx</a></div>
+  <div class="doc-section-desc">顶栏 54px + 侧边栏 220px + 内容区。24 列网格，禁止 max-width 居中。</div>
+
+<style>
+.shell-demo { border:1px solid var(--border-subtle); border-radius:var(--radius-4); overflow:hidden; height:360px; display:flex; flex-direction:column; box-shadow:var(--shadow-2); }
+.shell-topbar { height:44px; background:var(--surface); border-bottom:1px solid var(--border-subtle); display:flex; align-items:center; padding:0 16px; gap:10px; flex-shrink:0; }
+.shell-logo { font-size:13px; font-weight:700; color:var(--gray-12); display:flex; align-items:center; gap:6px; }
+.shell-logo-dot { width:18px; height:18px; border-radius:4px; background:var(--amber-9); display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:800; color:#fff; }
+.shell-topbar-spacer { flex:1; }
+.shell-topbar-icon { width:26px; height:26px; border-radius:var(--radius-2); background:var(--gray-2); display:flex; align-items:center; justify-content:center; color:var(--gray-9); cursor:pointer; }
+.shell-body { display:flex; flex:1; overflow:hidden; }
+.shell-sidebar { width:160px; background:var(--surface); border-right:1px solid var(--border-subtle); flex-shrink:0; padding:10px 0; overflow-y:auto; }
+.shell-nav-group { font-size:9px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--gray-8); padding:10px 12px 4px; }
+.shell-nav-item { display:flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px; color:var(--gray-10); cursor:pointer; border-left:2px solid transparent; transition:all .1s; }
+.shell-nav-item:hover { background:var(--gray-2); color:var(--gray-12); }
+.shell-nav-item.active { background:var(--amber-2); color:var(--gray-12); border-left-color:var(--amber-9); font-weight:500; }
+.shell-nav-item svg { flex-shrink:0; }
+.shell-content { flex:1; background:var(--bg); padding:16px; overflow-y:auto; }
+.shell-page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.shell-page-title { font-size:16px; font-weight:700; color:var(--gray-12); letter-spacing:-.02em; }
+.shell-kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:12px; }
+.shell-kpi { background:var(--surface); border:1px solid var(--border-subtle); border-radius:var(--radius-3); padding:10px 12px; }
+.shell-kpi-label { font-size:9px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--gray-9); margin-bottom:4px; }
+.shell-kpi-value { font-size:18px; font-weight:700; letter-spacing:-.03em; color:var(--gray-12); }
+.shell-table-wrap { background:var(--surface); border:1px solid var(--border-subtle); border-radius:var(--radius-3); overflow:hidden; }
+.shell-table-header { padding:8px 12px; border-bottom:1px solid var(--border-subtle); display:flex; align-items:center; justify-content:space-between; }
+.shell-table-title { font-size:12px; font-weight:600; color:var(--gray-12); }
+.shell-row { display:flex; align-items:center; gap:8px; padding:7px 12px; border-bottom:1px solid var(--border-subtle); font-size:11px; color:var(--gray-11); }
+.shell-row:last-child { border-bottom:none; }
+.shell-row:hover { background:var(--gray-2); }
+.shell-cell { flex:1; }
+.shell-cell.sm { flex:0 0 60px; }
+</style>
+
+  <div class="shell-demo">
+    <!-- Topbar -->
+    <div class="shell-topbar">
+      <div class="shell-logo">
+        <div class="shell-logo-dot">N</div>
+        NearGo OMS
+      </div>
+      <div class="shell-topbar-spacer"></div>
+      <div class="shell-topbar-icon">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      </div>
+      <div class="avatar avatar-xs" style="background:var(--blue-bg);color:var(--blue-text)">王</div>
+    </div>
+    <!-- Body -->
+    <div class="shell-body">
+      <!-- Sidebar -->
+      <div class="shell-sidebar">
+        <div class="shell-nav-group">核心业务</div>
+        <div class="shell-nav-item active">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+          订单管理
+        </div>
+        <div class="shell-nav-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          商品管理
+        </div>
+        <div class="shell-nav-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          数据看板
+        </div>
+        <div class="shell-nav-group">系统</div>
+        <div class="shell-nav-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+          系统设置
+        </div>
+      </div>
+      <!-- Content -->
+      <div class="shell-content">
+        <div class="shell-page-header">
+          <span class="shell-page-title">订单管理</span>
+          <button class="btn btn-sm btn-primary" style="font-size:11px;height:26px;padding:0 10px">+ 新建</button>
+        </div>
+        <div class="shell-kpi-row">
+          <div class="shell-kpi"><div class="shell-kpi-label">今日订单</div><div class="shell-kpi-value">128</div></div>
+          <div class="shell-kpi"><div class="shell-kpi-label">销售额</div><div class="shell-kpi-value">¥8.6w</div></div>
+          <div class="shell-kpi"><div class="shell-kpi-label">待处理</div><div class="shell-kpi-value">43</div></div>
+          <div class="shell-kpi"><div class="shell-kpi-label">退款率</div><div class="shell-kpi-value">2.1%</div></div>
+        </div>
+        <div class="shell-table-wrap">
+          <div class="shell-table-header">
+            <span class="shell-table-title">订单列表</span>
+            <span style="font-size:11px;color:var(--gray-9)">共 1,284 条</span>
+          </div>
+          <div class="shell-row"><span class="shell-cell" style="color:var(--gray-9);font-size:10px;text-transform:uppercase;letter-spacing:.05em">订单号</span><span class="shell-cell" style="color:var(--gray-9);font-size:10px;text-transform:uppercase;letter-spacing:.05em">客户</span><span class="shell-cell sm" style="color:var(--gray-9);font-size:10px;text-transform:uppercase;letter-spacing:.05em">金额</span><span class="shell-cell sm" style="color:var(--gray-9);font-size:10px;text-transform:uppercase;letter-spacing:.05em">状态</span></div>
+          <div class="shell-row" style="background:var(--amber-2)"><span class="shell-cell" style="font-family:var(--font-mono);font-size:11px">ORD-0128</span><span class="shell-cell">王小明</span><span class="shell-cell sm">¥2,580</span><span class="shell-cell sm"><span class="status status--active" style="font-size:10px"><span class="status-dot"></span>进行中</span></span></div>
+          <div class="shell-row"><span class="shell-cell" style="font-family:var(--font-mono);font-size:11px">ORD-0127</span><span class="shell-cell">李华</span><span class="shell-cell sm">¥980</span><span class="shell-cell sm"><span class="status status--inactive" style="font-size:10px"><span class="status-dot"></span>完成</span></span></div>
+          <div class="shell-row"><span class="shell-cell" style="font-family:var(--font-mono);font-size:11px">ORD-0126</span><span class="shell-cell">张伟</span><span class="shell-cell sm">¥4,200</span><span class="shell-cell sm"><span class="status status--error" style="font-size:10px"><span class="status-dot"></span>拒绝</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- SNIPPET: 完整 App Shell 骨架 ↓
+  <div class="app-shell">
+    <header class="shell-topbar">…顶栏 54px…</header>
+    <div class="shell-body">
+      <nav class="shell-sidebar">…侧边栏 220px…</nav>
+      <main class="shell-content">
+        <div class="page-header">…</div>
+        <!-- 24列网格内容 -->
+        <div style="display:grid;grid-template-columns:repeat(24,1fr);gap:16px">
+          <div style="grid-column:span 6">KPI</div>
+          <div style="grid-column:span 6">KPI</div>
+          <div style="grid-column:span 6">KPI</div>
+          <div style="grid-column:span 6">KPI</div>
+          <div style="grid-column:span 16">主内容</div>
+          <div style="grid-column:span 8">侧边信息</div>
+        </div>
+      </main>
+    </div>
+  </div>
+  -->
+</section>
+
+
+<!-- ═══════════════════════════════════════
+  29 FILE UPLOAD
+  ═══════════════════════════════════════ -->
+<section id="file-upload" class="doc-section">
+  <div class="doc-section-title">29 · File Upload</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/file-upload.tsx" target="_blank" title="src/components/ui/file-upload.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>file-upload.tsx</a></div>
+  <div class="doc-section-desc">拖拽上传区 + 文件列表。支持上传中进度条、错误态、移除操作。</div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">默认拖拽区</div>
+    <div style="max-width:480px">
+      <div class="upload-zone" role="button" tabindex="0" aria-label="点击或拖拽文件到此处上传">
+        <div class="upload-zone-icon">📁</div>
+        <div class="upload-zone-text">
+          <span class="upload-zone-link">点击上传</span> 或将文件拖拽到此处
+        </div>
+        <div class="upload-zone-hint">支持 PDF、Excel、图片，单文件最大 20MB</div>
+      </div>
+    </div>
+    <!-- SNIPPET ↓
+    <div class="upload-zone" role="button" tabindex="0" aria-label="点击或拖拽文件到此处上传">
+      <div class="upload-zone-icon">📁</div>
+      <div class="upload-zone-text"><span class="upload-zone-link">点击上传</span> 或拖拽到此处</div>
+      <div class="upload-zone-hint">PDF、Excel，最大 20MB</div>
+    </div>
+    -->
+  </div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">拖拽悬停态</div>
+    <div style="max-width:480px">
+      <div class="upload-zone upload-zone--drag">
+        <div class="upload-zone-icon">⬇️</div>
+        <div class="upload-zone-text" style="color:var(--gray-12)">松开鼠标即可上传</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">文件列表 · 3 种状态</div>
+    <div class="upload-file-list" style="max-width:480px">
+
+      <!-- 上传中 -->
+      <div class="upload-file-item">
+        <span class="upload-file-icon">📄</span>
+        <div class="upload-file-info">
+          <div class="upload-file-name">采购合同-2024.pdf</div>
+          <div class="upload-file-meta">
+            <span>2.4 MB</span>
+            <span style="color:var(--blue-text)">上传中 64%…</span>
+          </div>
+          <div class="upload-progress-bar">
+            <div class="upload-progress-fill" style="width:64%"></div>
+          </div>
+        </div>
+        <button class="upload-file-remove" aria-label="取消上传" disabled style="opacity:.4">✕</button>
+      </div>
+
+      <!-- 上传成功 -->
+      <div class="upload-file-item">
+        <span class="upload-file-icon">📊</span>
+        <div class="upload-file-info">
+          <div class="upload-file-name">库存明细-2024Q1.xlsx</div>
+          <div class="upload-file-meta">
+            <span>856 KB</span>
+            <span style="color:var(--green-text)">✓ 上传成功</span>
+          </div>
+        </div>
+        <button class="upload-file-remove" aria-label="移除文件">✕</button>
+      </div>
+
+      <!-- 上传失败 -->
+      <div class="upload-file-item upload-file-item--error">
+        <span class="upload-file-icon">🖼️</span>
+        <div class="upload-file-info">
+          <div class="upload-file-name" style="color:var(--red-text)">store-photo-01.raw</div>
+          <div class="upload-file-error">不支持的文件格式，请上传 JPG/PNG</div>
+        </div>
+        <button class="upload-file-remove" aria-label="移除" style="color:var(--red-text)">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">错误态拖拽区（格式/大小超限）</div>
+    <div style="max-width:480px">
+      <div class="upload-zone upload-zone--error">
+        <div class="upload-zone-icon">⚠️</div>
+        <div class="upload-zone-text" style="color:var(--red-text)">文件大小超过 20MB 限制</div>
+        <div class="upload-zone-hint" style="color:var(--red-text);opacity:.8">请重新选择文件</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  30 TOOLTIP
+  ═══════════════════════════════════════ -->
+<section id="tooltip" class="doc-section">
+  <div class="doc-section-title">30 · Tooltip</div>
+  <div class="doc-source"><a class="doc-src-file" href="https://github.com/zoezou7788/neargo-oms-design-system/blob/main/src/components/ui/tooltip.tsx" target="_blank" title="src/components/ui/tooltip.tsx"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>tooltip.tsx</a></div>
+  <div class="doc-section-desc">z-index: 700。4 个方向（top/bottom/left/right）。最大宽度 240px，超出自动换行。禁止在移动端使用。</div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">4 方向</div>
+    <div class="doc-row" style="gap:48px;flex-wrap:wrap;padding:40px 0">
+
+      <!-- top（默认）-->
+      <div class="tooltip-wrap" style="flex-direction:column;align-items:center;gap:0">
+        <div class="tooltip-box tooltip-box--top" style="position:relative;bottom:auto;left:auto;transform:none;margin-bottom:10px;">
+          顶部提示文字
+        </div>
+        <button class="btn btn-sm btn-outline">hover me</button>
+      </div>
+
+      <!-- bottom -->
+      <div class="tooltip-wrap" style="flex-direction:column;align-items:center;gap:0">
+        <button class="btn btn-sm btn-outline" style="margin-bottom:10px">hover me</button>
+        <div class="tooltip-box tooltip-box--bottom" style="position:relative;top:auto;left:auto;transform:none">
+          底部提示文字
+        </div>
+      </div>
+
+      <!-- right -->
+      <div class="tooltip-wrap" style="align-items:center;gap:12px">
+        <button class="btn btn-sm btn-outline">hover me</button>
+        <div class="tooltip-box tooltip-box--right" style="position:relative;left:auto;top:auto;transform:none">
+          右侧提示文字
+        </div>
+      </div>
+
+      <!-- left -->
+      <div class="tooltip-wrap" style="align-items:center;gap:12px">
+        <div class="tooltip-box tooltip-box--left" style="position:relative;right:auto;top:auto;transform:none">
+          左侧提示文字
+        </div>
+        <button class="btn btn-sm btn-outline">hover me</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-subsection">
+    <div class="doc-sublabel">实际用法 · 图标按钮 + 长文本</div>
+    <div class="doc-row" style="gap:32px;flex-wrap:wrap;padding:20px 0">
+
+      <!-- 图标按钮 tooltip -->
+      <div class="tooltip-wrap">
+        <button class="btn btn-md btn-outline btn-icon-only" style="width:34px;height:34px;border-radius:var(--radius-3)" aria-label="导出数据">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </button>
+        <div class="tooltip-box tooltip-box--top">导出当前筛选结果（CSV）</div>
+      </div>
+
+      <!-- 截断文字 tooltip -->
+      <div class="tooltip-wrap" style="max-width:140px">
+        <span style="font-size:13px;color:var(--gray-12);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;cursor:default">朝阳区国贸旗舰门店</span>
+        <div class="tooltip-box tooltip-box--top">朝阳区国贸旗舰门店</div>
+      </div>
+
+      <!-- 禁用按钮说明 -->
+      <div class="tooltip-wrap">
+        <button class="btn btn-md btn-primary btn-disabled" disabled aria-disabled="true">提交</button>
+        <div class="tooltip-box tooltip-box--top">请先完善必填项再提交</div>
+      </div>
+    </div>
+    <!-- SNIPPET: 实际 hover 触发（需 JS 或 CSS :hover）↓
+    <style>
+      .tooltip-wrap .tooltip-box { opacity:0; pointer-events:none; transition:opacity .15s; }
+      .tooltip-wrap:hover .tooltip-box { opacity:1; }
+    </style>
+    <div class="tooltip-wrap">
+      <button class="btn btn-md btn-outline" aria-describedby="tip-export">导出</button>
+      <div class="tooltip-box tooltip-box--top" id="tip-export" role="tooltip">导出当前筛选结果</div>
+    </div>
+    -->
+  </div>
+</section>
+
+</main>
+</body>
+</html>
