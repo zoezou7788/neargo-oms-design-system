@@ -190,8 +190,9 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 ══════════════════════════════════════ */
 .kpi-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:24px; }
 .kpi-card {
-  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  background:var(--surface); border-radius:12px;
   padding:20px; transition:box-shadow 200ms, transform 200ms;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
   cursor:default;
 }
 .kpi-card:hover { box-shadow:0 4px 12px rgba(0,0,0,.07); transform:translateY(-1px); }
@@ -223,7 +224,8 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
    CARD
 ══════════════════════════════════════ */
 .card {
-  background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden;
+  background:var(--surface); border-radius:12px; overflow:hidden;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
 }
 .card-header {
   display:flex; align-items:center; justify-content:space-between;
