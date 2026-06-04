@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>餐饮管理系统 — 门店管理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--gray-12); line-height: 1.5; min-height: 100vh; }
+
+:root {
+  --amber-2:#fff8d6; --amber-3:#ffeea8; --amber-9:#FFA902; --amber-10:#f09a00; --amber-11:#8c5c00;
+  --gray-1:#fdfdfc; --gray-2:#f9f9f8; --gray-3:#f2f1ef; --gray-4:#eceae7; --gray-5:#e5e3e0;
+  --gray-6:#dddbd8; --gray-7:#cac8c4; --gray-8:#b0adaa; --gray-9:#8c8a87; --gray-10:#807e7b;
+  --gray-11:#4a4846; --gray-12:#1F1D1C;
+  --green-bg:#edfbf4; --green-text:#107060; --green-solid:#29a383;
+  --red-bg:#fff5f5; --red-text:#ce2c31; --red-solid:#e5484d;
+  --blue-bg:#f0f8ff; --blue-text:#0060cf; --blue-solid:#0090ff;
+  --orange-bg:#fff6f0; --orange-text:#bd4b00; --orange-solid:#f76b15;
+  --purple-bg:#f5f0ff; --purple-text:#6e3fbd; --purple-solid:#8b5cf6;
+  --surface:#ffffff; --bg:#F4F5F7; --border:#e5e3e0;
+  --topbar-h:54px; --sidebar-w:220px;
+  --ease:cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  height:var(--topbar-h); background:var(--surface);
+  display:flex; align-items:center; padding:0 20px; gap:12px;
+  border-bottom:1px solid var(--border);
+}
+.topbar-brand { display:flex; align-items:center; gap:9px; text-decoration:none; }
+.brand-icon { width:30px; height:30px; border-radius:8px; background:var(--gray-12); display:flex; align-items:center; justify-content:center; }
+.brand-icon svg { color:#FFA902; }
+.brand-name { font-size:14px; font-weight:700; color:var(--gray-12); letter-spacing:-0.03em; }
+.brand-divider { width:1px; height:16px; background:var(--border); margin:0 2px; }
+.topbar-nav { display:flex; align-items:center; gap:2px; }
+.topbar-nav-item {
+  height:32px; padding:0 12px; border-radius:6px;
+  font-size:13px; font-weight:500; color:var(--gray-10);
+  cursor:pointer; border:none; background:none; font-family:inherit;
+  display:flex; align-items:center; gap:5px;
+  transition:all 120ms var(--ease);
+}
+.topbar-nav-item:hover { background:var(--gray-2); color:var(--gray-12); }
+.topbar-nav-item.active { color:var(--gray-12); font-weight:600; }
+.topbar-nav-item svg { width:13px; height:13px; transition:transform 200ms var(--ease); }
+.topbar-nav-item.open svg.chevron { transform:rotate(180deg); }
+.topbar-spacer { flex:1; }
+.topbar-actions { display:flex; align-items:center; gap:4px; }
+.icon-btn {
+  width:32px; height:32px; border-radius:6px; border:none; background:transparent;
+  cursor:pointer; color:var(--gray-9); display:flex; align-items:center; justify-content:center;
+  transition:all 120ms; position:relative;
+}
+.icon-btn:hover { background:var(--gray-2); color:var(--gray-12); }
+.icon-btn .badge-dot { position:absolute; top:6px; right:6px; width:7px; height:7px; border-radius:50%; background:var(--red-solid); border:1.5px solid var(--surface); }
+.topbar-divider { width:1px; height:18px; background:var(--border); margin:0 4px; }
+.avatar-btn { display:flex; align-items:center; gap:8px; height:32px; padding:0 6px 0 4px; border-radius:8px; border:none; background:none; cursor:pointer; font-family:inherit; transition:all 120ms; }
+.avatar-btn:hover { background:var(--gray-2); }
+.avatar { width:26px; height:26px; border-radius:50%; background:var(--amber-2); border:1.5px solid var(--amber-3); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:var(--amber-11); flex-shrink:0; }
+.avatar-name { font-size:13px; font-weight:500; color:var(--gray-11); }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position:fixed; top:var(--topbar-h); left:0; bottom:0;
+  width:var(--sidebar-w); background:var(--surface);
+  border-right:1px solid var(--border); overflow-y:auto;
+  padding:8px 0 32px; z-index:100;
+}
+.sidebar::-webkit-scrollbar { width:3px; }
+.sidebar::-webkit-scrollbar-thumb { background:var(--gray-4); border-radius:4px; }
+.sb-section { padding:6px 0; }
+.sb-section + .sb-section { border-top:1px solid var(--gray-3); margin-top:4px; padding-top:4px; }
+.sb-label { font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--gray-8); padding:8px 16px 4px; }
+.sb-item {
+  display:flex; align-items:center; gap:8px;
+  height:34px; padding:0 10px 0 14px; margin:1px 8px; border-radius:6px;
+  font-size:13px; color:var(--gray-10); cursor:pointer; text-decoration:none;
+  transition:all 120ms; border:none; background:none; font-family:inherit; width:calc(100% - 16px); text-align:left;
+}
+.sb-item:hover { background:var(--gray-2); color:var(--gray-12); }
+.sb-item.active { background:var(--amber-2); color:var(--gray-12); font-weight:600; border-left:2.5px solid var(--amber-9); padding-left:11.5px; }
+.sb-item svg { width:15px; height:15px; flex-shrink:0; stroke-width:2; opacity:.65; }
+.sb-item.active svg { opacity:1; }
+.sb-badge { margin-left:auto; font-size:10px; font-weight:600; padding:1px 6px; border-radius:20px; background:var(--gray-3); color:var(--gray-9); }
+.sb-badge.red { background:var(--red-bg); color:var(--red-text); }
+.sb-badge.amber { background:var(--amber-2); color:var(--amber-11); }
+.sb-sub { overflow:hidden; max-height:0; transition:max-height 250ms var(--ease); }
+.sb-sub.open { max-height:300px; }
+.sb-sub-item {
+  display:flex; align-items:center; gap:8px;
+  height:30px; padding:0 10px 0 36px; margin:1px 8px; border-radius:6px;
+  font-size:12.5px; color:var(--gray-9); cursor:pointer; text-decoration:none;
+  transition:all 120ms; border:none; background:none; font-family:inherit; width:calc(100% - 16px); text-align:left;
+}
+.sb-sub-item:hover { background:var(--gray-2); color:var(--gray-12); }
+.sb-sub-item.active { color:var(--gray-12); font-weight:600; }
+.sb-expand { margin-left:auto; transition:transform 200ms var(--ease); opacity:.5; }
+.sb-expand.open { transform:rotate(180deg); }
+
+/* ── MAIN ── */
+.main { margin-top:var(--topbar-h); margin-left:var(--sidebar-w); }
+.page-content { padding:24px 28px 60px; }
+
+/* ── BUTTONS ── */
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; font-family:inherit; font-weight:500; cursor:pointer; border-radius:6px; border:1px solid transparent; transition:all 120ms; white-space:nowrap; letter-spacing:-.01em; text-decoration:none; }
+.btn-md { height:34px; padding:0 14px; font-size:13px; }
+.btn-sm { height:28px; padding:0 10px; font-size:12px; }
+.btn-xs { height:24px; padding:0 8px; font-size:11px; }
+.btn-primary { background:var(--gray-12); color:#fff; border-color:var(--gray-12); }
+.btn-primary:hover { background:#111; }
+.btn-outline { background:transparent; color:var(--gray-11); border-color:var(--gray-6); }
+.btn-outline:hover { background:var(--gray-2); }
+.btn-ghost { background:transparent; color:var(--gray-10); border-color:transparent; }
+.btn-ghost:hover { background:var(--gray-3); color:var(--gray-12); }
+.btn-danger { background:var(--red-solid); color:#fff; border-color:var(--red-solid); }
+.btn-danger:hover { background:#d03030; }
+
+/* ── DROPDOWN ── */
+.dropdown-wrap { position:relative; display:inline-flex; }
+.dropdown-menu {
+  position:absolute; z-index:500; background:var(--surface); border:1px solid var(--border);
+  border-radius:8px; padding:4px; box-shadow:0 8px 24px rgba(0,0,0,.10), 0 2px 6px rgba(0,0,0,.05);
+  min-width:180px; opacity:0; transform:scale(0.96) translateY(-4px); pointer-events:none;
+  transition:opacity 150ms var(--ease), transform 150ms var(--ease); transform-origin:top right;
+}
+.dropdown-menu.top-right { top:calc(100% + 6px); right:0; }
+.dropdown-menu.top-left { top:calc(100% + 6px); left:0; }
+.dropdown-menu.open { opacity:1; transform:scale(1) translateY(0); pointer-events:auto; }
+.dm-label { padding:5px 10px 3px; font-size:10px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--gray-8); user-select:none; }
+.dm-item { display:flex; align-items:center; gap:8px; padding:7px 10px; border-radius:6px; font-size:13px; color:var(--gray-11); cursor:pointer; transition:all 100ms; border:none; background:none; font-family:inherit; width:100%; text-align:left; }
+.dm-item:hover { background:var(--gray-2); color:var(--gray-12); }
+.dm-item svg { width:14px; height:14px; flex-shrink:0; color:var(--gray-8); stroke-width:2; }
+.dm-item:hover svg { color:var(--gray-11); }
+.dm-item.destructive { color:var(--red-text); }
+.dm-item.destructive:hover { background:var(--red-bg); }
+.dm-item.destructive svg { color:var(--red-solid); }
+.dm-item.checked { font-weight:600; color:var(--gray-12); }
+.dm-sep { height:1px; background:var(--gray-3); margin:4px -4px; }
+
+/* ── BADGES ── */
+.badge { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:600; white-space:nowrap; }
+.badge::before { content:''; width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+.badge-green { background:var(--green-bg); color:var(--green-text); }
+.badge-green::before { background:var(--green-solid); }
+.badge-red { background:var(--red-bg); color:var(--red-text); }
+.badge-red::before { background:var(--red-solid); }
+.badge-amber { background:var(--amber-2); color:var(--amber-11); }
+.badge-amber::before { background:var(--amber-9); }
+.badge-blue { background:var(--blue-bg); color:var(--blue-text); }
+.badge-blue::before { background:var(--blue-solid); }
+.badge-gray { background:var(--gray-3); color:var(--gray-9); }
+.badge-gray::before { background:var(--gray-7); }
+.badge-purple { background:var(--purple-bg); color:var(--purple-text); }
+.badge-purple::before { background:var(--purple-solid); }
+
+/* ── CARD ── */
+.card { background:var(--surface); border-radius:12px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+.card-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--gray-3); }
+.card-title { font-size:14px; font-weight:600; color:var(--gray-12); }
+.card-subtitle { font-size:12px; color:var(--gray-9); margin-top:2px; }
+
+/* ── PAGE HEADER ── */
+.page-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:24px; }
+.breadcrumb { display:flex; align-items:center; gap:5px; margin-bottom:5px; }
+.bc-item { font-size:12px; color:var(--gray-9); cursor:pointer; }
+.bc-item:hover { color:var(--gray-12); }
+.bc-sep { font-size:11px; color:var(--gray-7); }
+.bc-current { font-size:12px; color:var(--gray-11); font-weight:500; }
+.page-title { font-size:22px; font-weight:700; color:var(--gray-12); letter-spacing:-0.03em; }
+.page-subtitle { font-size:13px; color:var(--gray-9); margin-top:3px; }
+.page-actions { display:flex; gap:8px; align-items:center; }
+
+/* ── KPI STRIP ── */
+.kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+.kpi-card { background:var(--surface); border-radius:12px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,.06); transition:box-shadow 200ms, transform 200ms; }
+.kpi-card:hover { box-shadow:0 4px 12px rgba(0,0,0,.07); transform:translateY(-1px); }
+.kpi-card-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
+.kpi-icon { width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center; }
+.kpi-icon svg { width:18px; height:18px; stroke-width:2; }
+.kpi-icon.amber { background:var(--amber-2); color:var(--amber-10); }
+.kpi-icon.green { background:var(--green-bg); color:var(--green-text); }
+.kpi-icon.blue { background:var(--blue-bg); color:var(--blue-text); }
+.kpi-icon.purple { background:var(--purple-bg); color:var(--purple-text); }
+.kpi-value { font-size:26px; font-weight:700; color:var(--gray-12); letter-spacing:-0.04em; line-height:1; margin-bottom:4px; }
+.kpi-label { font-size:12.5px; color:var(--gray-9); }
+
+/* ── VIEW TOGGLE ── */
+.view-toggle { display:flex; gap:2px; background:var(--gray-3); border-radius:7px; padding:2px; }
+.view-btn { width:30px; height:28px; border-radius:5px; border:none; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--gray-8); transition:all 120ms; }
+.view-btn.active { background:var(--surface); color:var(--gray-12); box-shadow:0 1px 3px rgba(0,0,0,.08); }
+.view-btn svg { width:14px; height:14px; }
+
+/* ── SEARCH ── */
+.search-wrap { position:relative; }
+.search-icon { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--gray-8); pointer-events:none; }
+.search-input { width:220px; height:34px; padding:0 10px 0 32px; font-family:inherit; font-size:13px; color:var(--gray-12); background:var(--surface); border:1px solid var(--gray-5); border-radius:6px; outline:none; transition:all 150ms; }
+.search-input::placeholder { color:var(--gray-8); }
+.search-input:focus { border-color:var(--gray-7); box-shadow:0 0 0 2px var(--gray-3); }
+
+/* ── STORE GRID (card view) ── */
+.store-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+
+.store-card {
+  background:var(--surface); border-radius:12px;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+  transition:box-shadow 200ms, transform 200ms; cursor:pointer;
+}
+.store-card:hover { box-shadow:0 6px 20px rgba(0,0,0,.09); transform:translateY(-2px); }
+
+.store-card-cover {
+  height:120px; position:relative; overflow:hidden;
+  border-radius:12px 12px 0 0;
+  background:linear-gradient(135deg, var(--gray-3) 0%, var(--gray-4) 100%);
+  display:flex; align-items:center; justify-content:center;
+}
+.store-cover-emoji { font-size:48px; opacity:.6; }
+.store-cover-badge { position:absolute; top:10px; right:10px; }
+.store-cover-tag {
+  position:absolute; bottom:10px; left:10px;
+  background:rgba(31,29,28,.65); backdrop-filter:blur(6px);
+  color:#fff; font-size:11px; font-weight:600; padding:3px 8px; border-radius:20px;
+}
+
+.store-card-body { padding:16px; }
+.store-card-name { font-size:15px; font-weight:700; color:var(--gray-12); margin-bottom:2px; }
+.store-card-addr { font-size:12px; color:var(--gray-8); display:flex; align-items:center; gap:4px; margin-bottom:12px; }
+.store-card-addr svg { width:11px; height:11px; flex-shrink:0; }
+
+.store-stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
+.store-stat { text-align:center; }
+.store-stat-val { font-size:15px; font-weight:700; color:var(--gray-12); }
+.store-stat-label { font-size:10.5px; color:var(--gray-8); margin-top:1px; }
+
+.store-card-footer { display:flex; align-items:center; justify-content:space-between; padding-top:12px; border-top:1px solid var(--gray-3); }
+.store-card-hours { font-size:12px; color:var(--gray-9); display:flex; align-items:center; gap:4px; }
+.store-card-hours svg { width:12px; height:12px; }
+.store-card-actions { display:flex; gap:4px; }
+
+/* ── TABLE VIEW ── */
+#view-table { display:none; }
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; }
+thead th { padding:10px 16px; text-align:left; font-size:11px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--gray-8); background:var(--gray-1); border-bottom:1px solid var(--gray-3); white-space:nowrap; }
+tbody tr { border-bottom:1px solid var(--gray-3); transition:background 100ms; }
+tbody tr:last-child { border-bottom:none; }
+tbody tr:hover { background:var(--gray-1); }
+tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-align:middle; }
+
+/* ── PROGRESS ── */
+.prog-bar { height:5px; background:var(--gray-3); border-radius:3px; overflow:hidden; }
+.prog-val { height:100%; border-radius:3px; background:var(--amber-9); }
+.prog-val.green { background:var(--green-solid); }
+.prog-val.red { background:var(--red-solid); }
+
+/* ── DETAIL DRAWER ── */
+.drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:600; opacity:0; pointer-events:none; transition:opacity 250ms; }
+.drawer-overlay.open { opacity:1; pointer-events:auto; }
+.drawer {
+  position:fixed; top:0; right:0; bottom:0; width:520px; z-index:700;
+  background:var(--surface); box-shadow:-8px 0 40px rgba(0,0,0,.12);
+  transform:translateX(100%); transition:transform 300ms var(--ease);
+  display:flex; flex-direction:column; overflow:hidden;
+}
+.drawer.open { transform:translateX(0); }
+.drawer-header { display:flex; align-items:center; justify-content:space-between; padding:20px 24px; border-bottom:1px solid var(--gray-3); flex-shrink:0; }
+.drawer-title { font-size:16px; font-weight:700; color:var(--gray-12); }
+.drawer-close { width:30px; height:30px; border-radius:6px; border:none; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--gray-9); transition:all 120ms; }
+.drawer-close:hover { background:var(--gray-2); }
+.drawer-body { flex:1; overflow-y:auto; padding:24px; }
+.drawer-body::-webkit-scrollbar { width:4px; }
+.drawer-body::-webkit-scrollbar-thumb { background:var(--gray-4); border-radius:4px; }
+.drawer-section { margin-bottom:24px; }
+.drawer-section-title { font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--gray-8); margin-bottom:12px; }
+.info-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.info-item { }
+.info-label { font-size:11.5px; color:var(--gray-8); margin-bottom:3px; }
+.info-value { font-size:13px; font-weight:500; color:var(--gray-12); }
+.drawer-footer { padding:16px 24px; border-top:1px solid var(--gray-3); display:flex; gap:10px; justify-content:flex-end; flex-shrink:0; }
+
+/* ── TABLE LIST (桌位) ── */
+.table-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
+.table-item {
+  aspect-ratio:1; border-radius:10px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:3px; cursor:pointer;
+  transition:all 120ms; border:1.5px solid transparent;
+}
+.table-item.available { background:var(--green-bg); border-color:var(--green-bg); }
+.table-item.available:hover { border-color:var(--green-solid); }
+.table-item.occupied { background:var(--amber-2); border-color:var(--amber-2); }
+.table-item.occupied:hover { border-color:var(--amber-9); }
+.table-item.reserved { background:var(--blue-bg); border-color:var(--blue-bg); }
+.table-item.reserved:hover { border-color:var(--blue-solid); }
+.table-item.unavailable { background:var(--gray-2); border-color:var(--gray-3); opacity:.6; }
+.table-item-num { font-size:13px; font-weight:700; }
+.table-item.available .table-item-num { color:var(--green-text); }
+.table-item.occupied .table-item-num { color:var(--amber-11); }
+.table-item.reserved .table-item-num { color:var(--blue-text); }
+.table-item.unavailable .table-item-num { color:var(--gray-8); }
+.table-item-cap { font-size:10px; color:var(--gray-8); }
+.table-legend { display:flex; gap:16px; margin-bottom:14px; }
+.legend-item { display:flex; align-items:center; gap:5px; font-size:12px; color:var(--gray-9); }
+.legend-dot { width:8px; height:8px; border-radius:50%; }
+
+/* ── MODAL ── */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:800; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 200ms; }
+.modal-overlay.open { opacity:1; pointer-events:auto; }
+.modal { background:var(--surface); border-radius:14px; width:500px; max-height:90vh; overflow:hidden; display:flex; flex-direction:column; transform:scale(.96); transition:transform 200ms var(--ease); box-shadow:0 20px 60px rgba(0,0,0,.18); }
+.modal-overlay.open .modal { transform:scale(1); }
+.modal-header { display:flex; align-items:center; justify-content:space-between; padding:20px 24px; border-bottom:1px solid var(--gray-3); }
+.modal-title { font-size:15px; font-weight:700; color:var(--gray-12); }
+.modal-close { width:28px; height:28px; border-radius:6px; border:none; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--gray-9); transition:all 120ms; }
+.modal-close:hover { background:var(--gray-2); }
+.modal-body { flex:1; overflow-y:auto; padding:20px 24px; }
+.modal-footer { padding:16px 24px; border-top:1px solid var(--gray-3); display:flex; gap:10px; justify-content:flex-end; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+.form-row.full { grid-template-columns:1fr; }
+.form-group { display:flex; flex-direction:column; gap:5px; }
+.form-label { font-size:12px; font-weight:500; color:var(--gray-11); }
+.form-input { height:36px; padding:0 12px; font-family:inherit; font-size:13px; color:var(--gray-12); background:var(--surface); border:1px solid var(--gray-5); border-radius:7px; outline:none; transition:all 150ms; }
+.form-input:focus { border-color:var(--gray-7); box-shadow:0 0 0 2px var(--gray-3); }
+/* Custom Select */
+.cs-wrap { position:relative; }
+.cs-trigger {
+  width:100%; height:36px; padding:0 32px 0 12px; font-family:inherit; font-size:13px;
+  color:var(--gray-12); background:var(--surface); border:1px solid var(--gray-5);
+  border-radius:7px; outline:none; cursor:pointer; text-align:left;
+  display:flex; align-items:center; justify-content:space-between;
+  transition:all 150ms; border:1px solid var(--gray-5);
+}
+.cs-trigger:hover { border-color:var(--gray-7); }
+.cs-trigger.open { border-color:var(--gray-7); box-shadow:0 0 0 2px var(--gray-3); }
+.cs-chevron { pointer-events:none; color:var(--gray-8); transition:transform 200ms var(--ease); flex-shrink:0; }
+.cs-trigger.open .cs-chevron { transform:rotate(180deg); }
+.cs-dropdown {
+  position:absolute; left:0; right:0; top:calc(100% + 4px); z-index:600;
+  background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:4px;
+  box-shadow:0 8px 24px rgba(0,0,0,.10), 0 2px 6px rgba(0,0,0,.05);
+  opacity:0; transform:scale(0.97) translateY(-4px); pointer-events:none;
+  transition:opacity 150ms var(--ease), transform 150ms var(--ease);
+}
+.cs-dropdown.open { opacity:1; transform:scale(1) translateY(0); pointer-events:auto; }
+.cs-option {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:7px 10px; border-radius:6px; font-size:13px; color:var(--gray-11);
+  cursor:pointer; transition:background 100ms; gap:8px;
+}
+.cs-option:hover { background:var(--gray-2); color:var(--gray-12); }
+.cs-option.selected { font-weight:600; color:var(--gray-12); }
+.cs-check { color:var(--amber-9); flex-shrink:0; display:block; }
+
+/* ── TOAST ── */
+.toast-container { position:fixed; bottom:24px; right:24px; z-index:999; display:flex; flex-direction:column; gap:8px; }
+.toast { display:flex; align-items:center; gap:10px; background:var(--gray-12); color:#fff; padding:12px 16px; border-radius:10px; font-size:13px; min-width:240px; box-shadow:0 4px 16px rgba(0,0,0,.15); animation:slideUp 250ms var(--ease) both; }
+.toast.success { background:var(--green-solid); }
+.toast.warning { background:var(--orange-solid); }
+.toast.danger { background:var(--red-solid); }
+@keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+#overlay { position:fixed; inset:0; z-index:400; display:none; }
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--gray-4); border-radius:4px; }
+</style>
+</head>
+<body>
+
+<div id="overlay" onclick="closeAllDropdowns()"></div>
+
+<!-- ═══ TOPBAR ═══ -->
+<header class="topbar">
+  <a class="topbar-brand" href="restaurant-dashboard.html">
+    <div class="brand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+    <span class="brand-name">餐饮管家</span>
+  </a>
+  <div class="brand-divider"></div>
+  <nav class="topbar-nav">
+    <a class="topbar-nav-item" href="restaurant-dashboard.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      总览
+    </a>
+    <div class="dropdown-wrap">
+      <button class="topbar-nav-item" onclick="toggleDropdown('nav-order', event)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        点餐管理
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="dropdown-menu top-left" id="dd-nav-order">
+        <button class="dm-item" onclick="showToast('跳转至今日订单')">今日订单</button>
+        <button class="dm-item" onclick="showToast('跳转至历史订单')">历史订单</button>
+        <button class="dm-item" onclick="showToast('跳转至退单管理')">退单管理</button>
+        <div class="dm-sep"></div>
+        <button class="dm-item" onclick="showToast('跳转至菜品管理')">菜品管理</button>
+        <button class="dm-item" onclick="showToast('跳转至套餐配置')">套餐配置</button>
+      </div>
+    </div>
+    <button class="topbar-nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      门店管理
+    </button>
+    <button class="topbar-nav-item" onclick="showToast('数据报表')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      数据报表
+    </button>
+    <button class="topbar-nav-item" onclick="showToast('员工管理')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      员工管理
+    </button>
+  </nav>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" onclick="showToast('通知中心')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span class="badge-dot"></span>
+    </button>
+    <div class="topbar-divider"></div>
+    <div class="dropdown-wrap">
+      <button class="avatar-btn" onclick="toggleDropdown('user', event)">
+        <div class="avatar">张</div>
+        <span class="avatar-name">张经理</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--gray-8)"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="dropdown-menu top-right" id="dd-user" style="min-width:160px;">
+        <button class="dm-item" onclick="showToast('个人资料')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>个人资料
+        </button>
+        <button class="dm-item" onclick="showToast('账户设置')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>设置
+        </button>
+        <div class="dm-sep"></div>
+        <button class="dm-item destructive" onclick="showToast('已退出登录', 'warning')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>退出登录
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="sb-section">
+    <div class="sb-label">工作台</div>
+    <a class="sb-item" href="restaurant-dashboard.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      数据总览
+    </a>
+    <button class="sb-item" onclick="showToast('实时大屏')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      实时大屏
+    </button>
+  </div>
+  <div class="sb-section">
+    <div class="sb-label">点餐管理</div>
+    <button class="sb-item" onclick="showToast('订单管理')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      订单管理
+      <span class="sb-badge red">32</span>
+    </button>
+    <button class="sb-item" onclick="showToast('菜品管理')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 2l1.5 12h15L21 2M8 22h8M12 17v5"/></svg>
+      菜品管理
+    </button>
+    <button class="sb-item" onclick="showToast('桌位管理')" id="sb-table-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      桌位管理
+      <span class="sb-badge amber">12</span>
+    </button>
+  </div>
+  <div class="sb-section">
+    <div class="sb-label">门店运营</div>
+    <button class="sb-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      门店管理
+    </button>
+    <button class="sb-item" onclick="showToast('员工排班')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      员工排班
+    </button>
+    <button class="sb-item" onclick="showToast('库存管理')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      库存管理
+      <span class="sb-badge red">3</span>
+    </button>
+    <button class="sb-item" onclick="showToast('优惠活动')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      优惠活动
+    </button>
+  </div>
+  <div class="sb-section">
+    <div class="sb-label">数据分析</div>
+    <button class="sb-item" onclick="showToast('营收报表')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      营收报表
+    </button>
+    <button class="sb-item" onclick="showToast('用户分析')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      用户分析
+    </button>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main">
+  <div class="page-content">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <div class="breadcrumb">
+          <a class="bc-item" href="restaurant-dashboard.html">工作台</a>
+          <span class="bc-sep">›</span>
+          <span class="bc-current">门店管理</span>
+        </div>
+        <h1 class="page-title">门店管理</h1>
+        <p class="page-subtitle">共 4 家门店 · 3 家营业中 · 1 家筹备中</p>
+      </div>
+      <div class="page-actions">
+        <!-- Filter -->
+        <div class="dropdown-wrap">
+          <button class="btn btn-outline btn-md" onclick="toggleDropdown('status-filter', event)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            全部状态
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="dropdown-menu top-left" id="dd-status-filter">
+            <div class="dm-label">营业状态</div>
+            <button class="dm-item checked" id="filter-all" onclick="filterStores('all', this)">
+              全部门店
+              <svg style="margin-left:auto;color:var(--amber-9);" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </button>
+            <button class="dm-item" id="filter-open" onclick="filterStores('open', this)">营业中</button>
+            <button class="dm-item" id="filter-rest" onclick="filterStores('rest', this)">午休中</button>
+            <button class="dm-item" id="filter-prep" onclick="filterStores('prep', this)">筹备中</button>
+            <button class="dm-item" id="filter-closed" onclick="filterStores('closed', this)">已停业</button>
+          </div>
+        </div>
+        <!-- View toggle -->
+        <div class="view-toggle">
+          <button class="view-btn active" id="btn-card" onclick="switchView('card')" title="卡片视图">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          </button>
+          <button class="view-btn" id="btn-table" onclick="switchView('table')" title="列表视图">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="search-wrap">
+          <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-input" placeholder="搜索门店名称…" oninput="searchStores(this.value)" />
+        </div>
+        <button class="btn btn-primary btn-md" onclick="openModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          新增门店
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI Strip -->
+    <div class="kpi-strip">
+      <div class="kpi-card">
+        <div class="kpi-card-header">
+          <div class="kpi-icon amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div>
+        </div>
+        <div class="kpi-value">4</div>
+        <div class="kpi-label">门店总数</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-header">
+          <div class="kpi-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        </div>
+        <div class="kpi-value" style="color:var(--green-text);">3</div>
+        <div class="kpi-label">营业中门店</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-header">
+          <div class="kpi-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+        </div>
+        <div class="kpi-value">68</div>
+        <div class="kpi-label">员工总人数</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-header">
+          <div class="kpi-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
+        </div>
+        <div class="kpi-value">186</div>
+        <div class="kpi-label">桌位总数</div>
+      </div>
+    </div>
+
+    <!-- CARD VIEW -->
+    <div id="view-card">
+      <div class="store-grid" id="store-grid">
+
+        <!-- 望京店 -->
+        <div class="store-card" data-status="open" data-name="望京店">
+          <div class="store-card-cover" style="background:linear-gradient(135deg,#fff3cc,#ffe08a);">
+            <span class="store-cover-emoji">🏮</span>
+            <span class="store-cover-badge"><span class="badge badge-green">营业中</span></span>
+            <span class="store-cover-tag">总店</span>
+          </div>
+          <div class="store-card-body">
+            <div class="store-card-name">望京店（总店）</div>
+            <div class="store-card-addr">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              朝阳区望京 SOHO T2 B1
+            </div>
+            <div class="store-stats-row">
+              <div class="store-stat"><div class="store-stat-val" style="color:var(--amber-10);">¥7,680</div><div class="store-stat-label">今日营收</div></div>
+              <div class="store-stat"><div class="store-stat-val">186</div><div class="store-stat-label">今日订单</div></div>
+              <div class="store-stat"><div class="store-stat-val">73%</div><div class="store-stat-label">在座率</div></div>
+            </div>
+            <div style="margin-bottom:14px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                <span style="font-size:11.5px;color:var(--gray-8);">桌位占用</span>
+                <span style="font-size:11.5px;font-weight:600;color:var(--gray-11);">38/52 桌</span>
+              </div>
+              <div class="prog-bar"><div class="prog-val" style="width:73%"></div></div>
+            </div>
+            <div class="store-card-footer">
+              <div class="store-card-hours">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                10:00 – 22:00
+              </div>
+              <div class="store-card-actions">
+                <button class="btn btn-ghost btn-xs" onclick="openTableView('望京店')">桌位</button>
+                <button class="btn btn-outline btn-xs" onclick="openDrawer('wangjing')">详情</button>
+                <div class="dropdown-wrap">
+                  <button class="btn btn-ghost btn-xs" style="padding:0 6px;" onclick="toggleDropdown('store-wangjing', event)">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                  </button>
+                  <div class="dropdown-menu top-right" id="dd-store-wangjing">
+                    <button class="dm-item" onclick="openDrawer('wangjing')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>查看详情
+                    </button>
+                    <button class="dm-item" onclick="showToast('编辑望京店信息')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>编辑信息
+                    </button>
+                    <button class="dm-item" onclick="openTableView('望京店')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>桌位管理
+                    </button>
+                    <button class="dm-item" onclick="showToast('查看望京店员工')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>员工管理
+                    </button>
+                    <button class="dm-item" onclick="showToast('查看营收报表')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>营收报表
+                    </button>
+                    <div class="dm-sep"></div>
+                    <button class="dm-item" onclick="showToast('已暂停营业', 'warning')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>暂停营业
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 三里屯店 -->
+        <div class="store-card" data-status="open" data-name="三里屯店">
+          <div class="store-card-cover" style="background:linear-gradient(135deg,#d1f5ea,#a7eddb);">
+            <span class="store-cover-emoji">🍜</span>
+            <span class="store-cover-badge"><span class="badge badge-green">营业中</span></span>
+          </div>
+          <div class="store-card-body">
+            <div class="store-card-name">三里屯店</div>
+            <div class="store-card-addr">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              朝阳区三里屯太古里北区 N4
+            </div>
+            <div class="store-stats-row">
+              <div class="store-stat"><div class="store-stat-val" style="color:var(--amber-10);">¥5,420</div><div class="store-stat-label">今日营收</div></div>
+              <div class="store-stat"><div class="store-stat-val">124</div><div class="store-stat-label">今日订单</div></div>
+              <div class="store-stat"><div class="store-stat-val">61%</div><div class="store-stat-label">在座率</div></div>
+            </div>
+            <div style="margin-bottom:14px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                <span style="font-size:11.5px;color:var(--gray-8);">桌位占用</span>
+                <span style="font-size:11.5px;font-weight:600;color:var(--gray-11);">27/44 桌</span>
+              </div>
+              <div class="prog-bar"><div class="prog-val green" style="width:61%"></div></div>
+            </div>
+            <div class="store-card-footer">
+              <div class="store-card-hours">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                11:00 – 22:30
+              </div>
+              <div class="store-card-actions">
+                <button class="btn btn-ghost btn-xs" onclick="openTableView('三里屯店')">桌位</button>
+                <button class="btn btn-outline btn-xs" onclick="openDrawer('sanlitun')">详情</button>
+                <div class="dropdown-wrap">
+                  <button class="btn btn-ghost btn-xs" style="padding:0 6px;" onclick="toggleDropdown('store-sanlitun', event)">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                  </button>
+                  <div class="dropdown-menu top-right" id="dd-store-sanlitun">
+                    <button class="dm-item" onclick="openDrawer('sanlitun')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>查看详情
+                    </button>
+                    <button class="dm-item" onclick="showToast('编辑三里屯店信息')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>编辑信息
+                    </button>
+                    <button class="dm-item" onclick="openTableView('三里屯店')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>桌位管理
+                    </button>
+                    <button class="dm-item" onclick="showToast('查看三里屯店员工')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>员工管理
+                    </button>
+                    <div class="dm-sep"></div>
+                    <button class="dm-item destructive" onclick="showToast('确认停业操作', 'warning')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>停业处理
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 国贸店 -->
+        <div class="store-card" data-status="rest" data-name="国贸店">
+          <div class="store-card-cover" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);">
+            <span class="store-cover-emoji">🥢</span>
+            <span class="store-cover-badge"><span class="badge badge-amber">午休中</span></span>
+          </div>
+          <div class="store-card-body">
+            <div class="store-card-name">国贸店</div>
+            <div class="store-card-addr">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              朝阳区建国路 74 号 CITIC 广场 B1
+            </div>
+            <div class="store-stats-row">
+              <div class="store-stat"><div class="store-stat-val" style="color:var(--amber-10);">¥3,260</div><div class="store-stat-label">今日营收</div></div>
+              <div class="store-stat"><div class="store-stat-val">89</div><div class="store-stat-label">今日订单</div></div>
+              <div class="store-stat"><div class="store-stat-val">—</div><div class="store-stat-label">在座率</div></div>
+            </div>
+            <div style="margin-bottom:14px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                <span style="font-size:11.5px;color:var(--gray-8);">午休恢复营业</span>
+                <span style="font-size:11.5px;font-weight:600;color:var(--amber-10);">14:00</span>
+              </div>
+              <div class="prog-bar"><div class="prog-val" style="width:45%;background:var(--amber-3);"></div></div>
+            </div>
+            <div class="store-card-footer">
+              <div class="store-card-hours">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                10:30 – 21:30
+              </div>
+              <div class="store-card-actions">
+                <button class="btn btn-ghost btn-xs" onclick="openTableView('国贸店')">桌位</button>
+                <button class="btn btn-outline btn-xs" onclick="openDrawer('guomao')">详情</button>
+                <div class="dropdown-wrap">
+                  <button class="btn btn-ghost btn-xs" style="padding:0 6px;" onclick="toggleDropdown('store-guomao', event)">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                  </button>
+                  <div class="dropdown-menu top-right" id="dd-store-guomao">
+                    <button class="dm-item" onclick="openDrawer('guomao')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>查看详情
+                    </button>
+                    <button class="dm-item" onclick="showToast('编辑国贸店信息')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>编辑信息
+                    </button>
+                    <button class="dm-item" onclick="showToast('开始营业', 'success')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>立即开始营业
+                    </button>
+                    <div class="dm-sep"></div>
+                    <button class="dm-item destructive" onclick="showToast('停业确认', 'warning')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>停业处理
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 朝阳店（筹备中） -->
+        <div class="store-card" data-status="prep" data-name="朝阳店" style="opacity:.8;">
+          <div class="store-card-cover" style="background:linear-gradient(135deg,#f3f4f6,#e5e7eb);">
+            <span class="store-cover-emoji" style="opacity:.4;">🏗️</span>
+            <span class="store-cover-badge"><span class="badge badge-gray">筹备中</span></span>
+          </div>
+          <div class="store-card-body">
+            <div class="store-card-name">朝阳店</div>
+            <div class="store-card-addr">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              朝阳区朝阳公园路 8 号
+            </div>
+            <div class="store-stats-row">
+              <div class="store-stat"><div class="store-stat-val">68%</div><div class="store-stat-label">装修进度</div></div>
+              <div class="store-stat"><div class="store-stat-val">12</div><div class="store-stat-label">已招聘</div></div>
+              <div class="store-stat"><div class="store-stat-val" style="font-size:13px;font-weight:700;">8月开业</div><div class="store-stat-label">预计时间</div></div>
+            </div>
+            <div style="margin-bottom:14px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                <span style="font-size:11.5px;color:var(--gray-8);">筹备进度</span>
+                <span style="font-size:11.5px;font-weight:600;color:var(--gray-11);">68%</span>
+              </div>
+              <div class="prog-bar"><div class="prog-val" style="width:68%;background:var(--blue-solid);"></div></div>
+            </div>
+            <div class="store-card-footer">
+              <div class="store-card-hours" style="color:var(--gray-7);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                预计 2025.08 开业
+              </div>
+              <div class="store-card-actions">
+                <button class="btn btn-outline btn-xs" onclick="openDrawer('chaoyang')">详情</button>
+                <div class="dropdown-wrap">
+                  <button class="btn btn-ghost btn-xs" style="padding:0 6px;" onclick="toggleDropdown('store-chaoyang', event)">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                  </button>
+                  <div class="dropdown-menu top-right" id="dd-store-chaoyang">
+                    <button class="dm-item" onclick="openDrawer('chaoyang')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>查看详情
+                    </button>
+                    <button class="dm-item" onclick="showToast('编辑朝阳店信息')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>编辑信息
+                    </button>
+                    <button class="dm-item" onclick="showToast('更新筹备进度')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>更新进度
+                    </button>
+                    <div class="dm-sep"></div>
+                    <button class="dm-item destructive" onclick="showToast('已取消该门店筹备', 'danger')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>取消筹备
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /store-grid -->
+    </div><!-- /view-card -->
+
+    <!-- TABLE VIEW -->
+    <div id="view-table">
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>门店名称</th>
+                <th>地址</th>
+                <th>状态</th>
+                <th>今日营收</th>
+                <th>今日订单</th>
+                <th>在座率</th>
+                <th>桌位</th>
+                <th>员工</th>
+                <th>营业时间</th>
+                <th style="text-align:right;">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-status="open" data-name="望京店">
+                <td><span style="font-weight:600;">望京店（总店）</span></td>
+                <td><span style="color:var(--gray-8);font-size:12px;">朝阳区望京 SOHO T2 B1</span></td>
+                <td><span class="badge badge-green">营业中</span></td>
+                <td><span style="font-weight:600;color:var(--amber-10);">¥7,680</span></td>
+                <td>186 单</td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <div class="prog-bar" style="width:60px;"><div class="prog-val" style="width:73%"></div></div>
+                    <span style="font-size:12px;font-weight:600;">73%</span>
+                  </div>
+                </td>
+                <td>52 桌</td>
+                <td>24 人</td>
+                <td><span style="font-size:12px;color:var(--gray-9);">10:00–22:00</span></td>
+                <td style="text-align:right;">
+                  <div style="display:flex;gap:4px;justify-content:flex-end;">
+                    <button class="btn btn-ghost btn-xs" onclick="openDrawer('wangjing')">详情</button>
+                    <button class="btn btn-ghost btn-xs" onclick="showToast('编辑望京店')">编辑</button>
+                    <div class="dropdown-wrap">
+                      <button class="btn btn-ghost btn-xs" style="padding:0 6px;" onclick="toggleDropdown('trow-wangjing', event)">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                      </button>
+                      <div class="dropdown-menu top-right" id="dd-trow-wangjing">
+                        <button class="dm-item" onclick="openTableView('望京店')">桌位管理</button>
+                        <button class="dm-item" onclick="showToast('员工管理')">员工管理</button>
+                        <button class="dm-item" onclick="showToast('营收报表')">营收报表</button>
+                        <div class="dm-sep"></div>
+                        <button class="dm-item" onclick="showToast('暂停营业', 'warning')">暂停营业</button>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr data-status="open" data-name="三里屯店">
+                <td><span style="font-weight:600;">三里屯店</span></td>
+                <td><span style="color:var(--gray-8);font-size:12px;">朝阳区三里屯太古里北区 N4</span></td>
+                <td><span class="badge badge-green">营业中</span></td>
+                <td><span style="font-weight:600;color:var(--amber-10);">¥5,420</span></td>
+                <td>124 单</td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <div class="prog-bar" style="width:60px;"><div class="prog-val green" style="width:61%"></div></div>
+                    <span style="font-size:12px;font-weight:600;">61%</span>
+                  </div>
+                </td>
+                <td>44 桌</td>
+                <td>18 人</td>
+                <td><span style="font-size:12px;color:var(--gray-9);">11:00–22:30</span></td>
+                <td style="text-align:right;">
+                  <div style="display:flex;gap:4px;justify-content:flex-end;">
+                    <button class="btn btn-ghost btn-xs" onclick="openDrawer('sanlitun')">详情</button>
+                    <button class="btn btn-ghost btn-xs" onclick="showToast('编辑三里屯店')">编辑</button>
+                    <div class="dropdown-wrap">
+                      <button class="btn btn-ghost btn-xs" style="padding:0 6px;" onclick="toggleDropdown('trow-sanlitun', event)">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                      </button>
+                      <div class="dropdown-menu top-right" id="dd-trow-sanlitun">
+                        <button class="dm-item" onclick="openTableView('三里屯店')">桌位管理</button>
+                        <button class="dm-item" onclick="showToast('员工管理')">员工管理</button>
+                        <div class="dm-sep"></div>
+                        <button class="dm-item destructive" onclick="showToast('停业确认', 'warning')">停业处理</button>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr data-status="rest" data-name="国贸店">
+                <td><span style="font-weight:600;">国贸店</span></td>
+                <td><span style="color:var(--gray-8);font-size:12px;">朝阳区建国路 74 号 CITIC 广场 B1</span></td>
+                <td><span class="badge badge-amber">午休中</span></td>
+                <td><span style="font-weight:600;color:var(--amber-10);">¥3,260</span></td>
+                <td>89 单</td>
+                <td><span style="font-size:12px;color:var(--gray-8);">—</span></td>
+                <td>40 桌</td>
+                <td>16 人</td>
+                <td><span style="font-size:12px;color:var(--gray-9);">10:30–21:30</span></td>
+                <td style="text-align:right;">
+                  <div style="display:flex;gap:4px;justify-content:flex-end;">
+                    <button class="btn btn-ghost btn-xs" onclick="openDrawer('guomao')">详情</button>
+                    <button class="btn btn-ghost btn-xs" onclick="showToast('编辑国贸店')">编辑</button>
+                    <div class="dropdown-wrap">
+                      <button class="btn btn-ghost btn-xs" style="padding:0 6px;" onclick="toggleDropdown('trow-guomao', event)">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                      </button>
+                      <div class="dropdown-menu top-right" id="dd-trow-guomao">
+                        <button class="dm-item" onclick="showToast('开始营业', 'success')">立即开始营业</button>
+                        <button class="dm-item" onclick="openTableView('国贸店')">桌位管理</button>
+                        <div class="dm-sep"></div>
+                        <button class="dm-item destructive" onclick="showToast('停业确认', 'warning')">停业处理</button>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr data-status="prep" data-name="朝阳店">
+                <td><span style="font-weight:600;color:var(--gray-9);">朝阳店</span></td>
+                <td><span style="color:var(--gray-8);font-size:12px;">朝阳区朝阳公园路 8 号</span></td>
+                <td><span class="badge badge-gray">筹备中</span></td>
+                <td><span style="color:var(--gray-7);">—</span></td>
+                <td><span style="color:var(--gray-7);">—</span></td>
+                <td><span style="color:var(--gray-7);">—</span></td>
+                <td>50 桌</td>
+                <td>10 人</td>
+                <td><span style="font-size:12px;color:var(--gray-8);">预计 2025.08</span></td>
+                <td style="text-align:right;">
+                  <div style="display:flex;gap:4px;justify-content:flex-end;">
+                    <button class="btn btn-ghost btn-xs" onclick="openDrawer('chaoyang')">详情</button>
+                    <button class="btn btn-ghost btn-xs" onclick="showToast('编辑朝阳店')">编辑</button>
+                    <div class="dropdown-wrap">
+                      <button class="btn btn-ghost btn-xs" style="padding:0 6px;" onclick="toggleDropdown('trow-chaoyang', event)">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                      </button>
+                      <div class="dropdown-menu top-right" id="dd-trow-chaoyang">
+                        <button class="dm-item" onclick="showToast('更新筹备进度')">更新进度</button>
+                        <div class="dm-sep"></div>
+                        <button class="dm-item destructive" onclick="showToast('已取消筹备', 'danger')">取消筹备</button>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div><!-- /view-table -->
+
+  </div>
+</main>
+
+<!-- ═══ DETAIL DRAWER ═══ -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <span class="drawer-title" id="drawer-title">门店详情</span>
+    <button class="drawer-close" onclick="closeDrawer()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+  <div class="drawer-footer">
+    <button class="btn btn-outline btn-md" onclick="closeDrawer()">关闭</button>
+    <button class="btn btn-primary btn-md" onclick="showToast('门店信息已保存', 'success'); closeDrawer();">保存更改</button>
+  </div>
+</div>
+
+<!-- ═══ TABLE VIEW DRAWER ═══ -->
+<div class="drawer-overlay" id="table-overlay" onclick="closeTableView()"></div>
+<div class="drawer" id="table-drawer">
+  <div class="drawer-header">
+    <span class="drawer-title" id="table-drawer-title">桌位管理</span>
+    <button class="drawer-close" onclick="closeTableView()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body" id="table-drawer-body"></div>
+  <div class="drawer-footer">
+    <button class="btn btn-outline btn-md" onclick="closeTableView()">关闭</button>
+    <button class="btn btn-primary btn-md" onclick="showToast('桌位设置已保存', 'success'); closeTableView();">保存设置</button>
+  </div>
+</div>
+
+<!-- ═══ ADD STORE MODAL ═══ -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">新增门店</span>
+      <button class="modal-close" onclick="closeModal()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">门店名称 <span style="color:var(--red-solid)">*</span></label>
+          <input class="form-input" placeholder="例：望京店" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">门店类型</label>
+          <div class="cs-wrap">
+            <button type="button" class="cs-trigger" onclick="toggleCs('type', event)">
+              <span id="cs-type-label">直营店</span>
+              <svg class="cs-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="cs-dropdown" id="cs-type">
+              <div class="cs-option selected" onclick="selectCs('type','直营店',this)"><span class="cs-opt-text">直营店</span><svg class="cs-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="cs-option" onclick="selectCs('type','加盟店',this)"><span class="cs-opt-text">加盟店</span><svg class="cs-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="visibility:hidden"><polyline points="20 6 9 17 4 12"/></svg></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label class="form-label">详细地址 <span style="color:var(--red-solid)">*</span></label>
+          <input class="form-input" placeholder="例：朝阳区望京 SOHO T2 B1" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">联系电话</label>
+          <input class="form-input" placeholder="010-XXXX-XXXX" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">店长姓名</label>
+          <input class="form-input" placeholder="请输入店长姓名" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">营业开始时间</label>
+          <input class="form-input" type="time" value="10:00" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">营业结束时间</label>
+          <input class="form-input" type="time" value="22:00" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">桌位总数</label>
+          <input class="form-input" type="number" placeholder="例：40" min="1" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">初始状态</label>
+          <div class="cs-wrap">
+            <button type="button" class="cs-trigger" onclick="toggleCs('status', event)">
+              <span id="cs-status-label">筹备中</span>
+              <svg class="cs-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="cs-dropdown" id="cs-status">
+              <div class="cs-option selected" onclick="selectCs('status','筹备中',this)"><span class="cs-opt-text">筹备中</span><svg class="cs-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="cs-option" onclick="selectCs('status','营业中',this)"><span class="cs-opt-text">营业中</span><svg class="cs-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="visibility:hidden"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="cs-option" onclick="selectCs('status','暂停营业',this)"><span class="cs-opt-text">暂停营业</span><svg class="cs-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="visibility:hidden"><polyline points="20 6 9 17 4 12"/></svg></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label class="form-label">备注</label>
+          <input class="form-input" placeholder="可选备注信息" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-md" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary btn-md" onclick="showToast('门店创建成功！', 'success'); closeModal();">创建门店</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+// ── Dropdown ──
+let activeDropdown = null;
+function toggleDropdown(id, e) {
+  e && e.stopPropagation();
+  const dd = document.getElementById('dd-' + id);
+  if (!dd) return;
+  if (activeDropdown && activeDropdown !== dd) closeAllDropdowns();
+  const isOpen = dd.classList.contains('open');
+  if (isOpen) { closeAllDropdowns(); } else {
+    dd.classList.add('open');
+    activeDropdown = dd;
+    document.getElementById('overlay').style.display = 'block';
+  }
+}
+function closeAllDropdowns() {
+  document.querySelectorAll('.dropdown-menu.open').forEach(d => d.classList.remove('open'));
+  document.getElementById('overlay').style.display = 'none';
+  activeDropdown = null;
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeAllDropdowns(); closeDrawer(); closeTableView(); closeModal(); } });
+
+// ── View Switch ──
+function switchView(v) {
+  document.getElementById('view-card').style.display = v === 'card' ? '' : 'none';
+  document.getElementById('view-table').style.display = v === 'table' ? '' : 'none';
+  document.getElementById('btn-card').classList.toggle('active', v === 'card');
+  document.getElementById('btn-table').classList.toggle('active', v === 'table');
+}
+
+// ── Search ──
+function searchStores(q) {
+  q = q.toLowerCase();
+  document.querySelectorAll('[data-name]').forEach(el => {
+    el.style.display = el.dataset.name.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+// ── Filter ──
+function filterStores(status, btn) {
+  document.querySelectorAll('#dd-status-filter .dm-item').forEach(i => {
+    i.classList.remove('checked');
+    const chk = i.querySelector('svg:last-child');
+    if (chk && i.id && i.id.startsWith('filter-')) {
+      chk.remove();
+    }
+  });
+  btn.classList.add('checked');
+  const chk = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  chk.setAttribute('style','margin-left:auto;color:var(--amber-9);');
+  chk.setAttribute('width','12'); chk.setAttribute('height','12');
+  chk.setAttribute('viewBox','0 0 24 24'); chk.setAttribute('fill','none');
+  chk.setAttribute('stroke','currentColor'); chk.setAttribute('stroke-width','3');
+  chk.innerHTML='<polyline points="20 6 9 17 4 12"/>';
+  btn.appendChild(chk);
+
+  // Card view
+  document.querySelectorAll('#store-grid .store-card').forEach(c => {
+    c.style.display = (status === 'all' || c.dataset.status === status) ? '' : 'none';
+  });
+  // Table view
+  document.querySelectorAll('#view-table tbody tr').forEach(r => {
+    r.style.display = (status === 'all' || r.dataset.status === status) ? '' : 'none';
+  });
+  closeAllDropdowns();
+}
+
+// ── Drawer ──
+const drawerData = {
+  wangjing: {
+    title: '望京店（总店）',
+    status: 'green', statusLabel: '营业中',
+    info: [
+      ['门店名称','望京店（总店）'],['门店类型','直营店'],
+      ['详细地址','朝阳区望京 SOHO T2 B1'],['联系电话','010-8765-4321'],
+      ['店长','李大明'],['员工人数','24 人'],
+      ['桌位总数','52 桌'],['营业时间','10:00 – 22:00'],
+      ['月均营收','¥186,000'],['好评率','97.2%'],
+    ]
+  },
+  sanlitun: {
+    title: '三里屯店',
+    status: 'green', statusLabel: '营业中',
+    info: [
+      ['门店名称','三里屯店'],['门店类型','直营店'],
+      ['详细地址','朝阳区三里屯太古里北区 N4'],['联系电话','010-6543-2109'],
+      ['店长','王小芳'],['员工人数','18 人'],
+      ['桌位总数','44 桌'],['营业时间','11:00 – 22:30'],
+      ['月均营收','¥124,000'],['好评率','96.8%'],
+    ]
+  },
+  guomao: {
+    title: '国贸店',
+    status: 'amber', statusLabel: '午休中',
+    info: [
+      ['门店名称','国贸店'],['门店类型','直营店'],
+      ['详细地址','朝阳区建国路 74 号 CITIC 广场 B1'],['联系电话','010-5432-1098'],
+      ['店长','张明远'],['员工人数','16 人'],
+      ['桌位总数','40 桌'],['营业时间','10:30 – 21:30'],
+      ['月均营收','¥98,000'],['好评率','95.4%'],
+    ]
+  },
+  chaoyang: {
+    title: '朝阳店（筹备中）',
+    status: 'gray', statusLabel: '筹备中',
+    info: [
+      ['门店名称','朝阳店'],['门店类型','直营店'],
+      ['详细地址','朝阳区朝阳公园路 8 号'],['联系电话','待定'],
+      ['负责人','赵超'],['已招聘','12 人'],
+      ['桌位总数','50 桌（规划）'],['预计营业时间','11:00 – 22:00'],
+      ['装修进度','68%'],['预计开业','2025年8月'],
+    ]
+  }
+};
+
+function openDrawer(key) {
+  closeAllDropdowns();
+  const d = drawerData[key];
+  if (!d) return;
+  document.getElementById('drawer-title').textContent = d.title;
+  const body = document.getElementById('drawer-body');
+  body.innerHTML = `
+    <div class="drawer-section">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <span class="badge badge-${d.status}">${d.statusLabel}</span>
+      </div>
+      <div class="drawer-section-title">基本信息</div>
+      <div class="info-grid">
+        ${d.info.map(([l,v]) => `<div class="info-item"><div class="info-label">${l}</div><div class="info-value">${v}</div></div>`).join('')}
+      </div>
+    </div>
+    <div class="drawer-section">
+      <div class="drawer-section-title">快捷操作</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <button class="btn btn-outline btn-sm" onclick="showToast('编辑门店信息')">编辑信息</button>
+        <button class="btn btn-outline btn-sm" onclick="showToast('查看营收报表')">营收报表</button>
+        <button class="btn btn-outline btn-sm" onclick="showToast('员工管理')">员工管理</button>
+        <button class="btn btn-outline btn-sm" onclick="showToast('打印门店信息')">打印</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+function closeDrawer() {
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+}
+
+// ── Table View ──
+const tableData = {
+  '望京店': { total:52, items:[
+    {n:'A01',cap:4,st:'occupied'},{n:'A02',cap:4,st:'available'},{n:'A03',cap:6,st:'occupied'},
+    {n:'A04',cap:2,st:'available'},{n:'A05',cap:4,st:'reserved'},{n:'A06',cap:8,st:'occupied'},
+    {n:'B01',cap:4,st:'occupied'},{n:'B02',cap:4,st:'occupied'},{n:'B03',cap:6,st:'available'},
+    {n:'B04',cap:2,st:'available'},{n:'B05',cap:4,st:'occupied'},{n:'B06',cap:10,st:'occupied'},
+    {n:'C01',cap:4,st:'available'},{n:'C02',cap:4,st:'reserved'},{n:'C03',cap:6,st:'occupied'},
+    {n:'C04',cap:2,st:'available'},{n:'C05',cap:4,st:'occupied'},{n:'C06',cap:8,st:'occupied'},
+    {n:'D01',cap:4,st:'occupied'},{n:'D02',cap:4,st:'available'},{n:'D03',cap:6,st:'reserved'},
+    {n:'D04',cap:2,st:'unavailable'},{n:'D05',cap:4,st:'occupied'},{n:'D06',cap:6,st:'occupied'},
+  ]},
+  '三里屯店': { total:44, items:[
+    {n:'A01',cap:4,st:'occupied'},{n:'A02',cap:4,st:'available'},{n:'A03',cap:6,st:'occupied'},
+    {n:'A04',cap:4,st:'occupied'},{n:'A05',cap:2,st:'available'},{n:'A06',cap:4,st:'reserved'},
+    {n:'B01',cap:6,st:'occupied'},{n:'B02',cap:4,st:'available'},{n:'B03',cap:4,st:'occupied'},
+    {n:'B04',cap:8,st:'occupied'},{n:'B05',cap:4,st:'available'},{n:'B06',cap:2,st:'occupied'},
+    {n:'C01',cap:4,st:'available'},{n:'C02',cap:6,st:'occupied'},{n:'C03',cap:4,st:'reserved'},
+    {n:'C04',cap:4,st:'available'},{n:'C05',cap:10,st:'occupied'},{n:'C06',cap:4,st:'occupied'},
+  ]},
+  '国贸店': { total:40, items:[
+    {n:'A01',cap:4,st:'available'},{n:'A02',cap:4,st:'available'},{n:'A03',cap:6,st:'available'},
+    {n:'A04',cap:2,st:'available'},{n:'A05',cap:4,st:'available'},{n:'A06',cap:8,st:'available'},
+    {n:'B01',cap:4,st:'available'},{n:'B02',cap:6,st:'available'},{n:'B03',cap:4,st:'reserved'},
+    {n:'B04',cap:4,st:'available'},{n:'B05',cap:2,st:'available'},{n:'B06',cap:4,st:'available'},
+  ]}
+};
+
+function openTableView(storeName) {
+  closeAllDropdowns();
+  const d = tableData[storeName];
+  document.getElementById('table-drawer-title').textContent = storeName + ' · 桌位管理';
+  const body = document.getElementById('table-drawer-body');
+  const stMap = {occupied:'occupied',available:'available',reserved:'reserved',unavailable:'unavailable'};
+  const labelMap = {occupied:'使用中',available:'空闲',reserved:'已预订',unavailable:'不可用'};
+  const items = d ? d.items : [];
+  const occ = items.filter(i=>i.st==='occupied').length;
+  const avail = items.filter(i=>i.st==='available').length;
+  const res = items.filter(i=>i.st==='reserved').length;
+  body.innerHTML = `
+    <div class="drawer-section">
+      <div style="display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;">
+        <div style="text-align:center;padding:10px 16px;background:var(--amber-2);border-radius:8px;">
+          <div style="font-size:20px;font-weight:700;color:var(--amber-10);">${occ}</div>
+          <div style="font-size:11px;color:var(--amber-11);margin-top:2px;">使用中</div>
+        </div>
+        <div style="text-align:center;padding:10px 16px;background:var(--green-bg);border-radius:8px;">
+          <div style="font-size:20px;font-weight:700;color:var(--green-text);">${avail}</div>
+          <div style="font-size:11px;color:var(--green-text);margin-top:2px;">空闲</div>
+        </div>
+        <div style="text-align:center;padding:10px 16px;background:var(--blue-bg);border-radius:8px;">
+          <div style="font-size:20px;font-weight:700;color:var(--blue-text);">${res}</div>
+          <div style="font-size:11px;color:var(--blue-text);margin-top:2px;">已预订</div>
+        </div>
+      </div>
+      <div class="table-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--amber-9);"></div>使用中</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--green-solid);"></div>空闲</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--blue-solid);"></div>已预订</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--gray-5);"></div>不可用</div>
+      </div>
+      <div class="table-grid">
+        ${items.map(t=>`
+          <div class="table-item ${t.st}" onclick="showToast('桌位 ${t.n} · ${labelMap[t.st]}')" title="${t.n} · ${t.cap}人桌 · ${labelMap[t.st]}">
+            <div class="table-item-num">${t.n}</div>
+            <div class="table-item-cap">${t.cap}人</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  document.getElementById('table-overlay').classList.add('open');
+  document.getElementById('table-drawer').classList.add('open');
+}
+function closeTableView() {
+  document.getElementById('table-overlay').classList.remove('open');
+  document.getElementById('table-drawer').classList.remove('open');
+}
+
+// ── Custom Select ──
+function toggleCs(id, e) {
+  e && e.stopPropagation();
+  const dd = document.getElementById('cs-' + id);
+  const btn = e.currentTarget;
+  const isOpen = dd.classList.contains('open');
+  // close all custom selects first
+  document.querySelectorAll('.cs-dropdown.open').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.cs-trigger.open').forEach(b => b.classList.remove('open'));
+  if (!isOpen) {
+    dd.classList.add('open');
+    btn.classList.add('open');
+  }
+}
+function selectCs(id, value, el) {
+  document.getElementById('cs-' + id + '-label').textContent = value;
+  el.closest('.cs-dropdown').querySelectorAll('.cs-option').forEach(o => {
+    o.classList.remove('selected');
+    const chk = o.querySelector('.cs-check');
+    if (chk) chk.style.visibility = 'hidden';
+  });
+  el.classList.add('selected');
+  const chk = el.querySelector('.cs-check');
+  if (chk) chk.style.visibility = 'visible';
+  document.getElementById('cs-' + id).classList.remove('open');
+  el.closest('.cs-wrap').querySelector('.cs-trigger').classList.remove('open');
+}
+// close custom selects on outside click
+document.addEventListener('click', () => {
+  document.querySelectorAll('.cs-dropdown.open').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.cs-trigger.open').forEach(b => b.classList.remove('open'));
+});
+
+// ── Modal ──
+function openModal() {
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+// ── Toast ──
+function showToast(msg, type) {
+  const icons = {
+    success:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',
+    warning:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>',
+    danger:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+    default:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+  };
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast' + (type ? ' '+type : '');
+  t.innerHTML = (icons[type]||icons.default) + '<span>' + msg + '</span>';
+  c.appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(8px)'; t.style.transition='all 200ms'; setTimeout(()=>t.remove(),200); }, 2500);
+}
+</script>
+</body>
+</html>
