@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>餐饮管理系统 — 数据总览</title>
+<title>Restaurant Management System — Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <style>
@@ -32,7 +32,6 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
   position:fixed; top:0; left:0; right:0; z-index:200;
   height:var(--topbar-h); background:var(--surface);
   display:flex; align-items:center; padding:0 20px; gap:12px;
-  border-bottom:1px solid var(--border);
 }
 .topbar-brand { display:flex; align-items:center; gap:9px; text-decoration:none; }
 .brand-icon {
@@ -42,6 +41,10 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .brand-icon svg { color:#FFA902; }
 .brand-name { font-size:14px; font-weight:700; color:var(--gray-12); letter-spacing:-0.03em; }
 .brand-divider { width:1px; height:16px; background:var(--border); }
+.topbar-path { display:flex; align-items:center; gap:6px; }
+.tp-parent { font-size:13px; color:var(--gray-8); }
+.tp-sep { font-size:13px; color:var(--gray-7); }
+.tp-current { font-size:13px; font-weight:600; color:var(--gray-12); }
 .topbar-nav { display:flex; align-items:center; gap:2px; }
 .topbar-nav-item {
   height:32px; padding:0 12px; border-radius:6px;
@@ -487,93 +490,10 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
     <div class="brand-icon">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     </div>
-    <span class="brand-name">餐饮管家</span>
+    <span class="brand-name">Restaurant Manager</span>
   </a>
   <div class="brand-divider"></div>
-
-  <!-- Top Nav -->
-  <nav class="topbar-nav">
-    <button class="topbar-nav-item active">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      总览
-    </button>
-
-    <!-- 点餐管理 下拉 -->
-    <div class="dropdown-wrap">
-      <button class="topbar-nav-item" id="nav-order-btn" onclick="toggleDropdown('nav-order', event)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-        点餐管理
-        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="dropdown-menu top-left" id="dd-nav-order">
-        <div class="dm-label">订单</div>
-        <button class="dm-item" onclick="showToast('跳转至今日订单')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
-          今日订单
-          <span class="dm-shortcut">32 待处理</span>
-        </button>
-        <button class="dm-item" onclick="showToast('跳转至历史订单')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          历史订单
-        </button>
-        <button class="dm-item" onclick="showToast('跳转至退单管理')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
-          退单管理
-          <span class="dm-shortcut badge badge-red" style="padding:1px 5px;font-size:10px;">8</span>
-        </button>
-        <div class="dm-sep"></div>
-        <div class="dm-label">菜单</div>
-        <button class="dm-item" onclick="showToast('跳转至菜品管理')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 2l1.5 12h15L21 2M3 2H1M21 2h2M8 22h8M12 17v5"/></svg>
-          菜品管理
-        </button>
-        <button class="dm-item" onclick="showToast('跳转至套餐配置')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-          套餐配置
-        </button>
-      </div>
-    </div>
-
-    <!-- 门店管理 下拉 -->
-    <div class="dropdown-wrap">
-      <button class="topbar-nav-item" id="nav-store-btn" onclick="toggleDropdown('nav-store', event)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-        门店管理
-        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="dropdown-menu top-left" id="dd-nav-store">
-        <button class="dm-item" onclick="showToast('门店列表')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          门店列表
-        </button>
-        <button class="dm-item" onclick="showToast('桌位管理')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          桌位管理
-        </button>
-        <button class="dm-item" onclick="showToast('营业时段')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          营业时段
-        </button>
-        <div class="dm-sep"></div>
-        <button class="dm-item" onclick="showToast('新增门店')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          新增门店
-        </button>
-      </div>
-    </div>
-
-    <!-- 数据报表 -->
-    <button class="topbar-nav-item" onclick="showToast('跳转至数据报表')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-      数据报表
-    </button>
-
-    <!-- 员工管理 -->
-    <button class="topbar-nav-item" onclick="showToast('员工管理')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-      员工管理
-    </button>
-  </nav>
+  <span class="topbar-path"><span class="tp-parent">Restaurant Manager</span><span class="tp-sep">/</span><span class="tp-current">Dashboard</span></span>
 
   <div class="topbar-spacer"></div>
 
@@ -581,55 +501,55 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
   <div class="topbar-actions">
     <!-- Notification -->
     <div class="dropdown-wrap">
-      <button class="icon-btn" id="notif-btn" onclick="toggleDropdown('notif', event)" title="通知">
+      <button class="icon-btn" id="notif-btn" onclick="toggleDropdown('notif', event)" title="Notifications">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
         <span class="badge-dot"></span>
       </button>
       <div class="dropdown-menu top-right notif-menu" id="dd-notif" style="min-width:320px;">
         <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px 6px;">
-          <span style="font-size:13px;font-weight:600;color:var(--gray-12)">通知消息</span>
-          <button class="btn btn-ghost btn-xs" onclick="showToast('已全部标记为已读')">全部已读</button>
+          <span style="font-size:13px;font-weight:600;color:var(--gray-12)">Notifications</span>
+          <button class="btn btn-ghost btn-xs" onclick="showToast('All marked as read')">Mark all read</button>
         </div>
         <div class="dm-sep"></div>
         <div class="notif-item">
           <div class="notif-dot"></div>
           <div>
-            <div class="notif-title">新订单待确认</div>
-            <div class="notif-desc">望京店 · 桌位 A03 · ¥268.00</div>
-            <div class="notif-time">刚刚</div>
+            <div class="notif-title">New order awaiting confirmation</div>
+            <div class="notif-desc">Wangjing · Table A03 · ¥268.00</div>
+            <div class="notif-time">Just now</div>
           </div>
         </div>
         <div class="notif-item">
           <div class="notif-dot"></div>
           <div>
-            <div class="notif-title">库存预警：红烧肉</div>
-            <div class="notif-desc">三里屯店库存不足，当前余量 2 份</div>
-            <div class="notif-time">3 分钟前</div>
+            <div class="notif-title">Low stock alert: Braised Pork</div>
+            <div class="notif-desc">Sanlitun store running low, only 2 servings left</div>
+            <div class="notif-time">3 minutes ago</div>
           </div>
         </div>
         <div class="notif-item">
           <div class="notif-dot read"></div>
           <div>
-            <div class="notif-title" style="color:var(--gray-10)">评价回复提醒</div>
-            <div class="notif-desc">用户「明哥」给出 5 星好评</div>
-            <div class="notif-time">12 分钟前</div>
+            <div class="notif-title" style="color:var(--gray-10)">Review reply reminder</div>
+            <div class="notif-desc">Guest "Ming" left a 5-star review</div>
+            <div class="notif-time">12 minutes ago</div>
           </div>
         </div>
         <div class="notif-item">
           <div class="notif-dot read"></div>
           <div>
-            <div class="notif-title" style="color:var(--gray-10)">月度报表已生成</div>
-            <div class="notif-desc">5月份营收数据报表已准备好</div>
-            <div class="notif-time">1 小时前</div>
+            <div class="notif-title" style="color:var(--gray-10)">Monthly report ready</div>
+            <div class="notif-desc">May revenue report has been generated</div>
+            <div class="notif-time">1 hour ago</div>
           </div>
         </div>
         <div class="dm-sep"></div>
-        <button class="dm-item" style="justify-content:center;color:var(--gray-9);" onclick="showToast('查看全部通知')">查看全部通知</button>
+        <button class="dm-item" style="justify-content:center;color:var(--gray-9);" onclick="showToast('View all notifications')">View all notifications</button>
       </div>
     </div>
 
     <!-- Help -->
-    <button class="icon-btn" title="帮助" onclick="showToast('帮助中心')">
+    <button class="icon-btn" title="Help" onclick="showToast('Help Center')">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
     </button>
 
@@ -638,47 +558,47 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
     <!-- User Avatar Dropdown -->
     <div class="dropdown-wrap">
       <button class="avatar-btn" id="user-btn" onclick="toggleDropdown('user', event)">
-        <div class="avatar">张</div>
-        <span class="avatar-name">张经理</span>
+        <div class="avatar">Z</div>
+        <span class="avatar-name">Manager Zhang</span>
         <svg class="avatar-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
       <div class="dropdown-menu top-right" id="dd-user">
         <div style="padding:10px 10px 8px;display:flex;gap:10px;align-items:center;">
-          <div class="avatar" style="width:34px;height:34px;font-size:13px;">张</div>
+          <div class="avatar" style="width:34px;height:34px;font-size:13px;">Z</div>
           <div>
-            <div style="font-size:13px;font-weight:600;color:var(--gray-12)">张伟经理</div>
+            <div style="font-size:13px;font-weight:600;color:var(--gray-12)">Zhang Wei (Manager)</div>
             <div style="font-size:11px;color:var(--gray-8)">super@fangyuancan.com</div>
           </div>
         </div>
         <div class="dm-sep"></div>
-        <button class="dm-item" onclick="showToast('个人资料')">
+        <button class="dm-item" onclick="showToast('Profile')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          个人资料
+          Profile
         </button>
-        <button class="dm-item" onclick="showToast('账户设置')">
+        <button class="dm-item" onclick="showToast('Account Settings')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-          账户设置
+          Account Settings
           <span class="dm-shortcut">⌘,</span>
         </button>
         <div class="dm-sep"></div>
-        <button class="dm-item" onclick="showToast('切换门店')">
+        <button class="dm-item" onclick="showToast('Switch Store')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-          切换门店
+          Switch Store
           <svg class="dm-arrow" style="margin-left:auto;width:12px;height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
           <div class="dm-sub-menu">
-            <button class="dm-item active" onclick="showToast('已切换至望京店')">
+            <button class="dm-item active" onclick="showToast('Switched to Wangjing (Main)')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
-              望京店（总店）
+              Wangjing (Main)
             </button>
-            <button class="dm-item" onclick="showToast('已切换至三里屯店')">三里屯店</button>
-            <button class="dm-item" onclick="showToast('已切换至国贸店')">国贸店</button>
-            <button class="dm-item" onclick="showToast('已切换至朝阳店')">朝阳店（筹备中）</button>
+            <button class="dm-item" onclick="showToast('Switched to Sanlitun')">Sanlitun</button>
+            <button class="dm-item" onclick="showToast('Switched to Guomao')">Guomao</button>
+            <button class="dm-item" onclick="showToast('Switched to Chaoyang')">Chaoyang (Opening Soon)</button>
           </div>
         </button>
         <div class="dm-sep"></div>
-        <button class="dm-item destructive" onclick="showToast('已退出登录', 'warning')">
+        <button class="dm-item destructive" onclick="showToast('Signed out', 'warning')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-          退出登录
+          Sign Out
         </button>
       </div>
     </div>
@@ -689,86 +609,71 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
      SIDEBAR
 ════════════════════════════════════════════════════════ -->
 <aside class="sidebar">
-  <div class="sb-section">
-    <div class="sb-label">工作台</div>
     <button class="sb-item active">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      数据总览
+      Dashboard
     </button>
-    <button class="sb-item" onclick="showToast('实时大屏')">
+    <button class="sb-item" onclick="showToast('Live Display')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-      实时大屏
+      Live Display
     </button>
-  </div>
-  <div class="sb-section">
-    <div class="sb-label">点餐管理</div>
     <button class="sb-item" id="sb-order-btn" onclick="toggleSbSub('sb-order')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-      订单管理
+      Orders
       <span class="sb-badge red">32</span>
       <svg class="sb-expand" id="sb-order-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
     </button>
     <div class="sb-sub" id="sb-sub-sb-order">
-      <button class="sb-sub-item" onclick="showToast('今日订单')">今日订单 <span class="sb-badge red" style="margin-left:auto;">32</span></button>
-      <button class="sb-sub-item" onclick="showToast('历史订单')">历史订单</button>
-      <button class="sb-sub-item" onclick="showToast('退单管理')">退单管理 <span class="sb-badge" style="margin-left:auto;">8</span></button>
+      <button class="sb-sub-item" onclick="showToast('Today\'s Orders')">Today's Orders <span class="sb-badge red" style="margin-left:auto;">32</span></button>
+      <button class="sb-sub-item" onclick="showToast('Order History')">Order History</button>
+      <button class="sb-sub-item" onclick="showToast('Refund Management')">Refund Management <span class="sb-badge" style="margin-left:auto;">8</span></button>
     </div>
-    <button class="sb-item" onclick="showToast('菜品管理')">
+    <button class="sb-item" onclick="showToast('Dish Management')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 2l1.5 12h15L21 2M8 22h8M12 17v5"/></svg>
-      菜品管理
+      Dish Management
     </button>
-    <button class="sb-item" onclick="showToast('套餐配置')">
+    <button class="sb-item" onclick="showToast('Combo Configuration')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-      套餐配置
+      Combo Configuration
     </button>
-    <button class="sb-item" onclick="showToast('桌位管理')">
+    <button class="sb-item" onclick="showToast('Table Management')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      桌位管理
+      Table Management
       <span class="sb-badge amber">12</span>
     </button>
-  </div>
-  <div class="sb-section">
-    <div class="sb-label">门店运营</div>
-    <button class="sb-item" onclick="showToast('门店列表')">
+    <button class="sb-item" onclick="showToast('Store List')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-      门店管理
+      Store Management
     </button>
-    <button class="sb-item" onclick="showToast('员工排班')">
+    <button class="sb-item" onclick="showToast('Staff Scheduling')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-      员工排班
+      Staff Scheduling
     </button>
-    <button class="sb-item" onclick="showToast('库存管理')">
+    <button class="sb-item" onclick="showToast('Inventory Management')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      库存管理
+      Inventory
       <span class="sb-badge red">3</span>
     </button>
-    <button class="sb-item" onclick="showToast('优惠活动')">
+    <button class="sb-item" onclick="showToast('Promotions')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-      优惠活动
+      Promotions
     </button>
-  </div>
-  <div class="sb-section">
-    <div class="sb-label">数据分析</div>
-    <button class="sb-item" onclick="showToast('营收报表')">
+    <button class="sb-item" onclick="showToast('Revenue Reports')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-      营收报表
+      Revenue Reports
     </button>
-    <button class="sb-item" onclick="showToast('用户分析')">
+    <button class="sb-item" onclick="showToast('Guest Analytics')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-      用户分析
+      Guest Analytics
     </button>
-    <button class="sb-item" onclick="showToast('菜品分析')">
+    <button class="sb-item" onclick="showToast('Dish Analytics')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      菜品分析
+      Dish Analytics
     </button>
-  </div>
-  <div class="sb-section">
-    <div class="sb-label">系统</div>
-    <button class="sb-item" onclick="showToast('系统设置')">
+    <button class="sb-item" onclick="showToast('System Settings')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-      系统设置
+      System Settings
     </button>
-  </div>
 </aside>
 
 <!-- ═══════════════════════════════════════════════════════
@@ -781,63 +686,63 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
     <div class="page-header">
       <div>
         <div class="breadcrumb">
-          <span class="bc-item">工作台</span>
+          <span class="bc-item">Workspace</span>
           <span class="bc-sep">›</span>
-          <span class="bc-current">数据总览</span>
+          <span class="bc-current">Dashboard</span>
         </div>
-        <h1 class="page-title">数据总览</h1>
-        <p class="page-subtitle">望京店 · 今日 2025年6月4日 周三</p>
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-subtitle">Wangjing · Today, Wednesday June 4, 2025</p>
       </div>
       <div class="page-actions">
         <div class="date-tabs">
-          <button class="date-tab" onclick="switchDateTab(this)">今日</button>
-          <button class="date-tab active" onclick="switchDateTab(this)">本周</button>
-          <button class="date-tab" onclick="switchDateTab(this)">本月</button>
-          <button class="date-tab" onclick="switchDateTab(this)">本年</button>
+          <button class="date-tab" onclick="switchDateTab(this)">Today</button>
+          <button class="date-tab active" onclick="switchDateTab(this)">This Week</button>
+          <button class="date-tab" onclick="switchDateTab(this)">This Month</button>
+          <button class="date-tab" onclick="switchDateTab(this)">This Year</button>
         </div>
 
         <!-- Export Dropdown -->
         <div class="dropdown-wrap">
           <button class="btn btn-outline btn-md" id="export-btn" onclick="toggleDropdown('export', event)">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-            导出报表
+            Export Report
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
           <div class="dropdown-menu top-right" id="dd-export">
-            <div class="dm-label">导出格式</div>
-            <button class="dm-item" onclick="showToast('正在导出 Excel…', 'success')">
+            <div class="dm-label">Export Format</div>
+            <button class="dm-item" onclick="showToast('Exporting Excel…', 'success')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
-              导出为 Excel
+              Export as Excel
               <span class="dm-shortcut">.xlsx</span>
             </button>
-            <button class="dm-item" onclick="showToast('正在导出 PDF…', 'success')">
+            <button class="dm-item" onclick="showToast('Exporting PDF…', 'success')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              导出为 PDF
+              Export as PDF
               <span class="dm-shortcut">.pdf</span>
             </button>
-            <button class="dm-item" onclick="showToast('正在导出 CSV…', 'success')">
+            <button class="dm-item" onclick="showToast('Exporting CSV…', 'success')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/></svg>
-              导出为 CSV
+              Export as CSV
               <span class="dm-shortcut">.csv</span>
             </button>
             <div class="dm-sep"></div>
-            <button class="dm-item" onclick="showToast('已发送邮件至 super@fangyuancan.com')">
+            <button class="dm-item" onclick="showToast('Report sent to super@fangyuancan.com')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
-              发送到邮箱
+              Send to Email
             </button>
           </div>
         </div>
 
-        <button class="btn btn-primary btn-md" onclick="showToast('打开新增订单', 'success')">
+        <button class="btn btn-primary btn-md" onclick="showToast('New order form opened', 'success')">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          新增订单
+          New Order
         </button>
       </div>
     </div>
 
-    <!-- ──────────────── KPI CARDS ──────────────── -->
+    <!-- KPI CARDS -->
     <div class="kpi-grid">
-      <!-- 今日营收 -->
+      <!-- Weekly Revenue -->
       <div class="kpi-card">
         <div class="kpi-card-header">
           <div class="kpi-card-icon amber">
@@ -849,10 +754,10 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
           </span>
         </div>
         <div class="kpi-value"><span>¥</span>24,680</div>
-        <div class="kpi-label">本周营收</div>
-        <div class="kpi-compare">较上周 +¥2,740</div>
+        <div class="kpi-label">Weekly Revenue</div>
+        <div class="kpi-compare">vs. last week +¥2,740</div>
       </div>
-      <!-- 订单量 -->
+      <!-- Order Count -->
       <div class="kpi-card">
         <div class="kpi-card-header">
           <div class="kpi-card-icon green">
@@ -864,10 +769,10 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
           </span>
         </div>
         <div class="kpi-value">1,247</div>
-        <div class="kpi-label">本周订单量</div>
-        <div class="kpi-compare">较上周 +94 单</div>
+        <div class="kpi-label">Weekly Orders</div>
+        <div class="kpi-compare">vs. last week +94 orders</div>
       </div>
-      <!-- 客单价 -->
+      <!-- Avg. Spend per Guest -->
       <div class="kpi-card">
         <div class="kpi-card-header">
           <div class="kpi-card-icon blue">
@@ -879,10 +784,10 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
           </span>
         </div>
         <div class="kpi-value"><span>¥</span>198</div>
-        <div class="kpi-label">平均客单价</div>
-        <div class="kpi-compare">较上周 +¥7.3</div>
+        <div class="kpi-label">Avg. Spend per Guest</div>
+        <div class="kpi-compare">vs. last week +¥7.3</div>
       </div>
-      <!-- 好评率 -->
+      <!-- Satisfaction Rate -->
       <div class="kpi-card">
         <div class="kpi-card-header">
           <div class="kpi-card-icon purple">
@@ -894,48 +799,48 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
           </span>
         </div>
         <div class="kpi-value">96.8<span>%</span></div>
-        <div class="kpi-label">顾客好评率</div>
-        <div class="kpi-compare">评价总量 342 条</div>
+        <div class="kpi-label">Guest Satisfaction</div>
+        <div class="kpi-compare">342 reviews total</div>
       </div>
     </div>
 
-    <!-- ──────────────── TWO-COL SECTION ──────────────── -->
+    <!-- TWO-COL SECTION -->
     <div class="two-col">
 
       <!-- Left: Revenue Chart -->
       <div class="card">
         <div class="card-header">
           <div>
-            <div class="card-title">本周营收趋势</div>
-            <div class="card-subtitle">各日营业额对比（元）</div>
+            <div class="card-title">Weekly Revenue Trend</div>
+            <div class="card-subtitle">Daily revenue comparison (¥)</div>
           </div>
           <div style="display:flex;gap:6px;">
-            <button class="btn btn-ghost btn-sm" style="font-size:11px;" onclick="showToast('切换至上周对比')">对比上周</button>
+            <button class="btn btn-ghost btn-sm" style="font-size:11px;" onclick="showToast('Compare with last week')">Compare Last Week</button>
             <!-- More options dropdown -->
             <div class="dropdown-wrap">
               <button class="icon-btn" style="width:28px;height:28px;" id="chart-more-btn" onclick="toggleDropdown('chart-more', event)">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
               </button>
               <div class="dropdown-menu top-right" id="dd-chart-more">
-                <button class="dm-item" onclick="showToast('已切换到日视图')">
+                <button class="dm-item" onclick="showToast('Switched to daily view')">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                  按日查看
+                  View by Day
                   <span class="dm-check">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                   </span>
                 </button>
-                <button class="dm-item" onclick="showToast('已切换到周视图')">
+                <button class="dm-item" onclick="showToast('Switched to weekly view')">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 3v18h18"/><polyline points="18.5 3 10 12 6 8 3 11"/></svg>
-                  按周查看
+                  View by Week
                 </button>
-                <button class="dm-item" onclick="showToast('已切换到月视图')">
+                <button class="dm-item" onclick="showToast('Switched to monthly view')">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-                  按月查看
+                  View by Month
                 </button>
                 <div class="dm-sep"></div>
-                <button class="dm-item" onclick="showToast('正在导出图表图片…', 'success')">
+                <button class="dm-item" onclick="showToast('Exporting chart image…', 'success')">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-                  导出图片
+                  Export Image
                 </button>
               </div>
             </div>
@@ -952,51 +857,51 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
             </div>
             <div class="chart-wrap" style="flex:1;">
               <div class="chart-bar-col">
-                <div class="chart-bar-track"><div class="chart-bar" style="height:55%;" title="周一 ¥4,400"></div></div>
-                <span class="chart-bar-label">周一</span>
+                <div class="chart-bar-track"><div class="chart-bar" style="height:55%;" title="Mon ¥4,400"></div></div>
+                <span class="chart-bar-label">Mon</span>
               </div>
               <div class="chart-bar-col">
-                <div class="chart-bar-track"><div class="chart-bar" style="height:70%;" title="周二 ¥5,600"></div></div>
-                <span class="chart-bar-label">周二</span>
+                <div class="chart-bar-track"><div class="chart-bar" style="height:70%;" title="Tue ¥5,600"></div></div>
+                <span class="chart-bar-label">Tue</span>
               </div>
               <div class="chart-bar-col">
-                <div class="chart-bar-track"><div class="chart-bar" style="height:62%;" title="周三 ¥4,960"></div></div>
-                <span class="chart-bar-label">周三</span>
+                <div class="chart-bar-track"><div class="chart-bar" style="height:62%;" title="Wed ¥4,960"></div></div>
+                <span class="chart-bar-label">Wed</span>
               </div>
               <div class="chart-bar-col">
-                <div class="chart-bar-track"><div class="chart-bar" style="height:85%;" title="周四 ¥6,800"></div></div>
-                <span class="chart-bar-label">周四</span>
+                <div class="chart-bar-track"><div class="chart-bar" style="height:85%;" title="Thu ¥6,800"></div></div>
+                <span class="chart-bar-label">Thu</span>
               </div>
               <div class="chart-bar-col">
-                <div class="chart-bar-track"><div class="chart-bar" style="height:100%;" title="周五 ¥8,000"></div></div>
-                <span class="chart-bar-label">周五</span>
+                <div class="chart-bar-track"><div class="chart-bar" style="height:100%;" title="Fri ¥8,000"></div></div>
+                <span class="chart-bar-label">Fri</span>
               </div>
               <div class="chart-bar-col">
-                <div class="chart-bar-track"><div class="chart-bar active" style="height:95%;" title="周六（今日） ¥7,600"></div></div>
-                <span class="chart-bar-label" style="color:var(--amber-10);font-weight:600;">周六</span>
+                <div class="chart-bar-track"><div class="chart-bar active" style="height:95%;" title="Sat (Today) ¥7,600"></div></div>
+                <span class="chart-bar-label" style="color:var(--amber-10);font-weight:600;">Sat</span>
               </div>
               <div class="chart-bar-col">
-                <div class="chart-bar-track"><div class="chart-bar" style="height:20%;background:var(--gray-3);" title="周日 待统计"></div></div>
-                <span class="chart-bar-label">周日</span>
+                <div class="chart-bar-track"><div class="chart-bar" style="height:20%;background:var(--gray-3);" title="Sun — Pending"></div></div>
+                <span class="chart-bar-label">Sun</span>
               </div>
             </div>
           </div>
           <div style="display:flex;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid var(--gray-3);">
             <div style="text-align:center;">
-              <div style="font-size:11px;color:var(--gray-8);">峰值日</div>
-              <div style="font-size:13px;font-weight:600;color:var(--gray-12);margin-top:2px;">周五</div>
+              <div style="font-size:11px;color:var(--gray-8);">Peak Day</div>
+              <div style="font-size:13px;font-weight:600;color:var(--gray-12);margin-top:2px;">Fri</div>
             </div>
             <div style="text-align:center;">
-              <div style="font-size:11px;color:var(--gray-8);">峰值营收</div>
+              <div style="font-size:11px;color:var(--gray-8);">Peak Revenue</div>
               <div style="font-size:13px;font-weight:600;color:var(--amber-10);margin-top:2px;">¥8,000</div>
             </div>
             <div style="text-align:center;">
-              <div style="font-size:11px;color:var(--gray-8);">日均营收</div>
+              <div style="font-size:11px;color:var(--gray-8);">Daily Avg.</div>
               <div style="font-size:13px;font-weight:600;color:var(--gray-12);margin-top:2px;">¥4,113</div>
             </div>
             <div style="text-align:center;">
-              <div style="font-size:11px;color:var(--gray-8);">最低日</div>
-              <div style="font-size:13px;font-weight:600;color:var(--gray-12);margin-top:2px;">周一</div>
+              <div style="font-size:11px;color:var(--gray-8);">Lowest Day</div>
+              <div style="font-size:13px;font-weight:600;color:var(--gray-12);margin-top:2px;">Mon</div>
             </div>
           </div>
         </div>
@@ -1006,18 +911,18 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
       <div class="card">
         <div class="card-header">
           <div>
-            <div class="card-title">热销菜品 TOP 5</div>
-            <div class="card-subtitle">本周销售额排行</div>
+            <div class="card-title">Top 5 Best Sellers</div>
+            <div class="card-subtitle">Weekly sales ranking</div>
           </div>
-          <button class="btn btn-ghost btn-sm" onclick="showToast('查看完整菜品分析')">查看全部</button>
+          <button class="btn btn-ghost btn-sm" onclick="showToast('View full dish analytics')">View All</button>
         </div>
         <div class="card-body" style="padding:16px 20px;">
           <div class="dish-item">
             <div class="dish-rank top">1</div>
             <div class="dish-img">🍖</div>
             <div style="flex:1;">
-              <div class="dish-name">秘制红烧肉</div>
-              <div class="dish-meta">主菜 · 188 份</div>
+              <div class="dish-name">Signature Braised Pork</div>
+              <div class="dish-meta">Main · 188 servings</div>
             </div>
             <div>
               <div class="dish-revenue">¥5,452</div>
@@ -1028,8 +933,8 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
             <div class="dish-rank top">2</div>
             <div class="dish-img">🦞</div>
             <div style="flex:1;">
-              <div class="dish-name">麻辣小龙虾</div>
-              <div class="dish-meta">特色 · 134 份</div>
+              <div class="dish-name">Spicy Crayfish</div>
+              <div class="dish-meta">Specialty · 134 servings</div>
             </div>
             <div>
               <div class="dish-revenue">¥4,020</div>
@@ -1040,8 +945,8 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
             <div class="dish-rank top">3</div>
             <div class="dish-img">🍲</div>
             <div style="flex:1;">
-              <div class="dish-name">招牌火锅底料</div>
-              <div class="dish-meta">主食 · 112 份</div>
+              <div class="dish-name">Signature Hotpot Base</div>
+              <div class="dish-meta">Staple · 112 servings</div>
             </div>
             <div>
               <div class="dish-revenue">¥3,136</div>
@@ -1052,8 +957,8 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
             <div class="dish-rank">4</div>
             <div class="dish-img">🥩</div>
             <div style="flex:1;">
-              <div class="dish-name">黑椒牛柳</div>
-              <div class="dish-meta">主菜 · 98 份</div>
+              <div class="dish-name">Black Pepper Beef</div>
+              <div class="dish-meta">Main · 98 servings</div>
             </div>
             <div>
               <div class="dish-revenue">¥2,744</div>
@@ -1064,8 +969,8 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
             <div class="dish-rank">5</div>
             <div class="dish-img">🥗</div>
             <div style="flex:1;">
-              <div class="dish-name">手撕包菜</div>
-              <div class="dish-meta">小炒 · 207 份</div>
+              <div class="dish-name">Torn Cabbage</div>
+              <div class="dish-meta">Stir-fry · 207 servings</div>
             </div>
             <div>
               <div class="dish-revenue">¥2,070</div>
@@ -1076,135 +981,135 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
       </div>
     </div>
 
-    <!-- ──────────────── STORE CARDS ──────────────── -->
+    <!-- STORE STATUS CARDS -->
     <div class="card" style="margin-bottom:20px;">
       <div class="card-header">
         <div>
-          <div class="card-title">门店营业状态</div>
-          <div class="card-subtitle">实时在线监控 · 4 家门店</div>
+          <div class="card-title">Store Status</div>
+          <div class="card-subtitle">Real-time monitoring · 4 stores</div>
         </div>
-        <button class="btn btn-outline btn-sm" onclick="showToast('前往门店管理')">管理门店</button>
+        <button class="btn btn-outline btn-sm" onclick="showToast('Go to Store Management')">Manage Stores</button>
       </div>
       <div class="store-grid">
         <!-- Store 1 -->
         <div class="store-card">
           <div class="store-card-header">
             <div>
-              <div class="store-card-name">望京店（总店）</div>
-              <div class="store-card-addr">朝阳区望京 SOHO T2 B1</div>
+              <div class="store-card-name">Wangjing (Main)</div>
+              <div class="store-card-addr">Chaoyang, Wangjing SOHO T2 B1</div>
             </div>
-            <span class="badge badge-green">营业中</span>
+            <span class="badge badge-green">Open</span>
           </div>
-          <div class="store-stat"><span>今日营收</span><strong>¥7,680</strong></div>
-          <div class="store-stat"><span>今日订单</span><strong>186 单</strong></div>
-          <div class="store-stat"><span>在座率</span><strong>73%</strong></div>
+          <div class="store-stat"><span>Today's Revenue</span><strong>¥7,680</strong></div>
+          <div class="store-stat"><span>Today's Orders</span><strong>186</strong></div>
+          <div class="store-stat"><span>Seat Occupancy</span><strong>73%</strong></div>
         </div>
         <!-- Store 2 -->
         <div class="store-card">
           <div class="store-card-header">
             <div>
-              <div class="store-card-name">三里屯店</div>
-              <div class="store-card-addr">朝阳区三里屯太古里北区</div>
+              <div class="store-card-name">Sanlitun</div>
+              <div class="store-card-addr">Chaoyang, Sanlitun Taikoo Li North</div>
             </div>
-            <span class="badge badge-green">营业中</span>
+            <span class="badge badge-green">Open</span>
           </div>
-          <div class="store-stat"><span>今日营收</span><strong>¥5,420</strong></div>
-          <div class="store-stat"><span>今日订单</span><strong>124 单</strong></div>
-          <div class="store-stat"><span>在座率</span><strong>61%</strong></div>
+          <div class="store-stat"><span>Today's Revenue</span><strong>¥5,420</strong></div>
+          <div class="store-stat"><span>Today's Orders</span><strong>124</strong></div>
+          <div class="store-stat"><span>Seat Occupancy</span><strong>61%</strong></div>
         </div>
         <!-- Store 3 -->
         <div class="store-card">
           <div class="store-card-header">
             <div>
-              <div class="store-card-name">国贸店</div>
-              <div class="store-card-addr">朝阳区建国路 74 号</div>
+              <div class="store-card-name">Guomao</div>
+              <div class="store-card-addr">Chaoyang, Jianguo Rd. No. 74</div>
             </div>
-            <span class="badge badge-amber">午休中</span>
+            <span class="badge badge-amber">Lunch Break</span>
           </div>
-          <div class="store-stat"><span>今日营收</span><strong>¥3,260</strong></div>
-          <div class="store-stat"><span>今日订单</span><strong>89 单</strong></div>
-          <div class="store-stat"><span>在座率</span><strong>—</strong></div>
+          <div class="store-stat"><span>Today's Revenue</span><strong>¥3,260</strong></div>
+          <div class="store-stat"><span>Today's Orders</span><strong>89</strong></div>
+          <div class="store-stat"><span>Seat Occupancy</span><strong>—</strong></div>
         </div>
         <!-- Store 4 -->
         <div class="store-card" style="opacity:.7;">
           <div class="store-card-header">
             <div>
-              <div class="store-card-name">朝阳店</div>
-              <div class="store-card-addr">朝阳区朝阳公园路 8 号</div>
+              <div class="store-card-name">Chaoyang</div>
+              <div class="store-card-addr">Chaoyang, Chaoyang Park Rd. No. 8</div>
             </div>
-            <span class="badge badge-gray">筹备中</span>
+            <span class="badge badge-gray">Coming Soon</span>
           </div>
-          <div class="store-stat"><span>预计开业</span><strong>2025.08</strong></div>
-          <div class="store-stat"><span>装修进度</span><strong>68%</strong></div>
-          <div class="store-stat"><span>招聘状态</span><strong>进行中</strong></div>
+          <div class="store-stat"><span>Est. Opening</span><strong>2025.08</strong></div>
+          <div class="store-stat"><span>Renovation</span><strong>68%</strong></div>
+          <div class="store-stat"><span>Hiring Status</span><strong>In Progress</strong></div>
         </div>
       </div>
     </div>
 
-    <!-- ──────────────── RECENT ORDERS TABLE ──────────────── -->
+    <!-- RECENT ORDERS TABLE -->
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">今日最新订单</div>
-          <div class="card-subtitle">实时更新 · 共 186 单</div>
+          <div class="card-title">Latest Orders Today</div>
+          <div class="card-subtitle">Live updates · 186 orders total</div>
         </div>
         <div style="display:flex;gap:8px;align-items:center;">
           <!-- Filter Dropdown -->
           <div class="dropdown-wrap">
             <button class="btn btn-outline btn-sm" id="filter-btn" onclick="toggleDropdown('filter', event)">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-              筛选
+              Filter
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="dropdown-menu top-right" id="dd-filter">
-              <div class="dm-label">订单状态</div>
+              <div class="dm-label">Order Status</div>
               <button class="dm-item active" onclick="filterOrders('all', this)">
-                全部订单
+                All Orders
                 <span class="dm-check"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
               </button>
-              <button class="dm-item" onclick="filterOrders('pending', this)">待确认</button>
-              <button class="dm-item" onclick="filterOrders('cooking', this)">制作中</button>
-              <button class="dm-item" onclick="filterOrders('ready', this)">待上桌</button>
-              <button class="dm-item" onclick="filterOrders('done', this)">已完成</button>
-              <button class="dm-item" onclick="filterOrders('refund', this)">已退单</button>
+              <button class="dm-item" onclick="filterOrders('pending', this)">Pending</button>
+              <button class="dm-item" onclick="filterOrders('cooking', this)">In Kitchen</button>
+              <button class="dm-item" onclick="filterOrders('ready', this)">Ready to Serve</button>
+              <button class="dm-item" onclick="filterOrders('done', this)">Completed</button>
+              <button class="dm-item" onclick="filterOrders('refund', this)">Refunded</button>
               <div class="dm-sep"></div>
-              <div class="dm-label">支付方式</div>
-              <button class="dm-item" onclick="showToast('筛选：微信支付')">微信支付</button>
-              <button class="dm-item" onclick="showToast('筛选：支付宝')">支付宝</button>
-              <button class="dm-item" onclick="showToast('筛选：现金')">现金</button>
+              <div class="dm-label">Payment Method</div>
+              <button class="dm-item" onclick="showToast('Filter: WeChat Pay')">WeChat Pay</button>
+              <button class="dm-item" onclick="showToast('Filter: Alipay')">Alipay</button>
+              <button class="dm-item" onclick="showToast('Filter: Cash')">Cash</button>
             </div>
           </div>
-          <button class="btn btn-primary btn-sm" onclick="showToast('查看全部订单')">查看全部</button>
+          <button class="btn btn-primary btn-sm" onclick="showToast('View all orders')">View All</button>
         </div>
       </div>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>订单号</th>
-              <th>桌位</th>
-              <th>菜品</th>
-              <th>金额</th>
-              <th>支付方式</th>
-              <th>状态</th>
-              <th>下单时间</th>
-              <th style="text-align:right;">操作</th>
+              <th>Order #</th>
+              <th>Table</th>
+              <th>Items</th>
+              <th>Amount</th>
+              <th>Payment</th>
+              <th>Status</th>
+              <th>Order Time</th>
+              <th style="text-align:right;">Actions</th>
             </tr>
           </thead>
           <tbody id="orders-tbody">
             <tr>
               <td><span class="td-mono">#ORD-20250604-0186</span></td>
               <td><span style="font-weight:600;">A03</span></td>
-              <td><span style="color:var(--gray-9);">红烧肉、小龙虾+2</span></td>
+              <td><span style="color:var(--gray-9);">Braised Pork, Spicy Crayfish +2</span></td>
               <td><span style="font-weight:600;color:var(--gray-12);">¥268.00</span></td>
-              <td><span style="color:var(--gray-9);">微信</span></td>
-              <td><span class="badge badge-amber" data-status="pending">待确认</span></td>
+              <td><span style="color:var(--gray-9);">WeChat</span></td>
+              <td><span class="badge badge-amber" data-status="pending">Pending</span></td>
               <td><span style="color:var(--gray-8);font-size:12px;">14:32</span></td>
               <td style="text-align:right;">
                 <div class="row-actions" style="justify-content:flex-end;">
-                  <button class="row-action-btn" onclick="showToast('查看订单详情 #0186')">
+                  <button class="row-action-btn" onclick="showToast('View order details #0186')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                    详情
+                    Details
                   </button>
                   <!-- Row Action Dropdown -->
                   <div class="dropdown-wrap">
@@ -1212,22 +1117,22 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
                     </button>
                     <div class="dropdown-menu top-right" id="dd-row-0186">
-                      <button class="dm-item" onclick="showToast('确认订单 #0186', 'success')">
+                      <button class="dm-item" onclick="showToast('Order #0186 confirmed', 'success')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
-                        确认订单
+                        Confirm Order
                       </button>
-                      <button class="dm-item" onclick="showToast('打印订单 #0186')">
+                      <button class="dm-item" onclick="showToast('Printing order #0186')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-                        打印小票
+                        Print Receipt
                       </button>
-                      <button class="dm-item" onclick="showToast('催单 #0186')">
+                      <button class="dm-item" onclick="showToast('Rush order #0186')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
-                        催单提醒
+                        Rush Order
                       </button>
                       <div class="dm-sep"></div>
-                      <button class="dm-item destructive" onclick="showToast('已提交退单申请 #0186', 'warning')">
+                      <button class="dm-item destructive" onclick="showToast('Refund request submitted #0186', 'warning')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-                        申请退单
+                        Request Refund
                       </button>
                     </div>
                   </div>
@@ -1237,38 +1142,38 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
             <tr>
               <td><span class="td-mono">#ORD-20250604-0185</span></td>
               <td><span style="font-weight:600;">B07</span></td>
-              <td><span style="color:var(--gray-9);">麻辣锅底、牛肉卷+5</span></td>
+              <td><span style="color:var(--gray-9);">Spicy Hotpot Base, Beef Rolls +5</span></td>
               <td><span style="font-weight:600;color:var(--gray-12);">¥486.00</span></td>
-              <td><span style="color:var(--gray-9);">支付宝</span></td>
-              <td><span class="badge badge-blue" data-status="cooking">制作中</span></td>
+              <td><span style="color:var(--gray-9);">Alipay</span></td>
+              <td><span class="badge badge-blue" data-status="cooking">In Kitchen</span></td>
               <td><span style="color:var(--gray-8);font-size:12px;">14:18</span></td>
               <td style="text-align:right;">
                 <div class="row-actions" style="justify-content:flex-end;">
-                  <button class="row-action-btn" onclick="showToast('查看订单详情 #0185')">
+                  <button class="row-action-btn" onclick="showToast('View order details #0185')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                    详情
+                    Details
                   </button>
                   <div class="dropdown-wrap">
                     <button class="row-action-btn" onclick="toggleDropdown('row-0185', event)">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
                     </button>
                     <div class="dropdown-menu top-right" id="dd-row-0185">
-                      <button class="dm-item" onclick="showToast('标记为已上菜 #0185', 'success')">
+                      <button class="dm-item" onclick="showToast('Marked as served #0185', 'success')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
-                        标记已上菜
+                        Mark as Served
                       </button>
-                      <button class="dm-item" onclick="showToast('打印订单 #0185')">
+                      <button class="dm-item" onclick="showToast('Printing order #0185')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-                        打印小票
+                        Print Receipt
                       </button>
-                      <button class="dm-item" onclick="showToast('修改订单 #0185')">
+                      <button class="dm-item" onclick="showToast('Edit order #0185')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                        修改订单
+                        Edit Order
                       </button>
                       <div class="dm-sep"></div>
-                      <button class="dm-item destructive" onclick="showToast('已提交退单申请 #0185', 'warning')">
+                      <button class="dm-item destructive" onclick="showToast('Refund request submitted #0185', 'warning')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-                        申请退单
+                        Request Refund
                       </button>
                     </div>
                   </div>
@@ -1278,34 +1183,34 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
             <tr>
               <td><span class="td-mono">#ORD-20250604-0184</span></td>
               <td><span style="font-weight:600;">C12</span></td>
-              <td><span style="color:var(--gray-9);">黑椒牛柳、手撕包菜</span></td>
+              <td><span style="color:var(--gray-9);">Black Pepper Beef, Torn Cabbage</span></td>
               <td><span style="font-weight:600;color:var(--gray-12);">¥152.00</span></td>
-              <td><span style="color:var(--gray-9);">微信</span></td>
-              <td><span class="badge badge-orange" data-status="ready">待上桌</span></td>
+              <td><span style="color:var(--gray-9);">WeChat</span></td>
+              <td><span class="badge badge-orange" data-status="ready">Ready to Serve</span></td>
               <td><span style="color:var(--gray-8);font-size:12px;">14:05</span></td>
               <td style="text-align:right;">
                 <div class="row-actions" style="justify-content:flex-end;">
-                  <button class="row-action-btn" onclick="showToast('查看订单详情 #0184')">
+                  <button class="row-action-btn" onclick="showToast('View order details #0184')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                    详情
+                    Details
                   </button>
                   <div class="dropdown-wrap">
                     <button class="row-action-btn" onclick="toggleDropdown('row-0184', event)">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
                     </button>
                     <div class="dropdown-menu top-right" id="dd-row-0184">
-                      <button class="dm-item" onclick="showToast('确认上桌 #0184', 'success')">
+                      <button class="dm-item" onclick="showToast('Confirmed served #0184', 'success')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
-                        确认上桌
+                        Confirm Served
                       </button>
-                      <button class="dm-item" onclick="showToast('打印订单 #0184')">
+                      <button class="dm-item" onclick="showToast('Printing order #0184')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-                        打印小票
+                        Print Receipt
                       </button>
                       <div class="dm-sep"></div>
-                      <button class="dm-item destructive" onclick="showToast('申请退单 #0184', 'warning')">
+                      <button class="dm-item destructive" onclick="showToast('Refund request #0184', 'warning')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-                        申请退单
+                        Request Refund
                       </button>
                     </div>
                   </div>
@@ -1315,29 +1220,29 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
             <tr>
               <td><span class="td-mono">#ORD-20250604-0183</span></td>
               <td><span style="font-weight:600;">A11</span></td>
-              <td><span style="color:var(--gray-9);">招牌火锅底料+8</span></td>
+              <td><span style="color:var(--gray-9);">Signature Hotpot Base +8</span></td>
               <td><span style="font-weight:600;color:var(--gray-12);">¥680.00</span></td>
-              <td><span style="color:var(--gray-9);">现金</span></td>
-              <td><span class="badge badge-green" data-status="done">已完成</span></td>
+              <td><span style="color:var(--gray-9);">Cash</span></td>
+              <td><span class="badge badge-green" data-status="done">Completed</span></td>
               <td><span style="color:var(--gray-8);font-size:12px;">13:44</span></td>
               <td style="text-align:right;">
                 <div class="row-actions" style="justify-content:flex-end;">
-                  <button class="row-action-btn" onclick="showToast('查看订单详情 #0183')">
+                  <button class="row-action-btn" onclick="showToast('View order details #0183')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                    详情
+                    Details
                   </button>
                   <div class="dropdown-wrap">
                     <button class="row-action-btn" onclick="toggleDropdown('row-0183', event)">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
                     </button>
                     <div class="dropdown-menu top-right" id="dd-row-0183">
-                      <button class="dm-item" onclick="showToast('打印订单 #0183')">
+                      <button class="dm-item" onclick="showToast('Printing order #0183')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-                        打印小票
+                        Print Receipt
                       </button>
-                      <button class="dm-item" onclick="showToast('发送评价邀请 #0183')">
+                      <button class="dm-item" onclick="showToast('Review invite sent #0183')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        邀请评价
+                        Request Review
                       </button>
                     </div>
                   </div>
@@ -1347,29 +1252,29 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
             <tr>
               <td><span class="td-mono">#ORD-20250604-0181</span></td>
               <td><span style="font-weight:600;">D02</span></td>
-              <td><span style="color:var(--gray-9);">秘制红烧肉、手撕包菜</span></td>
+              <td><span style="color:var(--gray-9);">Signature Braised Pork, Torn Cabbage</span></td>
               <td><span style="font-weight:600;color:var(--gray-10);text-decoration:line-through;">¥198.00</span></td>
-              <td><span style="color:var(--gray-9);">微信</span></td>
-              <td><span class="badge badge-red" data-status="refund">已退单</span></td>
+              <td><span style="color:var(--gray-9);">WeChat</span></td>
+              <td><span class="badge badge-red" data-status="refund">Refunded</span></td>
               <td><span style="color:var(--gray-8);font-size:12px;">13:12</span></td>
               <td style="text-align:right;">
                 <div class="row-actions" style="justify-content:flex-end;">
-                  <button class="row-action-btn" onclick="showToast('查看退单详情 #0181')">
+                  <button class="row-action-btn" onclick="showToast('View refund details #0181')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                    详情
+                    Details
                   </button>
                   <div class="dropdown-wrap">
                     <button class="row-action-btn" onclick="toggleDropdown('row-0181', event)">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
                     </button>
                     <div class="dropdown-menu top-right" id="dd-row-0181">
-                      <button class="dm-item" onclick="showToast('查看退单原因 #0181')">
+                      <button class="dm-item" onclick="showToast('View refund reason #0181')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                        退单原因
+                        Refund Reason
                       </button>
-                      <button class="dm-item" onclick="showToast('已处理退款 #0181', 'success')">
+                      <button class="dm-item" onclick="showToast('Refund processed #0181', 'success')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
-                        处理退款
+                        Process Refund
                       </button>
                     </div>
                   </div>
@@ -1381,15 +1286,15 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
       </div>
       <div class="card-footer">
         <div style="display:flex;align-items:center;justify-content:space-between;">
-          <span style="font-size:12px;color:var(--gray-8);">显示最新 5 条 · 共 186 条</span>
+          <span style="font-size:12px;color:var(--gray-8);">Showing latest 5 · 186 total</span>
           <div style="display:flex;gap:6px;">
-            <button class="btn btn-ghost btn-xs" style="color:var(--gray-9);" disabled>上一页</button>
+            <button class="btn btn-ghost btn-xs" style="color:var(--gray-9);" disabled>Prev</button>
             <button class="btn btn-outline btn-xs" style="background:var(--gray-12);color:#fff;border-color:var(--gray-12);">1</button>
-            <button class="btn btn-ghost btn-xs" onclick="showToast('第2页')">2</button>
-            <button class="btn btn-ghost btn-xs" onclick="showToast('第3页')">3</button>
+            <button class="btn btn-ghost btn-xs" onclick="showToast('Page 2')">2</button>
+            <button class="btn btn-ghost btn-xs" onclick="showToast('Page 3')">3</button>
             <span style="padding:0 4px;color:var(--gray-8);font-size:12px;line-height:24px;">…</span>
-            <button class="btn btn-ghost btn-xs" onclick="showToast('第38页')">38</button>
-            <button class="btn btn-ghost btn-xs" onclick="showToast('下一页')">下一页</button>
+            <button class="btn btn-ghost btn-xs" onclick="showToast('Page 38')">38</button>
+            <button class="btn btn-ghost btn-xs" onclick="showToast('Next page')">Next</button>
           </div>
         </div>
       </div>
@@ -1459,7 +1364,7 @@ function toggleSbSub(id) {
 function switchDateTab(btn) {
   btn.closest('.date-tabs').querySelectorAll('.date-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
-  showToast('已切换至' + btn.textContent + '数据');
+  showToast('Switched to ' + btn.textContent + ' data');
 }
 
 // ══════════════════════════════════════
@@ -1488,7 +1393,7 @@ function filterOrders(status, btn) {
   });
 
   closeAllDropdowns();
-  if (status !== 'all') showToast('已筛选：' + btn.textContent.trim());
+  if (status !== 'all') showToast('Filtered: ' + btn.textContent.trim());
 }
 
 // ══════════════════════════════════════

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>餐饮管理系统 — 门店管理</title>
+<title>Restaurant Management System — Store Management</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <style>
@@ -30,13 +30,16 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
   position:fixed; top:0; left:0; right:0; z-index:200;
   height:var(--topbar-h); background:var(--surface);
   display:flex; align-items:center; padding:0 20px; gap:12px;
-  border-bottom:1px solid var(--border);
 }
 .topbar-brand { display:flex; align-items:center; gap:9px; text-decoration:none; }
 .brand-icon { width:30px; height:30px; border-radius:8px; background:var(--gray-12); display:flex; align-items:center; justify-content:center; }
 .brand-icon svg { color:#FFA902; }
 .brand-name { font-size:14px; font-weight:700; color:var(--gray-12); letter-spacing:-0.03em; }
 .brand-divider { width:1px; height:16px; background:var(--border); margin:0 2px; }
+.topbar-path { display:flex; align-items:center; gap:6px; }
+.tp-parent { font-size:13px; color:var(--gray-8); }
+.tp-sep { font-size:13px; color:var(--gray-7); }
+.tp-current { font-size:13px; font-weight:600; color:var(--gray-12); }
 .topbar-nav { display:flex; align-items:center; gap:2px; }
 .topbar-nav-item {
   height:32px; padding:0 12px; border-radius:6px;
@@ -282,7 +285,7 @@ tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-ali
 .info-value { font-size:13px; font-weight:500; color:var(--gray-12); }
 .drawer-footer { padding:16px 24px; border-top:1px solid var(--gray-3); display:flex; gap:10px; justify-content:flex-end; flex-shrink:0; }
 
-/* ── TABLE LIST (桌位) ── */
+/* ── TABLE LIST (seating) ── */
 .table-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
 .table-item {
   aspect-ratio:1; border-radius:10px; display:flex; flex-direction:column;
@@ -375,65 +378,34 @@ tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-ali
 <header class="topbar">
   <a class="topbar-brand" href="restaurant-dashboard.html">
     <div class="brand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
-    <span class="brand-name">餐饮管家</span>
+    <span class="brand-name">Restaurant Manager</span>
   </a>
   <div class="brand-divider"></div>
-  <nav class="topbar-nav">
-    <a class="topbar-nav-item" href="restaurant-dashboard.html">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      总览
-    </a>
-    <div class="dropdown-wrap">
-      <button class="topbar-nav-item" onclick="toggleDropdown('nav-order', event)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-        点餐管理
-        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="dropdown-menu top-left" id="dd-nav-order">
-        <button class="dm-item" onclick="showToast('跳转至今日订单')">今日订单</button>
-        <button class="dm-item" onclick="showToast('跳转至历史订单')">历史订单</button>
-        <button class="dm-item" onclick="showToast('跳转至退单管理')">退单管理</button>
-        <div class="dm-sep"></div>
-        <button class="dm-item" onclick="showToast('跳转至菜品管理')">菜品管理</button>
-        <button class="dm-item" onclick="showToast('跳转至套餐配置')">套餐配置</button>
-      </div>
-    </div>
-    <button class="topbar-nav-item active">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-      门店管理
-    </button>
-    <button class="topbar-nav-item" onclick="showToast('数据报表')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-      数据报表
-    </button>
-    <button class="topbar-nav-item" onclick="showToast('员工管理')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-      员工管理
-    </button>
-  </nav>
+  <span class="topbar-path"><span class="tp-parent">Restaurant Manager</span><span class="tp-sep">/</span><span class="tp-current">Store Management</span></span>
+
   <div class="topbar-spacer"></div>
   <div class="topbar-actions">
-    <button class="icon-btn" onclick="showToast('通知中心')">
+    <button class="icon-btn" onclick="showToast('Notification Center')">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
       <span class="badge-dot"></span>
     </button>
     <div class="topbar-divider"></div>
     <div class="dropdown-wrap">
       <button class="avatar-btn" onclick="toggleDropdown('user', event)">
-        <div class="avatar">张</div>
-        <span class="avatar-name">张经理</span>
+        <div class="avatar">Z</div>
+        <span class="avatar-name">Manager Zhang</span>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--gray-8)"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
       <div class="dropdown-menu top-right" id="dd-user" style="min-width:160px;">
-        <button class="dm-item" onclick="showToast('个人资料')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>个人资料
+        <button class="dm-item" onclick="showToast('Profile')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile
         </button>
-        <button class="dm-item" onclick="showToast('账户设置')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>设置
+        <button class="dm-item" onclick="showToast('Account Settings')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings
         </button>
         <div class="dm-sep"></div>
-        <button class="dm-item destructive" onclick="showToast('已退出登录', 'warning')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>退出登录
+        <button class="dm-item destructive" onclick="showToast('Logged out', 'warning')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>Log Out
         </button>
       </div>
     </div>
@@ -442,65 +414,53 @@ tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-ali
 
 <!-- ═══ SIDEBAR ═══ -->
 <aside class="sidebar">
-  <div class="sb-section">
-    <div class="sb-label">工作台</div>
     <a class="sb-item" href="restaurant-dashboard.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      数据总览
+      Dashboard
     </a>
-    <button class="sb-item" onclick="showToast('实时大屏')">
+    <button class="sb-item" onclick="showToast('Live Display')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-      实时大屏
+      Live Display
     </button>
-  </div>
-  <div class="sb-section">
-    <div class="sb-label">点餐管理</div>
-    <button class="sb-item" onclick="showToast('订单管理')">
+    <button class="sb-item" onclick="showToast('Orders')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-      订单管理
+      Orders
       <span class="sb-badge red">32</span>
     </button>
-    <button class="sb-item" onclick="showToast('菜品管理')">
+    <button class="sb-item" onclick="showToast('Menu Management')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 2l1.5 12h15L21 2M8 22h8M12 17v5"/></svg>
-      菜品管理
+      Menu Management
     </button>
-    <button class="sb-item" onclick="showToast('桌位管理')" id="sb-table-btn">
+    <button class="sb-item" onclick="showToast('Table Management')" id="sb-table-btn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      桌位管理
+      Table Management
       <span class="sb-badge amber">12</span>
     </button>
-  </div>
-  <div class="sb-section">
-    <div class="sb-label">门店运营</div>
     <button class="sb-item active">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-      门店管理
+      Store Management
     </button>
-    <button class="sb-item" onclick="showToast('员工排班')">
+    <button class="sb-item" onclick="showToast('Staff Scheduling')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-      员工排班
+      Staff Scheduling
     </button>
-    <button class="sb-item" onclick="showToast('库存管理')">
+    <button class="sb-item" onclick="showToast('Inventory')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      库存管理
+      Inventory
       <span class="sb-badge red">3</span>
     </button>
-    <button class="sb-item" onclick="showToast('优惠活动')">
+    <button class="sb-item" onclick="showToast('Promotions')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-      优惠活动
+      Promotions
     </button>
-  </div>
-  <div class="sb-section">
-    <div class="sb-label">数据分析</div>
-    <button class="sb-item" onclick="showToast('营收报表')">
+    <button class="sb-item" onclick="showToast('Revenue Reports')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-      营收报表
+      Revenue Reports
     </button>
-    <button class="sb-item" onclick="showToast('用户分析')">
+    <button class="sb-item" onclick="showToast('Customer Analytics')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-      用户分析
+      Customer Analytics
     </button>
-  </div>
 </aside>
 
 <!-- ═══ MAIN ═══ -->
@@ -511,49 +471,49 @@ tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-ali
     <div class="page-header">
       <div>
         <div class="breadcrumb">
-          <a class="bc-item" href="restaurant-dashboard.html">工作台</a>
+          <a class="bc-item" href="restaurant-dashboard.html">Workspace</a>
           <span class="bc-sep">›</span>
-          <span class="bc-current">门店管理</span>
+          <span class="bc-current">Store Management</span>
         </div>
-        <h1 class="page-title">门店管理</h1>
-        <p class="page-subtitle">共 4 家门店 · 3 家营业中 · 1 家筹备中</p>
+        <h1 class="page-title">Store Management</h1>
+        <p class="page-subtitle">4 stores total · 3 open · 1 preparing</p>
       </div>
       <div class="page-actions">
         <!-- Filter -->
         <div class="dropdown-wrap">
           <button class="btn btn-outline btn-md" onclick="toggleDropdown('status-filter', event)">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-            全部状态
+            All Statuses
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
           <div class="dropdown-menu top-left" id="dd-status-filter">
-            <div class="dm-label">营业状态</div>
+            <div class="dm-label">Status</div>
             <button class="dm-item checked" id="filter-all" onclick="filterStores('all', this)">
-              全部门店
+              All Stores
               <svg style="margin-left:auto;color:var(--amber-9);" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
             </button>
-            <button class="dm-item" id="filter-open" onclick="filterStores('open', this)">营业中</button>
-            <button class="dm-item" id="filter-rest" onclick="filterStores('rest', this)">午休中</button>
-            <button class="dm-item" id="filter-prep" onclick="filterStores('prep', this)">筹备中</button>
-            <button class="dm-item" id="filter-closed" onclick="filterStores('closed', this)">已停业</button>
+            <button class="dm-item" id="filter-open" onclick="filterStores('open', this)">Open</button>
+            <button class="dm-item" id="filter-rest" onclick="filterStores('rest', this)">On Break</button>
+            <button class="dm-item" id="filter-prep" onclick="filterStores('prep', this)">Preparing</button>
+            <button class="dm-item" id="filter-closed" onclick="filterStores('closed', this)">Closed</button>
           </div>
         </div>
         <!-- View toggle -->
         <div class="view-toggle">
-          <button class="view-btn active" id="btn-card" onclick="switchView('card')" title="卡片视图">
+          <button class="view-btn active" id="btn-card" onclick="switchView('card')" title="Card View">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
           </button>
-          <button class="view-btn" id="btn-table" onclick="switchView('table')" title="列表视图">
+          <button class="view-btn" id="btn-table" onclick="switchView('table')" title="List View">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
           </button>
         </div>
         <div class="search-wrap">
           <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input class="search-input" placeholder="搜索门店名称…" oninput="searchStores(this.value)" />
+          <input class="search-input" placeholder="Search store name…" oninput="searchStores(this.value)" />
         </div>
         <button class="btn btn-primary btn-md" onclick="openModal()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          新增门店
+          Add Store
         </button>
       </div>
     </div>
@@ -565,28 +525,28 @@ tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-ali
           <div class="kpi-icon amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div>
         </div>
         <div class="kpi-value">4</div>
-        <div class="kpi-label">门店总数</div>
+        <div class="kpi-label">Total Stores</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-card-header">
           <div class="kpi-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
         </div>
         <div class="kpi-value" style="color:var(--green-text);">3</div>
-        <div class="kpi-label">营业中门店</div>
+        <div class="kpi-label">Open Stores</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-card-header">
           <div class="kpi-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
         </div>
         <div class="kpi-value">68</div>
-        <div class="kpi-label">员工总人数</div>
+        <div class="kpi-label">Total Staff</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-card-header">
           <div class="kpi-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
         </div>
         <div class="kpi-value">186</div>
-        <div class="kpi-label">桌位总数</div>
+        <div class="kpi-label">Total Tables</div>
       </div>
     </div>
 
@@ -594,28 +554,28 @@ tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-ali
     <div id="view-card">
       <div class="store-grid" id="store-grid">
 
-        <!-- 望京店 -->
-        <div class="store-card" data-status="open" data-name="望京店">
+        <!-- Wangjing Store -->
+        <div class="store-card" data-status="open" data-name="Wangjing Store">
           <div class="store-card-cover" style="background:linear-gradient(135deg,#fff3cc,#ffe08a);">
             <span class="store-cover-emoji">🏮</span>
-            <span class="store-cover-badge"><span class="badge badge-green">营业中</span></span>
-            <span class="store-cover-tag">总店</span>
+            <span class="store-cover-badge"><span class="badge badge-green">Open</span></span>
+            <span class="store-cover-tag">Flagship</span>
           </div>
           <div class="store-card-body">
-            <div class="store-card-name">望京店（总店）</div>
+            <div class="store-card-name">Wangjing Store (Flagship)</div>
             <div class="store-card-addr">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              朝阳区望京 SOHO T2 B1
+              Chaoyang District, Wangjing SOHO T2 B1
             </div>
             <div class="store-stats-row">
-              <div class="store-stat"><div class="store-stat-val" style="color:var(--amber-10);">¥7,680</div><div class="store-stat-label">今日营收</div></div>
-              <div class="store-stat"><div class="store-stat-val">186</div><div class="store-stat-label">今日订单</div></div>
-              <div class="store-stat"><div class="store-stat-val">73%</div><div class="store-stat-label">在座率</div></div>
+              <div class="store-stat"><div class="store-stat-val" style="color:var(--amber-10);">¥7,680</div><div class="store-stat-label">Today's Revenue</div></div>
+              <div class="store-stat"><div class="store-stat-val">186</div><div class="store-stat-label">Today's Orders</div></div>
+              <div class="store-stat"><div class="store-stat-val">73%</div><div class="store-stat-label">Occupancy</div></div>
             </div>
             <div style="margin-bottom:14px;">
               <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
-                <span style="font-size:11.5px;color:var(--gray-8);">桌位占用</span>
-                <span style="font-size:11.5px;font-weight:600;color:var(--gray-11);">38/52 桌</span>
+                <span style="font-size:11.5px;color:var(--gray-8);">Table Occupancy</span>
+                <span style="font-size:11.5px;font-weight:600;color:var(--gray-11);">38/52 tables</span>
               </div>
               <div class="prog-bar"><div class="prog-val" style="width:73%"></div></div>
             </div>
@@ -625,31 +585,31 @@ tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-ali
                 10:00 – 22:00
               </div>
               <div class="store-card-actions">
-                <button class="btn btn-ghost btn-xs" onclick="openTableView('望京店')">桌位</button>
-                <button class="btn btn-outline btn-xs" onclick="openDrawer('wangjing')">详情</button>
+                <button class="btn btn-ghost btn-xs" onclick="openTableView('Wangjing Store')">Tables</button>
+                <button class="btn btn-outline btn-xs" onclick="openDrawer('wangjing')">Details</button>
                 <div class="dropdown-wrap">
                   <button class="btn btn-ghost btn-xs" style="padding:0 6px;" onclick="toggleDropdown('store-wangjing', event)">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
                   </button>
                   <div class="dropdown-menu top-right" id="dd-store-wangjing">
                     <button class="dm-item" onclick="openDrawer('wangjing')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>查看详情
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View Details
                     </button>
-                    <button class="dm-item" onclick="showToast('编辑望京店信息')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>编辑信息
+                    <button class="dm-item" onclick="showToast('Edit Wangjing Store info')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit Info
                     </button>
-                    <button class="dm-item" onclick="openTableView('望京店')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>桌位管理
+                    <button class="dm-item" onclick="openTableView('Wangjing Store')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Table Management
                     </button>
-                    <button class="dm-item" onclick="showToast('查看望京店员工')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>员工管理
+                    <button class="dm-item" onclick="showToast('View Wangjing Store staff')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Staff Management
                     </button>
-                    <button class="dm-item" onclick="showToast('查看营收报表')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>营收报表
+                    <button class="dm-item" onclick="showToast('View revenue report')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Revenue Report
                     </button>
                     <div class="dm-sep"></div>
-                    <button class="dm-item" onclick="showToast('已暂停营业', 'warning')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>暂停营业
+                    <button class="dm-item" onclick="showToast('Store paused', 'warning')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>Pause Operations
                     </button>
                   </div>
                 </div>
@@ -658,27 +618,27 @@ tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-ali
           </div>
         </div>
 
-        <!-- 三里屯店 -->
-        <div class="store-card" data-status="open" data-name="三里屯店">
+        <!-- Sanlitun Store -->
+        <div class="store-card" data-status="open" data-name="Sanlitun Store">
           <div class="store-card-cover" style="background:linear-gradient(135deg,#d1f5ea,#a7eddb);">
             <span class="store-cover-emoji">🍜</span>
-            <span class="store-cover-badge"><span class="badge badge-green">营业中</span></span>
+            <span class="store-cover-badge"><span class="badge badge-green">Open</span></span>
           </div>
           <div class="store-card-body">
-            <div class="store-card-name">三里屯店</div>
+            <div class="store-card-name">Sanlitun Store</div>
             <div class="store-card-addr">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              朝阳区三里屯太古里北区 N4
+              Chaoyang District, Sanlitun Taikoo Li North N4
             </div>
             <div class="store-stats-row">
-              <div class="store-stat"><div class="store-stat-val" style="color:var(--amber-10);">¥5,420</div><div class="store-stat-label">今日营收</div></div>
-              <div class="store-stat"><div class="store-stat-val">124</div><div class="store-stat-label">今日订单</div></div>
-              <div class="store-stat"><div class="store-stat-val">61%</div><div class="store-stat-label">在座率</div></div>
+              <div class="store-stat"><div class="store-stat-val" style="color:var(--amber-10);">¥5,420</div><div class="store-stat-label">Today's Revenue</div></div>
+              <div class="store-stat"><div class="store-stat-val">124</div><div class="store-stat-label">Today's Orders</div></div>
+              <div class="store-stat"><div class="store-stat-val">61%</div><div class="store-stat-label">Occupancy</div></div>
             </div>
             <div style="margin-bottom:14px;">
               <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
-                <span style="font-size:11.5px;color:var(--gray-8);">桌位占用</span>
-                <span style="font-size:11.5px;font-weight:600;color:var(--gray-11);">27/44 桌</span>
+                <span style="font-size:11.5px;color:var(--gray-8);">Table Occupancy</span>
+                <span style="font-size:11.5px;font-weight:600;color:var(--gray-11);">27/44 tables</span>
               </div>
               <div class="prog-bar"><div class="prog-val green" style="width:61%"></div></div>
             </div>
@@ -688,28 +648,28 @@ tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-ali
                 11:00 – 22:30
               </div>
               <div class="store-card-actions">
-                <button class="btn btn-ghost btn-xs" onclick="openTableView('三里屯店')">桌位</button>
-                <button class="btn btn-outline btn-xs" onclick="openDrawer('sanlitun')">详情</button>
+                <button class="btn btn-ghost btn-xs" onclick="openTableView('Sanlitun Store')">Tables</button>
+                <button class="btn btn-outline btn-xs" onclick="openDrawer('sanlitun')">Details</button>
                 <div class="dropdown-wrap">
                   <button class="btn btn-ghost btn-xs" style="padding:0 6px;" onclick="toggleDropdown('store-sanlitun', event)">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
                   </button>
                   <div class="dropdown-menu top-right" id="dd-store-sanlitun">
                     <button class="dm-item" onclick="openDrawer('sanlitun')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>查看详情
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View Details
                     </button>
-                    <button class="dm-item" onclick="showToast('编辑三里屯店信息')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>编辑信息
+                    <button class="dm-item" onclick="showToast('Edit Sanlitun Store info')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit Info
                     </button>
-                    <button class="dm-item" onclick="openTableView('三里屯店')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>桌位管理
+                    <button class="dm-item" onclick="openTableView('Sanlitun Store')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Table Management
                     </button>
-                    <button class="dm-item" onclick="showToast('查看三里屯店员工')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>员工管理
+                    <button class="dm-item" onclick="showToast('View Sanlitun Store staff')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Staff Management
                     </button>
                     <div class="dm-sep"></div>
-                    <button class="dm-item destructive" onclick="showToast('确认停业操作', 'warning')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>停业处理
+                    <button class="dm-item destructive" onclick="showToast('Confirm closure', 'warning')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Close Store
                     </button>
                   </div>
                 </div>
@@ -718,26 +678,26 @@ tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-ali
           </div>
         </div>
 
-        <!-- 国贸店 -->
-        <div class="store-card" data-status="rest" data-name="国贸店">
+        <!-- Guomao Store -->
+        <div class="store-card" data-status="rest" data-name="Guomao Store">
           <div class="store-card-cover" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);">
             <span class="store-cover-emoji">🥢</span>
-            <span class="store-cover-badge"><span class="badge badge-amber">午休中</span></span>
+            <span class="store-cover-badge"><span class="badge badge-amber">On Break</span></span>
           </div>
           <div class="store-card-body">
-            <div class="store-card-name">国贸店</div>
+            <div class="store-card-name">Guomao Store</div>
             <div class="store-card-addr">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              朝阳区建国路 74 号 CITIC 广场 B1
+              Chaoyang District, 74 Jianguo Road, CITIC Plaza B1
             </div>
             <div class="store-stats-row">
-              <div class="store-stat"><div class="store-stat-val" style="color:var(--amber-10);">¥3,260</div><div class="store-stat-label">今日营收</div></div>
-              <div class="store-stat"><div class="store-stat-val">89</div><div class="store-stat-label">今日订单</div></div>
-              <div class="store-stat"><div class="store-stat-val">—</div><div class="store-stat-label">在座率</div></div>
+              <div class="store-stat"><div class="store-stat-val" style="color:var(--amber-10);">¥3,260</div><div class="store-stat-label">Today's Revenue</div></div>
+              <div class="store-stat"><div class="store-stat-val">89</div><div class="store-stat-label">Today's Orders</div></div>
+              <div class="store-stat"><div class="store-stat-val">—</div><div class="store-stat-label">Occupancy</div></div>
             </div>
             <div style="margin-bottom:14px;">
               <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
-                <span style="font-size:11.5px;color:var(--gray-8);">午休恢复营业</span>
+                <span style="font-size:11.5px;color:var(--gray-8);">Reopens After Break</span>
                 <span style="font-size:11.5px;font-weight:600;color:var(--amber-10);">14:00</span>
               </div>
               <div class="prog-bar"><div class="prog-val" style="width:45%;background:var(--amber-3);"></div></div>
@@ -748,25 +708,25 @@ tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-ali
                 10:30 – 21:30
               </div>
               <div class="store-card-actions">
-                <button class="btn btn-ghost btn-xs" onclick="openTableView('国贸店')">桌位</button>
-                <button class="btn btn-outline btn-xs" onclick="openDrawer('guomao')">详情</button>
+                <button class="btn btn-ghost btn-xs" onclick="openTableView('Guomao Store')">Tables</button>
+                <button class="btn btn-outline btn-xs" onclick="openDrawer('guomao')">Details</button>
                 <div class="dropdown-wrap">
                   <button class="btn btn-ghost btn-xs" style="padding:0 6px;" onclick="toggleDropdown('store-guomao', event)">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
                   </button>
                   <div class="dropdown-menu top-right" id="dd-store-guomao">
                     <button class="dm-item" onclick="openDrawer('guomao')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>查看详情
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View Details
                     </button>
-                    <button class="dm-item" onclick="showToast('编辑国贸店信息')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>编辑信息
+                    <button class="dm-item" onclick="showToast('Edit Guomao Store info')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit Info
                     </button>
-                    <button class="dm-item" onclick="showToast('开始营业', 'success')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>立即开始营业
+                    <button class="dm-item" onclick="showToast('Open now', 'success')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>Open Now
                     </button>
                     <div class="dm-sep"></div>
-                    <button class="dm-item destructive" onclick="showToast('停业确认', 'warning')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>停业处理
+                    <button class="dm-item destructive" onclick="showToast('Confirm closure', 'warning')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Close Store
                     </button>
                   </div>
                 </div>
@@ -775,26 +735,26 @@ tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-ali
           </div>
         </div>
 
-        <!-- 朝阳店（筹备中） -->
-        <div class="store-card" data-status="prep" data-name="朝阳店" style="opacity:.8;">
+        <!-- Chaoyang Store (Preparing) -->
+        <div class="store-card" data-status="prep" data-name="Chaoyang Store" style="opacity:.8;">
           <div class="store-card-cover" style="background:linear-gradient(135deg,#f3f4f6,#e5e7eb);">
             <span class="store-cover-emoji" style="opacity:.4;">🏗️</span>
-            <span class="store-cover-badge"><span class="badge badge-gray">筹备中</span></span>
+            <span class="store-cover-badge"><span class="badge badge-gray">Preparing</span></span>
           </div>
           <div class="store-card-body">
-            <div class="store-card-name">朝阳店</div>
+            <div class="store-card-name">Chaoyang Store</div>
             <div class="store-card-addr">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              朝阳区朝阳公园路 8 号
+              Chaoyang District, 8 Chaoyang Park Road
             </div>
             <div class="store-stats-row">
-              <div class="store-stat"><div class="store-stat-val">68%</div><div class="store-stat-label">装修进度</div></div>
-              <div class="store-stat"><div class="store-stat-val">12</div><div class="store-stat-label">已招聘</div></div>
-              <div class="store-stat"><div class="store-stat-val" style="font-size:13px;font-weight:700;">8月开业</div><div class="store-stat-label">预计时间</div></div>
+              <div class="store-stat"><div class="store-stat-val">68%</div><div class="store-stat-label">Renovation</div></div>
+              <div class="store-stat"><div class="store-stat-val">12</div><div class="store-stat-label">Hired</div></div>
+              <div class="store-stat"><div class="store-stat-val" style="font-size:13px;font-weight:700;">Aug Opening</div><div class="store-stat-label">Est. Date</div></div>
             </div>
             <div style="margin-bottom:14px;">
               <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
-                <span style="font-size:11.5px;color:var(--gray-8);">筹备进度</span>
+                <span style="font-size:11.5px;color:var(--gray-8);">Preparation Progress</span>
                 <span style="font-size:11.5px;font-weight:600;color:var(--gray-11);">68%</span>
               </div>
               <div class="prog-bar"><div class="prog-val" style="width:68%;background:var(--blue-solid);"></div></div>
@@ -802,27 +762,27 @@ tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-ali
             <div class="store-card-footer">
               <div class="store-card-hours" style="color:var(--gray-7);">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                预计 2025.08 开业
+                Est. opening 2025.08
               </div>
               <div class="store-card-actions">
-                <button class="btn btn-outline btn-xs" onclick="openDrawer('chaoyang')">详情</button>
+                <button class="btn btn-outline btn-xs" onclick="openDrawer('chaoyang')">Details</button>
                 <div class="dropdown-wrap">
                   <button class="btn btn-ghost btn-xs" style="padding:0 6px;" onclick="toggleDropdown('store-chaoyang', event)">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
                   </button>
                   <div class="dropdown-menu top-right" id="dd-store-chaoyang">
                     <button class="dm-item" onclick="openDrawer('chaoyang')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>查看详情
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View Details
                     </button>
-                    <button class="dm-item" onclick="showToast('编辑朝阳店信息')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>编辑信息
+                    <button class="dm-item" onclick="showToast('Edit Chaoyang Store info')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit Info
                     </button>
-                    <button class="dm-item" onclick="showToast('更新筹备进度')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>更新进度
+                    <button class="dm-item" onclick="showToast('Update preparation progress')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Update Progress
                     </button>
                     <div class="dm-sep"></div>
-                    <button class="dm-item destructive" onclick="showToast('已取消该门店筹备', 'danger')">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>取消筹备
+                    <button class="dm-item destructive" onclick="showToast('Store preparation cancelled', 'danger')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>Cancel Preparation
                     </button>
                   </div>
                 </div>
@@ -841,136 +801,136 @@ tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-ali
           <table>
             <thead>
               <tr>
-                <th>门店名称</th>
-                <th>地址</th>
-                <th>状态</th>
-                <th>今日营收</th>
-                <th>今日订单</th>
-                <th>在座率</th>
-                <th>桌位</th>
-                <th>员工</th>
-                <th>营业时间</th>
-                <th style="text-align:right;">操作</th>
+                <th>Store Name</th>
+                <th>Address</th>
+                <th>Status</th>
+                <th>Today's Revenue</th>
+                <th>Today's Orders</th>
+                <th>Occupancy</th>
+                <th>Tables</th>
+                <th>Staff</th>
+                <th>Hours</th>
+                <th style="text-align:right;">Actions</th>
               </tr>
             </thead>
             <tbody>
-              <tr data-status="open" data-name="望京店">
-                <td><span style="font-weight:600;">望京店（总店）</span></td>
-                <td><span style="color:var(--gray-8);font-size:12px;">朝阳区望京 SOHO T2 B1</span></td>
-                <td><span class="badge badge-green">营业中</span></td>
+              <tr data-status="open" data-name="Wangjing Store">
+                <td><span style="font-weight:600;">Wangjing Store (Flagship)</span></td>
+                <td><span style="color:var(--gray-8);font-size:12px;">Chaoyang District, Wangjing SOHO T2 B1</span></td>
+                <td><span class="badge badge-green">Open</span></td>
                 <td><span style="font-weight:600;color:var(--amber-10);">¥7,680</span></td>
-                <td>186 单</td>
+                <td>186 orders</td>
                 <td>
                   <div style="display:flex;align-items:center;gap:8px;">
                     <div class="prog-bar" style="width:60px;"><div class="prog-val" style="width:73%"></div></div>
                     <span style="font-size:12px;font-weight:600;">73%</span>
                   </div>
                 </td>
-                <td>52 桌</td>
-                <td>24 人</td>
+                <td>52 tables</td>
+                <td>24 staff</td>
                 <td><span style="font-size:12px;color:var(--gray-9);">10:00–22:00</span></td>
                 <td style="text-align:right;">
                   <div style="display:flex;gap:4px;justify-content:flex-end;">
-                    <button class="btn btn-ghost btn-xs" onclick="openDrawer('wangjing')">详情</button>
-                    <button class="btn btn-ghost btn-xs" onclick="showToast('编辑望京店')">编辑</button>
+                    <button class="btn btn-ghost btn-xs" onclick="openDrawer('wangjing')">Details</button>
+                    <button class="btn btn-ghost btn-xs" onclick="showToast('Edit Wangjing Store')">Edit</button>
                     <div class="dropdown-wrap">
                       <button class="btn btn-ghost btn-xs" style="padding:0 6px;" onclick="toggleDropdown('trow-wangjing', event)">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
                       </button>
                       <div class="dropdown-menu top-right" id="dd-trow-wangjing">
-                        <button class="dm-item" onclick="openTableView('望京店')">桌位管理</button>
-                        <button class="dm-item" onclick="showToast('员工管理')">员工管理</button>
-                        <button class="dm-item" onclick="showToast('营收报表')">营收报表</button>
+                        <button class="dm-item" onclick="openTableView('Wangjing Store')">Table Management</button>
+                        <button class="dm-item" onclick="showToast('Staff Management')">Staff Management</button>
+                        <button class="dm-item" onclick="showToast('Revenue Report')">Revenue Report</button>
                         <div class="dm-sep"></div>
-                        <button class="dm-item" onclick="showToast('暂停营业', 'warning')">暂停营业</button>
+                        <button class="dm-item" onclick="showToast('Store paused', 'warning')">Pause Operations</button>
                       </div>
                     </div>
                   </div>
                 </td>
               </tr>
-              <tr data-status="open" data-name="三里屯店">
-                <td><span style="font-weight:600;">三里屯店</span></td>
-                <td><span style="color:var(--gray-8);font-size:12px;">朝阳区三里屯太古里北区 N4</span></td>
-                <td><span class="badge badge-green">营业中</span></td>
+              <tr data-status="open" data-name="Sanlitun Store">
+                <td><span style="font-weight:600;">Sanlitun Store</span></td>
+                <td><span style="color:var(--gray-8);font-size:12px;">Chaoyang District, Sanlitun Taikoo Li North N4</span></td>
+                <td><span class="badge badge-green">Open</span></td>
                 <td><span style="font-weight:600;color:var(--amber-10);">¥5,420</span></td>
-                <td>124 单</td>
+                <td>124 orders</td>
                 <td>
                   <div style="display:flex;align-items:center;gap:8px;">
                     <div class="prog-bar" style="width:60px;"><div class="prog-val green" style="width:61%"></div></div>
                     <span style="font-size:12px;font-weight:600;">61%</span>
                   </div>
                 </td>
-                <td>44 桌</td>
-                <td>18 人</td>
+                <td>44 tables</td>
+                <td>18 staff</td>
                 <td><span style="font-size:12px;color:var(--gray-9);">11:00–22:30</span></td>
                 <td style="text-align:right;">
                   <div style="display:flex;gap:4px;justify-content:flex-end;">
-                    <button class="btn btn-ghost btn-xs" onclick="openDrawer('sanlitun')">详情</button>
-                    <button class="btn btn-ghost btn-xs" onclick="showToast('编辑三里屯店')">编辑</button>
+                    <button class="btn btn-ghost btn-xs" onclick="openDrawer('sanlitun')">Details</button>
+                    <button class="btn btn-ghost btn-xs" onclick="showToast('Edit Sanlitun Store')">Edit</button>
                     <div class="dropdown-wrap">
                       <button class="btn btn-ghost btn-xs" style="padding:0 6px;" onclick="toggleDropdown('trow-sanlitun', event)">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
                       </button>
                       <div class="dropdown-menu top-right" id="dd-trow-sanlitun">
-                        <button class="dm-item" onclick="openTableView('三里屯店')">桌位管理</button>
-                        <button class="dm-item" onclick="showToast('员工管理')">员工管理</button>
+                        <button class="dm-item" onclick="openTableView('Sanlitun Store')">Table Management</button>
+                        <button class="dm-item" onclick="showToast('Staff Management')">Staff Management</button>
                         <div class="dm-sep"></div>
-                        <button class="dm-item destructive" onclick="showToast('停业确认', 'warning')">停业处理</button>
+                        <button class="dm-item destructive" onclick="showToast('Confirm closure', 'warning')">Close Store</button>
                       </div>
                     </div>
                   </div>
                 </td>
               </tr>
-              <tr data-status="rest" data-name="国贸店">
-                <td><span style="font-weight:600;">国贸店</span></td>
-                <td><span style="color:var(--gray-8);font-size:12px;">朝阳区建国路 74 号 CITIC 广场 B1</span></td>
-                <td><span class="badge badge-amber">午休中</span></td>
+              <tr data-status="rest" data-name="Guomao Store">
+                <td><span style="font-weight:600;">Guomao Store</span></td>
+                <td><span style="color:var(--gray-8);font-size:12px;">Chaoyang District, 74 Jianguo Road, CITIC Plaza B1</span></td>
+                <td><span class="badge badge-amber">On Break</span></td>
                 <td><span style="font-weight:600;color:var(--amber-10);">¥3,260</span></td>
-                <td>89 单</td>
+                <td>89 orders</td>
                 <td><span style="font-size:12px;color:var(--gray-8);">—</span></td>
-                <td>40 桌</td>
-                <td>16 人</td>
+                <td>40 tables</td>
+                <td>16 staff</td>
                 <td><span style="font-size:12px;color:var(--gray-9);">10:30–21:30</span></td>
                 <td style="text-align:right;">
                   <div style="display:flex;gap:4px;justify-content:flex-end;">
-                    <button class="btn btn-ghost btn-xs" onclick="openDrawer('guomao')">详情</button>
-                    <button class="btn btn-ghost btn-xs" onclick="showToast('编辑国贸店')">编辑</button>
+                    <button class="btn btn-ghost btn-xs" onclick="openDrawer('guomao')">Details</button>
+                    <button class="btn btn-ghost btn-xs" onclick="showToast('Edit Guomao Store')">Edit</button>
                     <div class="dropdown-wrap">
                       <button class="btn btn-ghost btn-xs" style="padding:0 6px;" onclick="toggleDropdown('trow-guomao', event)">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
                       </button>
                       <div class="dropdown-menu top-right" id="dd-trow-guomao">
-                        <button class="dm-item" onclick="showToast('开始营业', 'success')">立即开始营业</button>
-                        <button class="dm-item" onclick="openTableView('国贸店')">桌位管理</button>
+                        <button class="dm-item" onclick="showToast('Open now', 'success')">Open Now</button>
+                        <button class="dm-item" onclick="openTableView('Guomao Store')">Table Management</button>
                         <div class="dm-sep"></div>
-                        <button class="dm-item destructive" onclick="showToast('停业确认', 'warning')">停业处理</button>
+                        <button class="dm-item destructive" onclick="showToast('Confirm closure', 'warning')">Close Store</button>
                       </div>
                     </div>
                   </div>
                 </td>
               </tr>
-              <tr data-status="prep" data-name="朝阳店">
-                <td><span style="font-weight:600;color:var(--gray-9);">朝阳店</span></td>
-                <td><span style="color:var(--gray-8);font-size:12px;">朝阳区朝阳公园路 8 号</span></td>
-                <td><span class="badge badge-gray">筹备中</span></td>
+              <tr data-status="prep" data-name="Chaoyang Store">
+                <td><span style="font-weight:600;color:var(--gray-9);">Chaoyang Store</span></td>
+                <td><span style="color:var(--gray-8);font-size:12px;">Chaoyang District, 8 Chaoyang Park Road</span></td>
+                <td><span class="badge badge-gray">Preparing</span></td>
                 <td><span style="color:var(--gray-7);">—</span></td>
                 <td><span style="color:var(--gray-7);">—</span></td>
                 <td><span style="color:var(--gray-7);">—</span></td>
-                <td>50 桌</td>
-                <td>10 人</td>
-                <td><span style="font-size:12px;color:var(--gray-8);">预计 2025.08</span></td>
+                <td>50 tables</td>
+                <td>10 staff</td>
+                <td><span style="font-size:12px;color:var(--gray-8);">Est. 2025.08</span></td>
                 <td style="text-align:right;">
                   <div style="display:flex;gap:4px;justify-content:flex-end;">
-                    <button class="btn btn-ghost btn-xs" onclick="openDrawer('chaoyang')">详情</button>
-                    <button class="btn btn-ghost btn-xs" onclick="showToast('编辑朝阳店')">编辑</button>
+                    <button class="btn btn-ghost btn-xs" onclick="openDrawer('chaoyang')">Details</button>
+                    <button class="btn btn-ghost btn-xs" onclick="showToast('Edit Chaoyang Store')">Edit</button>
                     <div class="dropdown-wrap">
                       <button class="btn btn-ghost btn-xs" style="padding:0 6px;" onclick="toggleDropdown('trow-chaoyang', event)">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
                       </button>
                       <div class="dropdown-menu top-right" id="dd-trow-chaoyang">
-                        <button class="dm-item" onclick="showToast('更新筹备进度')">更新进度</button>
+                        <button class="dm-item" onclick="showToast('Update preparation progress')">Update Progress</button>
                         <div class="dm-sep"></div>
-                        <button class="dm-item destructive" onclick="showToast('已取消筹备', 'danger')">取消筹备</button>
+                        <button class="dm-item destructive" onclick="showToast('Preparation cancelled', 'danger')">Cancel Preparation</button>
                       </div>
                     </div>
                   </div>
@@ -989,15 +949,15 @@ tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-ali
 <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
   <div class="drawer-header">
-    <span class="drawer-title" id="drawer-title">门店详情</span>
+    <span class="drawer-title" id="drawer-title">Store Details</span>
     <button class="drawer-close" onclick="closeDrawer()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
   </div>
   <div class="drawer-body" id="drawer-body"></div>
   <div class="drawer-footer">
-    <button class="btn btn-outline btn-md" onclick="closeDrawer()">关闭</button>
-    <button class="btn btn-primary btn-md" onclick="showToast('门店信息已保存', 'success'); closeDrawer();">保存更改</button>
+    <button class="btn btn-outline btn-md" onclick="closeDrawer()">Close</button>
+    <button class="btn btn-primary btn-md" onclick="showToast('Store info saved', 'success'); closeDrawer();">Save Changes</button>
   </div>
 </div>
 
@@ -1005,15 +965,15 @@ tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-ali
 <div class="drawer-overlay" id="table-overlay" onclick="closeTableView()"></div>
 <div class="drawer" id="table-drawer">
   <div class="drawer-header">
-    <span class="drawer-title" id="table-drawer-title">桌位管理</span>
+    <span class="drawer-title" id="table-drawer-title">Table Management</span>
     <button class="drawer-close" onclick="closeTableView()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
   </div>
   <div class="drawer-body" id="table-drawer-body"></div>
   <div class="drawer-footer">
-    <button class="btn btn-outline btn-md" onclick="closeTableView()">关闭</button>
-    <button class="btn btn-primary btn-md" onclick="showToast('桌位设置已保存', 'success'); closeTableView();">保存设置</button>
+    <button class="btn btn-outline btn-md" onclick="closeTableView()">Close</button>
+    <button class="btn btn-primary btn-md" onclick="showToast('Table settings saved', 'success'); closeTableView();">Save Settings</button>
   </div>
 </div>
 
@@ -1021,7 +981,7 @@ tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-ali
 <div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <div class="modal-header">
-      <span class="modal-title">新增门店</span>
+      <span class="modal-title">Add New Store</span>
       <button class="modal-close" onclick="closeModal()">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
@@ -1029,79 +989,79 @@ tbody td { padding:14px 16px; font-size:13px; color:var(--gray-11); vertical-ali
     <div class="modal-body">
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">门店名称 <span style="color:var(--red-solid)">*</span></label>
-          <input class="form-input" placeholder="例：望京店" />
+          <label class="form-label">Store Name <span style="color:var(--red-solid)">*</span></label>
+          <input class="form-input" placeholder="e.g. Wangjing Store" />
         </div>
         <div class="form-group">
-          <label class="form-label">门店类型</label>
+          <label class="form-label">Store Type</label>
           <div class="cs-wrap">
             <button type="button" class="cs-trigger" onclick="toggleCs('type', event)">
-              <span id="cs-type-label">直营店</span>
+              <span id="cs-type-label">Direct</span>
               <svg class="cs-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="cs-dropdown" id="cs-type">
-              <div class="cs-option selected" onclick="selectCs('type','直营店',this)"><span class="cs-opt-text">直营店</span><svg class="cs-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-              <div class="cs-option" onclick="selectCs('type','加盟店',this)"><span class="cs-opt-text">加盟店</span><svg class="cs-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="visibility:hidden"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="cs-option selected" onclick="selectCs('type','Direct',this)"><span class="cs-opt-text">Direct</span><svg class="cs-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="cs-option" onclick="selectCs('type','Franchise',this)"><span class="cs-opt-text">Franchise</span><svg class="cs-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="visibility:hidden"><polyline points="20 6 9 17 4 12"/></svg></div>
             </div>
           </div>
         </div>
       </div>
       <div class="form-row full">
         <div class="form-group">
-          <label class="form-label">详细地址 <span style="color:var(--red-solid)">*</span></label>
-          <input class="form-input" placeholder="例：朝阳区望京 SOHO T2 B1" />
+          <label class="form-label">Address <span style="color:var(--red-solid)">*</span></label>
+          <input class="form-input" placeholder="e.g. Chaoyang District, Wangjing SOHO T2 B1" />
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">联系电话</label>
+          <label class="form-label">Phone Number</label>
           <input class="form-input" placeholder="010-XXXX-XXXX" />
         </div>
         <div class="form-group">
-          <label class="form-label">店长姓名</label>
-          <input class="form-input" placeholder="请输入店长姓名" />
+          <label class="form-label">Store Manager</label>
+          <input class="form-input" placeholder="Enter manager name" />
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">营业开始时间</label>
+          <label class="form-label">Opening Time</label>
           <input class="form-input" type="time" value="10:00" />
         </div>
         <div class="form-group">
-          <label class="form-label">营业结束时间</label>
+          <label class="form-label">Closing Time</label>
           <input class="form-input" type="time" value="22:00" />
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">桌位总数</label>
-          <input class="form-input" type="number" placeholder="例：40" min="1" />
+          <label class="form-label">Total Tables</label>
+          <input class="form-input" type="number" placeholder="e.g. 40" min="1" />
         </div>
         <div class="form-group">
-          <label class="form-label">初始状态</label>
+          <label class="form-label">Initial Status</label>
           <div class="cs-wrap">
             <button type="button" class="cs-trigger" onclick="toggleCs('status', event)">
-              <span id="cs-status-label">筹备中</span>
+              <span id="cs-status-label">Preparing</span>
               <svg class="cs-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="cs-dropdown" id="cs-status">
-              <div class="cs-option selected" onclick="selectCs('status','筹备中',this)"><span class="cs-opt-text">筹备中</span><svg class="cs-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-              <div class="cs-option" onclick="selectCs('status','营业中',this)"><span class="cs-opt-text">营业中</span><svg class="cs-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="visibility:hidden"><polyline points="20 6 9 17 4 12"/></svg></div>
-              <div class="cs-option" onclick="selectCs('status','暂停营业',this)"><span class="cs-opt-text">暂停营业</span><svg class="cs-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="visibility:hidden"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="cs-option selected" onclick="selectCs('status','Preparing',this)"><span class="cs-opt-text">Preparing</span><svg class="cs-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="cs-option" onclick="selectCs('status','Open',this)"><span class="cs-opt-text">Open</span><svg class="cs-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="visibility:hidden"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="cs-option" onclick="selectCs('status','Paused',this)"><span class="cs-opt-text">Paused</span><svg class="cs-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="visibility:hidden"><polyline points="20 6 9 17 4 12"/></svg></div>
             </div>
           </div>
         </div>
       </div>
       <div class="form-row full">
         <div class="form-group">
-          <label class="form-label">备注</label>
-          <input class="form-input" placeholder="可选备注信息" />
+          <label class="form-label">Notes</label>
+          <input class="form-input" placeholder="Optional notes" />
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-outline btn-md" onclick="closeModal()">取消</button>
-      <button class="btn btn-primary btn-md" onclick="showToast('门店创建成功！', 'success'); closeModal();">创建门店</button>
+      <button class="btn btn-outline btn-md" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary btn-md" onclick="showToast('Store created successfully!', 'success'); closeModal();">Create Store</button>
     </div>
   </div>
 </div>
@@ -1179,47 +1139,47 @@ function filterStores(status, btn) {
 // ── Drawer ──
 const drawerData = {
   wangjing: {
-    title: '望京店（总店）',
-    status: 'green', statusLabel: '营业中',
+    title: 'Wangjing Store (Flagship)',
+    status: 'green', statusLabel: 'Open',
     info: [
-      ['门店名称','望京店（总店）'],['门店类型','直营店'],
-      ['详细地址','朝阳区望京 SOHO T2 B1'],['联系电话','010-8765-4321'],
-      ['店长','李大明'],['员工人数','24 人'],
-      ['桌位总数','52 桌'],['营业时间','10:00 – 22:00'],
-      ['月均营收','¥186,000'],['好评率','97.2%'],
+      ['Store Name','Wangjing Store (Flagship)'],['Store Type','Direct'],
+      ['Address','Chaoyang District, Wangjing SOHO T2 B1'],['Phone','010-8765-4321'],
+      ['Manager','Li Daming'],['Staff Count','24 staff'],
+      ['Total Tables','52 tables'],['Hours','10:00 – 22:00'],
+      ['Monthly Revenue','¥186,000'],['Rating','97.2%'],
     ]
   },
   sanlitun: {
-    title: '三里屯店',
-    status: 'green', statusLabel: '营业中',
+    title: 'Sanlitun Store',
+    status: 'green', statusLabel: 'Open',
     info: [
-      ['门店名称','三里屯店'],['门店类型','直营店'],
-      ['详细地址','朝阳区三里屯太古里北区 N4'],['联系电话','010-6543-2109'],
-      ['店长','王小芳'],['员工人数','18 人'],
-      ['桌位总数','44 桌'],['营业时间','11:00 – 22:30'],
-      ['月均营收','¥124,000'],['好评率','96.8%'],
+      ['Store Name','Sanlitun Store'],['Store Type','Direct'],
+      ['Address','Chaoyang District, Sanlitun Taikoo Li North N4'],['Phone','010-6543-2109'],
+      ['Manager','Wang Xiaofang'],['Staff Count','18 staff'],
+      ['Total Tables','44 tables'],['Hours','11:00 – 22:30'],
+      ['Monthly Revenue','¥124,000'],['Rating','96.8%'],
     ]
   },
   guomao: {
-    title: '国贸店',
-    status: 'amber', statusLabel: '午休中',
+    title: 'Guomao Store',
+    status: 'amber', statusLabel: 'On Break',
     info: [
-      ['门店名称','国贸店'],['门店类型','直营店'],
-      ['详细地址','朝阳区建国路 74 号 CITIC 广场 B1'],['联系电话','010-5432-1098'],
-      ['店长','张明远'],['员工人数','16 人'],
-      ['桌位总数','40 桌'],['营业时间','10:30 – 21:30'],
-      ['月均营收','¥98,000'],['好评率','95.4%'],
+      ['Store Name','Guomao Store'],['Store Type','Direct'],
+      ['Address','Chaoyang District, 74 Jianguo Road, CITIC Plaza B1'],['Phone','010-5432-1098'],
+      ['Manager','Zhang Mingyuan'],['Staff Count','16 staff'],
+      ['Total Tables','40 tables'],['Hours','10:30 – 21:30'],
+      ['Monthly Revenue','¥98,000'],['Rating','95.4%'],
     ]
   },
   chaoyang: {
-    title: '朝阳店（筹备中）',
-    status: 'gray', statusLabel: '筹备中',
+    title: 'Chaoyang Store (Preparing)',
+    status: 'gray', statusLabel: 'Preparing',
     info: [
-      ['门店名称','朝阳店'],['门店类型','直营店'],
-      ['详细地址','朝阳区朝阳公园路 8 号'],['联系电话','待定'],
-      ['负责人','赵超'],['已招聘','12 人'],
-      ['桌位总数','50 桌（规划）'],['预计营业时间','11:00 – 22:00'],
-      ['装修进度','68%'],['预计开业','2025年8月'],
+      ['Store Name','Chaoyang Store'],['Store Type','Direct'],
+      ['Address','Chaoyang District, 8 Chaoyang Park Road'],['Phone','TBD'],
+      ['In Charge','Zhao Chao'],['Hired','12 staff'],
+      ['Total Tables','50 tables (planned)'],['Planned Hours','11:00 – 22:00'],
+      ['Renovation Progress','68%'],['Est. Opening','August 2025'],
     ]
   }
 };
@@ -1235,18 +1195,18 @@ function openDrawer(key) {
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
         <span class="badge badge-${d.status}">${d.statusLabel}</span>
       </div>
-      <div class="drawer-section-title">基本信息</div>
+      <div class="drawer-section-title">Basic Info</div>
       <div class="info-grid">
         ${d.info.map(([l,v]) => `<div class="info-item"><div class="info-label">${l}</div><div class="info-value">${v}</div></div>`).join('')}
       </div>
     </div>
     <div class="drawer-section">
-      <div class="drawer-section-title">快捷操作</div>
+      <div class="drawer-section-title">Quick Actions</div>
       <div style="display:flex;flex-wrap:wrap;gap:8px;">
-        <button class="btn btn-outline btn-sm" onclick="showToast('编辑门店信息')">编辑信息</button>
-        <button class="btn btn-outline btn-sm" onclick="showToast('查看营收报表')">营收报表</button>
-        <button class="btn btn-outline btn-sm" onclick="showToast('员工管理')">员工管理</button>
-        <button class="btn btn-outline btn-sm" onclick="showToast('打印门店信息')">打印</button>
+        <button class="btn btn-outline btn-sm" onclick="showToast('Edit store info')">Edit Info</button>
+        <button class="btn btn-outline btn-sm" onclick="showToast('View revenue report')">Revenue Report</button>
+        <button class="btn btn-outline btn-sm" onclick="showToast('Staff management')">Staff Management</button>
+        <button class="btn btn-outline btn-sm" onclick="showToast('Print store info')">Print</button>
       </div>
     </div>
   `;
@@ -1260,7 +1220,7 @@ function closeDrawer() {
 
 // ── Table View ──
 const tableData = {
-  '望京店': { total:52, items:[
+  'Wangjing Store': { total:52, items:[
     {n:'A01',cap:4,st:'occupied'},{n:'A02',cap:4,st:'available'},{n:'A03',cap:6,st:'occupied'},
     {n:'A04',cap:2,st:'available'},{n:'A05',cap:4,st:'reserved'},{n:'A06',cap:8,st:'occupied'},
     {n:'B01',cap:4,st:'occupied'},{n:'B02',cap:4,st:'occupied'},{n:'B03',cap:6,st:'available'},
@@ -1270,7 +1230,7 @@ const tableData = {
     {n:'D01',cap:4,st:'occupied'},{n:'D02',cap:4,st:'available'},{n:'D03',cap:6,st:'reserved'},
     {n:'D04',cap:2,st:'unavailable'},{n:'D05',cap:4,st:'occupied'},{n:'D06',cap:6,st:'occupied'},
   ]},
-  '三里屯店': { total:44, items:[
+  'Sanlitun Store': { total:44, items:[
     {n:'A01',cap:4,st:'occupied'},{n:'A02',cap:4,st:'available'},{n:'A03',cap:6,st:'occupied'},
     {n:'A04',cap:4,st:'occupied'},{n:'A05',cap:2,st:'available'},{n:'A06',cap:4,st:'reserved'},
     {n:'B01',cap:6,st:'occupied'},{n:'B02',cap:4,st:'available'},{n:'B03',cap:4,st:'occupied'},
@@ -1278,7 +1238,7 @@ const tableData = {
     {n:'C01',cap:4,st:'available'},{n:'C02',cap:6,st:'occupied'},{n:'C03',cap:4,st:'reserved'},
     {n:'C04',cap:4,st:'available'},{n:'C05',cap:10,st:'occupied'},{n:'C06',cap:4,st:'occupied'},
   ]},
-  '国贸店': { total:40, items:[
+  'Guomao Store': { total:40, items:[
     {n:'A01',cap:4,st:'available'},{n:'A02',cap:4,st:'available'},{n:'A03',cap:6,st:'available'},
     {n:'A04',cap:2,st:'available'},{n:'A05',cap:4,st:'available'},{n:'A06',cap:8,st:'available'},
     {n:'B01',cap:4,st:'available'},{n:'B02',cap:6,st:'available'},{n:'B03',cap:4,st:'reserved'},
@@ -1289,10 +1249,10 @@ const tableData = {
 function openTableView(storeName) {
   closeAllDropdowns();
   const d = tableData[storeName];
-  document.getElementById('table-drawer-title').textContent = storeName + ' · 桌位管理';
+  document.getElementById('table-drawer-title').textContent = storeName + ' · Table Management';
   const body = document.getElementById('table-drawer-body');
   const stMap = {occupied:'occupied',available:'available',reserved:'reserved',unavailable:'unavailable'};
-  const labelMap = {occupied:'使用中',available:'空闲',reserved:'已预订',unavailable:'不可用'};
+  const labelMap = {occupied:'Occupied',available:'Available',reserved:'Reserved',unavailable:'Unavailable'};
   const items = d ? d.items : [];
   const occ = items.filter(i=>i.st==='occupied').length;
   const avail = items.filter(i=>i.st==='available').length;
@@ -1302,28 +1262,28 @@ function openTableView(storeName) {
       <div style="display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;">
         <div style="text-align:center;padding:10px 16px;background:var(--amber-2);border-radius:8px;">
           <div style="font-size:20px;font-weight:700;color:var(--amber-10);">${occ}</div>
-          <div style="font-size:11px;color:var(--amber-11);margin-top:2px;">使用中</div>
+          <div style="font-size:11px;color:var(--amber-11);margin-top:2px;">Occupied</div>
         </div>
         <div style="text-align:center;padding:10px 16px;background:var(--green-bg);border-radius:8px;">
           <div style="font-size:20px;font-weight:700;color:var(--green-text);">${avail}</div>
-          <div style="font-size:11px;color:var(--green-text);margin-top:2px;">空闲</div>
+          <div style="font-size:11px;color:var(--green-text);margin-top:2px;">Available</div>
         </div>
         <div style="text-align:center;padding:10px 16px;background:var(--blue-bg);border-radius:8px;">
           <div style="font-size:20px;font-weight:700;color:var(--blue-text);">${res}</div>
-          <div style="font-size:11px;color:var(--blue-text);margin-top:2px;">已预订</div>
+          <div style="font-size:11px;color:var(--blue-text);margin-top:2px;">Reserved</div>
         </div>
       </div>
       <div class="table-legend">
-        <div class="legend-item"><div class="legend-dot" style="background:var(--amber-9);"></div>使用中</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--green-solid);"></div>空闲</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--blue-solid);"></div>已预订</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--gray-5);"></div>不可用</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--amber-9);"></div>Occupied</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--green-solid);"></div>Available</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--blue-solid);"></div>Reserved</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--gray-5);"></div>Unavailable</div>
       </div>
       <div class="table-grid">
         ${items.map(t=>`
-          <div class="table-item ${t.st}" onclick="showToast('桌位 ${t.n} · ${labelMap[t.st]}')" title="${t.n} · ${t.cap}人桌 · ${labelMap[t.st]}">
+          <div class="table-item ${t.st}" onclick="showToast('Table ${t.n} · ${labelMap[t.st]}')" title="${t.n} · ${t.cap}-seat · ${labelMap[t.st]}">
             <div class="table-item-num">${t.n}</div>
-            <div class="table-item-cap">${t.cap}人</div>
+            <div class="table-item-cap">${t.cap} seats</div>
           </div>
         `).join('')}
       </div>

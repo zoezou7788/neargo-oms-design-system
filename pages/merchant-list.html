@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Merchants — NearGo OMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--gray-12); line-height: 1.5; min-height: 100vh; }
+
+:root {
+  --amber-2:#fff8d6; --amber-3:#ffeea8; --amber-9:#FFA902; --amber-10:#f09a00; --amber-11:#8c5c00;
+  --gray-1:#fdfdfc; --gray-2:#f9f9f8; --gray-3:#f2f1ef; --gray-4:#eceae7; --gray-5:#e5e3e0;
+  --gray-6:#dddbd8; --gray-7:#cac8c4; --gray-8:#b0adaa; --gray-9:#8c8a87; --gray-10:#807e7b;
+  --gray-11:#4a4846; --gray-12:#1F1D1C;
+  --green-bg:#edfbf4; --green-text:#107060; --green-solid:#29a383;
+  --red-bg:#fff5f5;   --red-text:#ce2c31;   --red-solid:#e5484d;
+  --blue-bg:#f0f8ff;  --blue-text:#0060cf;  --blue-solid:#0090ff;
+  --orange-bg:#fff6f0;--orange-text:#bd4b00;--orange-solid:#f76b15;
+  --purple-bg:#f5f0ff;--purple-text:#6e3fbd;--purple-solid:#8b5cf6;
+  --teal-bg:#f0fdfa;  --teal-text:#0d7066;  --teal-solid:#14b8a6;
+  --surface:#ffffff; --bg:#F4F5F7; --border:#e5e3e0;
+  --topbar-h:54px; --sidebar-w:220px;
+  --ease:cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  height:var(--topbar-h); background:var(--surface);
+  display:flex; align-items:center; padding:0 20px; gap:12px;
+}
+.brand { display:flex; align-items:center; gap:9px; text-decoration:none; }
+.brand-icon { width:30px; height:30px; border-radius:8px; background:var(--gray-12); display:flex; align-items:center; justify-content:center; }
+.brand-icon svg { color:#FFA902; }
+.brand-name { font-size:14px; font-weight:700; color:var(--gray-12); letter-spacing:-0.03em; }
+.brand-div { width:1px; height:16px; background:var(--border); }
+.topbar-path { display:flex; align-items:center; gap:6px; }
+.tp-parent { font-size:13px; color:var(--gray-8); }
+.tp-sep { font-size:13px; color:var(--gray-7); }
+.tp-current { font-size:13px; font-weight:600; color:var(--gray-12); }
+.topbar-nav { display:flex; align-items:center; gap:2px; }
+.nav-item {
+  height:32px; padding:0 11px; border-radius:6px; font-size:13px; font-weight:500;
+  color:var(--gray-10); cursor:pointer; border:none; background:none; font-family:inherit;
+  display:flex; align-items:center; gap:5px; transition:all 120ms var(--ease);
+}
+.nav-item:hover { background:var(--gray-2); color:var(--gray-12); }
+.nav-item.active { color:var(--gray-12); font-weight:600; }
+.nav-item svg { width:13px; height:13px; }
+.topbar-spacer { flex:1; }
+.topbar-right { display:flex; align-items:center; gap:6px; }
+.icon-btn { width:32px; height:32px; border-radius:6px; border:none; background:transparent; cursor:pointer; color:var(--gray-9); display:flex; align-items:center; justify-content:center; transition:all 120ms; position:relative; }
+.icon-btn:hover { background:var(--gray-2); color:var(--gray-12); }
+.notif-dot { position:absolute; top:6px; right:6px; width:7px; height:7px; border-radius:50%; background:var(--red-solid); border:1.5px solid var(--surface); }
+.topbar-div { width:1px; height:18px; background:var(--border); }
+.avatar-btn { display:flex; align-items:center; gap:7px; height:32px; padding:0 8px 0 4px; border-radius:8px; border:none; background:none; cursor:pointer; font-family:inherit; transition:all 120ms; }
+.avatar-btn:hover { background:var(--gray-2); }
+.avatar { width:26px; height:26px; border-radius:50%; background:var(--amber-2); border:1.5px solid var(--amber-3); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:var(--amber-11); flex-shrink:0; }
+.avatar-name { font-size:13px; font-weight:500; color:var(--gray-11); }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position:fixed; top:var(--topbar-h); left:0; bottom:0; width:var(--sidebar-w);
+  background:var(--surface); border-right:1px solid var(--border);
+  overflow-y:auto; padding:8px 0 40px; z-index:100;
+}
+.sidebar::-webkit-scrollbar { width:3px; }
+.sidebar::-webkit-scrollbar-thumb { background:var(--gray-4); border-radius:4px; }
+.sb-section + .sb-section { border-top:1px solid var(--gray-3); margin-top:4px; padding-top:4px; }
+.sb-label { font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--gray-8); padding:10px 16px 4px; }
+.sb-item {
+  display:flex; align-items:center; gap:8px; height:34px; padding:0 10px 0 14px;
+  margin:1px 8px; border-radius:6px; font-size:13px; color:var(--gray-10);
+  cursor:pointer; text-decoration:none; transition:all 120ms;
+  border:none; background:none; font-family:inherit; width:calc(100% - 16px); text-align:left;
+}
+.sb-item:hover { background:var(--gray-2); color:var(--gray-12); }
+.sb-item.active { background:var(--amber-2); color:var(--gray-12); font-weight:600; border-left:2.5px solid var(--amber-9); padding-left:11.5px; }
+.sb-item svg { width:15px; height:15px; flex-shrink:0; stroke-width:2; opacity:.65; }
+.sb-item.active svg { opacity:1; }
+.sb-count { margin-left:auto; font-size:10px; font-weight:600; padding:1px 6px; border-radius:20px; background:var(--gray-3); color:var(--gray-9); }
+.sb-count.red { background:var(--red-bg); color:var(--red-text); }
+
+/* ── MAIN ── */
+.main { margin-top:var(--topbar-h); margin-left:var(--sidebar-w); }
+
+/* ── BUTTONS ── */
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; font-family:inherit; font-weight:500; cursor:pointer; border-radius:6px; border:1px solid transparent; transition:all 120ms; white-space:nowrap; letter-spacing:-.01em; text-decoration:none; }
+.btn-md { height:34px; padding:0 14px; font-size:13px; }
+.btn-sm { height:28px; padding:0 10px; font-size:12px; }
+.btn-xs { height:24px; padding:0 8px; font-size:11.5px; }
+.btn-primary { background:var(--gray-12); color:#fff; border-color:var(--gray-12); }
+.btn-primary:hover { background:#111; }
+.btn-outline { background:var(--surface); color:var(--gray-11); border-color:var(--gray-6); }
+.btn-outline:hover { background:var(--gray-2); }
+.btn-ghost { background:transparent; color:var(--gray-10); border-color:transparent; }
+.btn-ghost:hover { background:var(--gray-3); color:var(--gray-12); }
+.btn-danger { background:var(--red-solid); color:#fff; border-color:var(--red-solid); }
+.btn-danger:hover { background:#c53030; }
+.btn-positive { background:var(--green-solid); color:#fff; border-color:var(--green-solid); }
+.btn-positive:hover { background:#218c6c; }
+
+/* ── DROPDOWN ── */
+#overlay { position:fixed; inset:0; z-index:400; display:none; }
+.dd-wrap { position:relative; display:inline-flex; }
+.dd-menu {
+  position:absolute; z-index:500; background:var(--surface); border:1px solid var(--border);
+  border-radius:8px; padding:4px;
+  box-shadow:0 8px 24px rgba(0,0,0,.10),0 2px 6px rgba(0,0,0,.05);
+  min-width:180px; opacity:0; transform:scale(.96) translateY(-4px); pointer-events:none;
+  transition:opacity 150ms var(--ease),transform 150ms var(--ease); transform-origin:top right;
+}
+.dd-menu.right { top:calc(100% + 6px); right:0; }
+.dd-menu.left  { top:calc(100% + 6px); left:0;  }
+.dd-menu.open  { opacity:1; transform:scale(1) translateY(0); pointer-events:auto; }
+.dd-label { padding:5px 10px 3px; font-size:10px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--gray-8); user-select:none; }
+.dd-item { display:flex; align-items:center; gap:8px; padding:7px 10px; border-radius:6px; font-size:13px; color:var(--gray-11); cursor:pointer; transition:all 100ms; border:none; background:none; font-family:inherit; width:100%; text-align:left; }
+.dd-item:hover { background:var(--gray-2); color:var(--gray-12); }
+.dd-item svg { width:14px; height:14px; flex-shrink:0; color:var(--gray-8); stroke-width:2; }
+.dd-item:hover svg { color:var(--gray-11); }
+.dd-item.danger { color:var(--red-text); }
+.dd-item.danger:hover { background:var(--red-bg); }
+.dd-item.danger svg { color:var(--red-solid); }
+.dd-item .ml { margin-left:auto; }
+.dd-sep { height:1px; background:var(--gray-3); margin:4px -4px; }
+.dd-check { color:var(--amber-9); margin-left:auto; }
+
+/* ── PAGE HEADER ── */
+.page-header { padding:20px 28px 0; border-bottom:1px solid var(--gray-3); background:var(--surface); }
+.breadcrumb { display:flex; align-items:center; gap:5px; margin-bottom:6px; }
+.bc { font-size:12px; color:var(--gray-9); cursor:pointer; }
+.bc:hover { color:var(--gray-12); }
+.bc-sep { font-size:11px; color:var(--gray-7); }
+.bc-cur { font-size:12px; color:var(--gray-11); font-weight:500; }
+.ph-row { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:16px; }
+.ph-title { font-size:22px; font-weight:700; color:var(--gray-12); letter-spacing:-0.03em; }
+.ph-sub { font-size:13px; color:var(--gray-9); margin-top:3px; }
+.ph-actions { display:flex; gap:8px; align-items:center; }
+
+/* ── SECTION TABS ── */
+.section-tabs { display:flex; gap:0; }
+.stab {
+  height:40px; padding:0 16px; font-size:13px; font-weight:500; color:var(--gray-9);
+  cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px;
+  display:flex; align-items:center; gap:6px;
+  transition:all 120ms; border-top:none; border-left:none; border-right:none;
+  background:none; font-family:inherit;
+}
+.stab:hover { color:var(--gray-11); }
+.stab.active { color:var(--gray-12); border-bottom-color:var(--gray-12); font-weight:600; }
+.stab-count { font-size:10px; font-weight:600; padding:1px 6px; border-radius:10px; background:var(--gray-3); color:var(--gray-9); }
+.stab.active .stab-count { background:var(--gray-12); color:#fff; }
+
+/* ── CONTENT ── */
+.content { padding:20px 28px 60px; }
+
+/* ── TOOLBAR ── */
+.toolbar { display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+.search-wrap { position:relative; }
+.search-icon { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--gray-8); pointer-events:none; }
+.search-input {
+  width:260px; height:34px; padding:0 10px 0 33px;
+  font-family:inherit; font-size:13px; color:var(--gray-12);
+  background:var(--surface); border:1px solid var(--gray-6); border-radius:6px; outline:none; transition:all 150ms;
+  -webkit-appearance:none; appearance:none;
+}
+.search-input::placeholder { color:var(--gray-8); }
+.search-input:focus { border-color:var(--gray-7); box-shadow:0 0 0 2px var(--gray-3); }
+.toolbar-spacer { flex:1; }
+.toolbar-right { display:flex; align-items:center; gap:8px; }
+
+/* ── FILTER CHIPS ── */
+.filter-chips { display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:14px; min-height:28px; }
+.filter-chip {
+  display:inline-flex; align-items:center; gap:5px;
+  height:26px; padding:0 8px 0 10px; border-radius:20px;
+  font-size:12px; font-weight:500; color:var(--gray-11);
+  background:var(--gray-3); border:1px solid var(--gray-4);
+  cursor:default; transition:all 120ms;
+}
+.filter-chip-label { color:var(--gray-8); margin-right:2px; }
+.chip-remove { width:16px; height:16px; border-radius:50%; border:none; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--gray-7); transition:all 100ms; padding:0; }
+.chip-remove:hover { background:var(--gray-5); color:var(--gray-11); }
+.clear-all { font-size:12px; color:var(--blue-text); cursor:pointer; background:none; border:none; font-family:inherit; padding:0 4px; }
+.clear-all:hover { text-decoration:underline; }
+
+/* ── BULK ACTION BAR ── */
+.bulk-bar {
+  display:none; align-items:center; gap:10px; padding:10px 14px;
+  background:var(--amber-2); border:1px solid var(--amber-3); border-radius:8px;
+  margin-bottom:12px;
+}
+.bulk-bar.show { display:flex; }
+.bulk-info { font-size:13px; font-weight:600; color:var(--amber-11); }
+
+/* ── TABLE ── */
+.card { background:var(--surface); border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+.tbl-wrap { overflow-x:hidden; border-radius:12px; }
+table { width:100%; border-collapse:collapse; table-layout:fixed; }
+thead tr:first-child th:first-child { border-radius:12px 0 0 0; }
+thead tr:first-child th:last-child  { border-radius:0 12px 0 0; }
+thead th {
+  padding:8px 12px; text-align:left; font-size:11px; font-weight:600;
+  letter-spacing:.05em; text-transform:uppercase; color:var(--gray-8);
+  background:var(--gray-2); border-bottom:1px solid var(--gray-3);
+  white-space:nowrap; user-select:none;
+}
+thead th.sortable { cursor:pointer; }
+thead th.sortable:hover { color:var(--gray-11); }
+thead th.sorted { color:var(--gray-12); }
+.sort-icon { display:inline-flex; align-items:center; margin-left:4px; opacity:.5; }
+.sort-icon.asc { opacity:1; }
+tbody tr { border-bottom:1px solid var(--gray-3); transition:background 100ms; }
+tbody tr:last-child { border-bottom:none; }
+tbody tr:hover { background:var(--gray-1); }
+tbody tr.selected { background:var(--amber-2); }
+tbody td { padding:10px 12px; font-size:13px; color:var(--gray-11); vertical-align:middle; }
+.td-check { width:40px; }
+.td-name { min-width:200px; }
+.td-id { font-family:'JetBrains Mono','Courier New',monospace; font-size:11.5px; color:var(--gray-9); }
+.td-link { color:var(--blue-text); cursor:pointer; font-weight:500; }
+.td-link:hover { text-decoration:underline; }
+
+/* ── CHECKBOX ── */
+.cb { width:16px; height:16px; accent-color:var(--gray-12); cursor:pointer; }
+
+/* ── MERCHANT INFO CELL ── */
+.merch-name { font-size:13px; font-weight:600; color:var(--gray-12); line-height:1.3; }
+.merch-category { font-size:11.5px; color:var(--gray-9); margin-top:2px; }
+
+/* ── BADGES / STATUS ── */
+.badge { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:600; white-space:nowrap; }
+.badge::before { content:''; width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+.badge-green  { background:var(--green-bg);  color:var(--green-text);  } .badge-green::before  { background:var(--green-solid);  }
+.badge-red    { background:var(--red-bg);    color:var(--red-text);    } .badge-red::before    { background:var(--red-solid);    }
+.badge-amber  { background:var(--amber-2);   color:var(--amber-11);    } .badge-amber::before  { background:var(--amber-9);      }
+.badge-blue   { background:var(--blue-bg);   color:var(--blue-text);   } .badge-blue::before   { background:var(--blue-solid);   }
+.badge-gray   { background:var(--gray-3);    color:var(--gray-9);      } .badge-gray::before   { background:var(--gray-7);       }
+.badge-purple { background:var(--purple-bg); color:var(--purple-text); } .badge-purple::before { background:var(--purple-solid); }
+.badge-teal   { background:var(--teal-bg);   color:var(--teal-text);   } .badge-teal::before   { background:var(--teal-solid);   }
+
+/* ── RATING ── */
+.rating { display:flex; align-items:center; gap:3px; font-size:13px; font-weight:600; color:var(--gray-12); }
+.rating svg { color:var(--amber-9); }
+
+/* ── TABLE FOOTER ── */
+.tbl-footer { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-top:1px solid var(--gray-3); background:var(--gray-1); border-radius:0 0 12px 12px; }
+.tbl-info { font-size:12px; color:var(--gray-8); }
+.pagination { display:flex; gap:4px; align-items:center; }
+.pg-btn { height:28px; min-width:28px; padding:0 6px; border-radius:5px; font-size:12px; font-weight:500; cursor:pointer; border:1px solid transparent; background:none; font-family:inherit; color:var(--gray-10); transition:all 100ms; }
+.pg-btn:hover { background:var(--gray-2); }
+.pg-btn.active { background:var(--gray-12); color:#fff; border-color:var(--gray-12); }
+.pg-btn:disabled { opacity:.4; cursor:default; }
+.pg-dots { font-size:12px; color:var(--gray-7); padding:0 2px; line-height:28px; }
+
+/* ── DETAIL PANEL (Sheet) ── */
+.sheet-overlay { position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:600; opacity:0; pointer-events:none; transition:opacity 250ms; }
+.sheet-overlay.open { opacity:1; pointer-events:auto; }
+.sheet {
+  position:fixed; top:0; right:0; bottom:0; width:480px; z-index:700;
+  background:var(--surface); box-shadow:-8px 0 40px rgba(0,0,0,.12);
+  transform:translateX(100%); transition:transform 300ms var(--ease);
+  display:flex; flex-direction:column;
+}
+.sheet.open { transform:translateX(0); }
+.sheet-header { display:flex; align-items:center; justify-content:space-between; padding:20px 24px; border-bottom:1px solid var(--gray-3); flex-shrink:0; }
+.sheet-title { font-size:16px; font-weight:700; color:var(--gray-12); }
+.sheet-close { width:28px; height:28px; border-radius:6px; border:none; background:none; cursor:pointer; color:var(--gray-9); display:flex; align-items:center; justify-content:center; transition:all 120ms; }
+.sheet-close:hover { background:var(--gray-2); }
+.sheet-body { flex:1; overflow-y:auto; padding:24px; }
+.sheet-body::-webkit-scrollbar { width:4px; }
+.sheet-body::-webkit-scrollbar-thumb { background:var(--gray-4); border-radius:4px; }
+.sheet-footer { padding:16px 24px; border-top:1px solid var(--gray-3); display:flex; gap:8px; justify-content:flex-end; flex-shrink:0; }
+.section-heading { font-size:10px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--gray-8); margin-bottom:12px; }
+.info-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+.info-item .lbl { font-size:11.5px; color:var(--gray-8); margin-bottom:3px; }
+.info-item .val { font-size:13px; font-weight:500; color:var(--gray-12); }
+
+/* ── MERCHANT HERO (sheet) ── */
+.merch-hero { display:flex; align-items:center; gap:14px; padding:16px; background:var(--gray-1); border-radius:10px; margin-bottom:20px; }
+.merch-hero-logo { width:52px; height:52px; border-radius:12px; background:var(--surface); display:flex; align-items:center; justify-content:center; font-size:28px; border:1px solid var(--gray-3); flex-shrink:0; }
+.merch-hero-name { font-size:17px; font-weight:700; color:var(--gray-12); }
+.merch-hero-cat { font-size:12px; color:var(--gray-9); margin-top:2px; }
+.merch-hero-badges { display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
+
+/* ── PROGRESS ── */
+.prog { height:5px; background:var(--gray-3); border-radius:3px; overflow:hidden; }
+.prog-val { height:100%; border-radius:3px; background:var(--amber-9); }
+.prog-val.green { background:var(--green-solid); }
+
+/* ── CONFIRM DIALOG ── */
+.dialog-overlay { position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:800; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 200ms; }
+.dialog-overlay.open { opacity:1; pointer-events:auto; }
+.dialog { background:var(--surface); border-radius:14px; width:400px; padding:28px; box-shadow:0 20px 60px rgba(0,0,0,.18); transform:scale(.96); transition:transform 200ms var(--ease); }
+.dialog-overlay.open .dialog { transform:scale(1); }
+.dialog-icon { width:44px; height:44px; border-radius:12px; background:var(--red-bg); display:flex; align-items:center; justify-content:center; margin-bottom:16px; }
+.dialog-icon svg { color:var(--red-solid); }
+.dialog-title { font-size:16px; font-weight:700; color:var(--gray-12); margin-bottom:8px; }
+.dialog-desc { font-size:13px; color:var(--gray-9); line-height:1.6; }
+.dialog-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:24px; }
+
+/* ── TOAST ── */
+.toast-wrap { position:fixed; bottom:24px; right:24px; z-index:999; display:flex; flex-direction:column; gap:8px; }
+.toast { display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:10px; font-size:13px; min-width:240px; box-shadow:0 4px 16px rgba(0,0,0,.14); animation:slideUp 250ms var(--ease) both; }
+.toast.default { background:var(--gray-12); color:#fff; }
+.toast.success { background:var(--green-solid); color:#fff; }
+.toast.warning { background:var(--orange-solid); color:#fff; }
+.toast.danger  { background:var(--red-solid);    color:#fff; }
+@keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--gray-4); border-radius:4px; }
+html { scrollbar-width:none; }
+html::-webkit-scrollbar { display:none; }
+</style>
+</head>
+<body>
+
+<div id="overlay" onclick="closeAll()"></div>
+
+<!-- ═══ TOPBAR ═══ -->
+<header class="topbar">
+  <a class="brand" href="#">
+    <div class="brand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+    <span class="brand-name">NearGo OMS</span>
+  </a>
+  <div class="brand-div"></div>
+  <span class="topbar-path"><span class="tp-parent">Management</span><span class="tp-sep">/</span><span class="tp-current">Merchants</span></span>
+
+  <div class="topbar-spacer"></div>
+  <div class="topbar-right">
+    <button class="icon-btn" onclick="toast('Notifications')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span class="notif-dot"></span>
+    </button>
+    <button class="icon-btn" onclick="toast('Search')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    <div class="topbar-div"></div>
+    <!-- User menu -->
+    <div class="dd-wrap">
+      <button class="avatar-btn" onclick="toggle('user-menu', event)">
+        <div class="avatar">AJ</div>
+        <span class="avatar-name">Alex Johnson</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--gray-8)"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="dd-menu right" id="dd-user-menu" style="min-width:180px;">
+        <div style="padding:10px 10px 8px;display:flex;gap:10px;align-items:center;">
+          <div class="avatar" style="width:32px;height:32px;font-size:11px;">AJ</div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--gray-12)">Alex Johnson</div>
+            <div style="font-size:11px;color:var(--gray-8)">alex@neargo.com</div>
+          </div>
+        </div>
+        <div class="dd-sep"></div>
+        <button class="dd-item" onclick="toast('Profile')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</button>
+        <button class="dd-item" onclick="toast('Account Settings')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings <span class="ml" style="font-size:11px;color:var(--gray-8);">⌘,</span></button>
+        <div class="dd-sep"></div>
+        <button class="dd-item danger" onclick="toast('Signed out', 'warning')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>Sign out</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+    <button class="sb-item" onclick="toast('Overview')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Overview
+    </button>
+    <button class="sb-item" onclick="toast('Analytics')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Analytics
+    </button>
+    <button class="sb-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      Merchants
+    </button>
+    <button class="sb-item" onclick="toast('Orders')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      Orders
+      <span class="sb-count red">48</span>
+    </button>
+    <button class="sb-item" onclick="toast('Products')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      Products
+    </button>
+    <button class="sb-item" onclick="toast('Payouts')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      Payouts
+      <span class="sb-count">12</span>
+    </button>
+    <button class="sb-item" onclick="toast('Reviews')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Reviews
+    </button>
+    <button class="sb-item" onclick="toast('Applications')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Applications
+      <span class="sb-count red">7</span>
+    </button>
+    <button class="sb-item" onclick="toast('Disputes')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Disputes
+    </button>
+    <button class="sb-item" onclick="toast('Campaigns')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      Campaigns
+    </button>
+    <button class="sb-item" onclick="toast('User Roles')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      User Roles
+    </button>
+    <button class="sb-item" onclick="toast('Settings')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      Settings
+    </button>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="breadcrumb">
+      <span class="bc">Home</span>
+      <span class="bc-sep">›</span>
+      <span class="bc-cur">Merchants</span>
+    </div>
+    <div class="ph-row">
+      <div>
+        <h1 class="ph-title">Merchants</h1>
+        <p class="ph-sub">Manage and monitor all registered merchant accounts</p>
+      </div>
+      <div class="ph-actions">
+        <!-- Export dropdown -->
+        <div class="dd-wrap">
+          <button class="btn btn-outline btn-md" onclick="toggle('export', event)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Export
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="dd-menu right" id="dd-export">
+            <div class="dd-label">Format</div>
+            <button class="dd-item" onclick="toast('Exporting CSV…', 'success')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/></svg>Export as CSV <span class="ml" style="font-size:11px;color:var(--gray-8)">.csv</span></button>
+            <button class="dd-item" onclick="toast('Exporting Excel…', 'success')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>Export as Excel <span class="ml" style="font-size:11px;color:var(--gray-8)">.xlsx</span></button>
+            <div class="dd-sep"></div>
+            <button class="dd-item" onclick="toast('Report sent to inbox', 'success')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>Email to me</button>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-md" onclick="toast('Add Merchant modal opened')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Merchant
+        </button>
+      </div>
+    </div>
+
+    <!-- Section Tabs -->
+    <div class="section-tabs" id="tabs">
+      <button class="stab active" onclick="switchTab(this,'all')">All <span class="stab-count">284</span></button>
+      <button class="stab" onclick="switchTab(this,'active')">Active <span class="stab-count">198</span></button>
+      <button class="stab" onclick="switchTab(this,'pending')">Pending Review <span class="stab-count">31</span></button>
+      <button class="stab" onclick="switchTab(this,'suspended')">Suspended <span class="stab-count">12</span></button>
+      <button class="stab" onclick="switchTab(this,'inactive')">Inactive <span class="stab-count">43</span></button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" placeholder="Search merchants, IDs, email…" oninput="searchMerchants(this.value)" />
+      </div>
+
+      <!-- Category filter -->
+      <div class="dd-wrap">
+        <button class="btn btn-outline btn-md" id="cat-btn" onclick="toggle('category', event)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          Category
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="dd-menu left" id="dd-category">
+          <div class="dd-label">Merchant Category</div>
+          <button class="dd-item" id="cat-all" onclick="applyFilter('category','All Categories',this)">All Categories <svg class="dd-check" id="chk-cat-all" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
+          <button class="dd-item" id="cat-restaurant" onclick="applyFilter('category','Restaurant',this)">🍽️ Restaurant</button>
+          <button class="dd-item" id="cat-cafe" onclick="applyFilter('category','Café & Bakery',this)">☕ Café & Bakery</button>
+          <button class="dd-item" id="cat-fastfood" onclick="applyFilter('category','Fast Food',this)">🍔 Fast Food</button>
+          <button class="dd-item" id="cat-grocery" onclick="applyFilter('category','Grocery',this)">🛒 Grocery</button>
+          <button class="dd-item" id="cat-retail" onclick="applyFilter('category','Retail',this)">🏪 Retail</button>
+        </div>
+      </div>
+
+      <!-- Plan filter -->
+      <div class="dd-wrap">
+        <button class="btn btn-outline btn-md" onclick="toggle('plan', event)">
+          Plan
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="dd-menu left" id="dd-plan">
+          <div class="dd-label">Subscription Plan</div>
+          <button class="dd-item" onclick="applyFilter('plan','All Plans',this)">All Plans <svg class="dd-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
+          <button class="dd-item" onclick="applyFilter('plan','Starter',this)">Starter</button>
+          <button class="dd-item" onclick="applyFilter('plan','Growth',this)">Growth</button>
+          <button class="dd-item" onclick="applyFilter('plan','Pro',this)">Pro</button>
+          <button class="dd-item" onclick="applyFilter('plan','Enterprise',this)">Enterprise</button>
+        </div>
+      </div>
+
+      <!-- Region filter -->
+      <div class="dd-wrap">
+        <button class="btn btn-outline btn-md" onclick="toggle('region', event)">
+          Region
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="dd-menu left" id="dd-region">
+          <div class="dd-label">Region</div>
+          <button class="dd-item" onclick="applyFilter('region','All Regions',this)">All Regions <svg class="dd-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
+          <button class="dd-item" onclick="applyFilter('region','North America',this)">🇺🇸 North America</button>
+          <button class="dd-item" onclick="applyFilter('region','Europe',this)">🇪🇺 Europe</button>
+          <button class="dd-item" onclick="applyFilter('region','Asia Pacific',this)">🌏 Asia Pacific</button>
+          <button class="dd-item" onclick="applyFilter('region','Middle East',this)">🌍 Middle East</button>
+        </div>
+      </div>
+
+      <div class="toolbar-spacer"></div>
+      <div class="toolbar-right">
+        <span style="font-size:12px;color:var(--gray-8);" id="row-count">284 merchants</span>
+        <!-- Sort -->
+        <div class="dd-wrap">
+          <button class="btn btn-ghost btn-md" onclick="toggle('sort', event)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            Sort: <span id="sort-label">Newest</span>
+          </button>
+          <div class="dd-menu right" id="dd-sort">
+            <div class="dd-label">Sort by</div>
+            <button class="dd-item" onclick="setSort('Newest',this)">Newest first <svg class="dd-check" id="sort-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
+            <button class="dd-item" onclick="setSort('Oldest',this)">Oldest first</button>
+            <button class="dd-item" onclick="setSort('A → Z',this)">Name A → Z</button>
+            <button class="dd-item" onclick="setSort('Z → A',this)">Name Z → A</button>
+            <div class="dd-sep"></div>
+            <button class="dd-item" onclick="setSort('Highest GMV',this)">Highest GMV</button>
+            <button class="dd-item" onclick="setSort('Top Rated',this)">Top Rated</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active filter chips -->
+    <div class="filter-chips" id="filter-chips" style="display:none;"></div>
+
+    <!-- Bulk action bar -->
+    <div class="bulk-bar" id="bulk-bar">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--amber-10)"><polyline points="20 6 9 17 4 12"/></svg>
+      <span class="bulk-info" id="bulk-info">0 selected</span>
+      <button class="btn btn-sm btn-outline" style="margin-left:4px;" onclick="toast('Bulk approve', 'success')">Approve</button>
+      <button class="btn btn-sm btn-outline" onclick="toast('Bulk export', 'success')">Export</button>
+      <button class="btn btn-sm btn-outline" onclick="toast('Send notification')">Notify</button>
+      <div style="flex:1"></div>
+      <button class="btn btn-sm btn-danger" onclick="openConfirm()">Suspend Selected</button>
+      <button class="btn btn-ghost btn-sm" onclick="clearSelection()">Clear selection</button>
+    </div>
+
+    <!-- Table -->
+    <div class="card">
+      <div class="tbl-wrap">
+        <table>
+          <colgroup>
+            <col style="width:40px" />
+            <col style="width:24%" />
+            <col style="width:10%" />
+            <col style="width:10%" />
+            <col style="width:11%" />
+            <col style="width:8%" />
+            <col style="width:7%" />
+            <col style="width:10%" />
+            <col style="width:56px" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th><input type="checkbox" class="cb" id="check-all" onchange="toggleAll(this)" /></th>
+              <th>Merchant</th>
+              <th>Status</th>
+              <th>Plan</th>
+              <th class="sortable" onclick="sortBy('gmv')">GMV (30d) <span class="sort-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></span></th>
+              <th class="sortable" onclick="sortBy('orders')">Orders <span class="sort-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></span></th>
+              <th>Rating</th>
+              <th>Joined</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="merchant-tbody">
+            <!-- Rows injected by JS -->
+          </tbody>
+        </table>
+      </div>
+      <div class="tbl-footer">
+        <span class="tbl-info" id="tbl-info">Showing 1–20 of 284 merchants</span>
+        <div class="pagination">
+          <button class="pg-btn" disabled>← Prev</button>
+          <button class="pg-btn active">1</button>
+          <button class="pg-btn" onclick="toast('Page 2')">2</button>
+          <button class="pg-btn" onclick="toast('Page 3')">3</button>
+          <span class="pg-dots">…</span>
+          <button class="pg-btn" onclick="toast('Page 15')">15</button>
+          <button class="pg-btn" onclick="toast('Next page')">Next →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ═══ DETAIL SHEET ═══ -->
+<div class="sheet-overlay" id="sheet-overlay" onclick="closeSheet()"></div>
+<div class="sheet" id="detail-sheet">
+  <div class="sheet-header">
+    <span class="sheet-title">Merchant Details</span>
+    <button class="sheet-close" onclick="closeSheet()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="sheet-body" id="sheet-body"></div>
+  <div class="sheet-footer">
+    <button class="btn btn-outline btn-md" onclick="closeSheet()">Close</button>
+    <button class="btn btn-outline btn-md" onclick="toast('Edit merchant opened')">Edit</button>
+    <button class="btn btn-primary btn-md" onclick="toast('Changes saved', 'success'); closeSheet()">Save Changes</button>
+  </div>
+</div>
+
+<!-- ═══ CONFIRM DIALOG ═══ -->
+<div class="dialog-overlay" id="confirm-overlay" onclick="if(event.target===this)closeConfirm()">
+  <div class="dialog">
+    <div class="dialog-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <div class="dialog-title">Suspend selected merchants?</div>
+    <div class="dialog-desc">This will immediately suspend all selected merchant accounts. Their storefronts will go offline and customers won't be able to place orders. You can reactivate them at any time.</div>
+    <div class="dialog-actions">
+      <button class="btn btn-outline btn-md" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger btn-md" onclick="toast('Merchants suspended', 'danger'); closeConfirm(); clearSelection();">Suspend</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────
+const MERCHANTS = [
+  { id:'MCH-00128', name:'The Golden Fork',  emoji:'🍽️', category:'Restaurant',   status:'active',    plan:'Pro',        gmv:84320, orders:1247, rating:4.8, region:'Asia Pacific',  joined:'Jan 12, 2023' },
+  { id:'MCH-00127', name:'Brew & Bloom',     emoji:'☕', category:'Café & Bakery',status:'active',    plan:'Growth',     gmv:32100, orders: 648, rating:4.6, region:'North America',  joined:'Feb 3, 2023'  },
+  { id:'MCH-00126', name:'Burger Station',   emoji:'🍔', category:'Fast Food',    status:'active',    plan:'Starter',    gmv:18740, orders: 924, rating:4.2, region:'Europe',         joined:'Mar 17, 2023' },
+  { id:'MCH-00125', name:'FreshMart',        emoji:'🛒', category:'Grocery',      status:'pending',   plan:'Growth',     gmv:     0, orders:   0, rating:   0, region:'Middle East',   joined:'Jun 1, 2024'  },
+  { id:'MCH-00124', name:'Sakura Kitchen',   emoji:'🍱', category:'Restaurant',   status:'active',    plan:'Enterprise', gmv:124500, orders:2341, rating:4.9, region:'Asia Pacific',  joined:'Nov 8, 2022'  },
+  { id:'MCH-00123', name:'La Petite Boulangerie', emoji:'🥐', category:'Café & Bakery', status:'suspended', plan:'Growth', gmv: 4200, orders: 120, rating:3.8, region:'Europe',      joined:'Apr 22, 2023' },
+  { id:'MCH-00122', name:'TechSnacks',       emoji:'🏪', category:'Retail',       status:'active',    plan:'Pro',        gmv:56700, orders: 832, rating:4.5, region:'North America',  joined:'Jul 5, 2022'  },
+  { id:'MCH-00121', name:'Noodle House',     emoji:'🍜', category:'Restaurant',   status:'active',    plan:'Growth',     gmv:29400, orders: 510, rating:4.4, region:'Asia Pacific',  joined:'Sep 14, 2023' },
+  { id:'MCH-00120', name:'Pizza Palace',     emoji:'🍕', category:'Fast Food',    status:'inactive',  plan:'Starter',    gmv:  800, orders:  42, rating:3.5, region:'North America',  joined:'Dec 1, 2022'  },
+  { id:'MCH-00119', name:'Spice Route',      emoji:'🌶️', category:'Restaurant',  status:'active',    plan:'Pro',        gmv:71200, orders:1089, rating:4.7, region:'Middle East',    joined:'Feb 28, 2023' },
+  { id:'MCH-00118', name:'Green Bowl',       emoji:'🥗', category:'Restaurant',   status:'pending',   plan:'Starter',    gmv:     0, orders:   0, rating:   0, region:'Europe',        joined:'Jul 19, 2024' },
+  { id:'MCH-00117', name:'Cloud Nine Café',  emoji:'☕', category:'Café & Bakery',status:'active',    plan:'Growth',     gmv:21300, orders: 387, rating:4.3, region:'Asia Pacific',  joined:'Oct 11, 2023' },
+  { id:'MCH-00116', name:'QuickBite',        emoji:'🍔', category:'Fast Food',    status:'active',    plan:'Starter',    gmv:12600, orders: 698, rating:4.0, region:'North America',  joined:'May 3, 2024'  },
+  { id:'MCH-00115', name:'Oceano Seafood',   emoji:'🦞', category:'Restaurant',   status:'active',    plan:'Enterprise', gmv:98400, orders:1560, rating:4.8, region:'Asia Pacific',  joined:'Aug 7, 2022'  },
+  { id:'MCH-00114', name:'Corner Deli',      emoji:'🥙', category:'Grocery',      status:'suspended', plan:'Starter',    gmv:  500, orders:  18, rating:2.9, region:'Europe',         joined:'Jan 30, 2024' },
+];
+
+const STATUS_CFG = {
+  active:    { cls:'badge-green',  label:'Active'    },
+  pending:   { cls:'badge-amber',  label:'Pending'   },
+  suspended: { cls:'badge-red',    label:'Suspended' },
+  inactive:  { cls:'badge-gray',   label:'Inactive'  },
+};
+const PLAN_CFG = {
+  Starter:    { cls:'badge-gray',   },
+  Growth:     { cls:'badge-blue',   },
+  Pro:        { cls:'badge-purple', },
+  Enterprise: { cls:'badge-teal',   },
+};
+
+let activeFilters = {};
+let selectedRows  = new Set();
+let currentTab    = 'all';
+let searchQuery   = '';
+let currentMerchant = null;
+
+// ── RENDER ────────────────────────────────────────────────────
+function getFiltered() {
+  return MERCHANTS.filter(m => {
+    if (currentTab !== 'all' && m.status !== currentTab) return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      if (!m.name.toLowerCase().includes(q) && !m.id.toLowerCase().includes(q) && !m.category.toLowerCase().includes(q)) return false;
+    }
+    if (activeFilters.category && activeFilters.category !== 'All Categories' && m.category !== activeFilters.category) return false;
+    if (activeFilters.plan     && activeFilters.plan     !== 'All Plans'      && m.plan     !== activeFilters.plan)     return false;
+    if (activeFilters.region   && activeFilters.region   !== 'All Regions'    && m.region   !== activeFilters.region)   return false;
+    return true;
+  });
+}
+
+function renderTable() {
+  const data = getFiltered();
+  const tbody = document.getElementById('merchant-tbody');
+  document.getElementById('row-count').textContent = data.length + ' merchants';
+
+  if (data.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:48px;color:var(--gray-8);font-size:13px;">No merchants match your filters. <button class="clear-all" onclick="clearFilters()">Clear all filters</button></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = data.map(m => {
+    const sel = selectedRows.has(m.id);
+    const sc  = STATUS_CFG[m.status] || STATUS_CFG.inactive;
+    const pc  = PLAN_CFG[m.plan]     || PLAN_CFG.Starter;
+    const stars = m.rating > 0 ? `<div class="rating"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>${m.rating}</div>` : `<span style="color:var(--gray-7);font-size:12px;">—</span>`;
+    const gmv = m.gmv > 0 ? `$${m.gmv.toLocaleString()}` : `<span style="color:var(--gray-7);">—</span>`;
+    const ord = m.orders > 0 ? m.orders.toLocaleString() : `<span style="color:var(--gray-7);">—</span>`;
+    return `
+      <tr class="${sel ? 'selected' : ''}" id="row-${m.id}">
+        <td class="td-check"><input type="checkbox" class="cb row-cb" ${sel ? 'checked' : ''} onchange="toggleRow('${m.id}',this)" /></td>
+        <td class="td-name">
+          <div>
+            <div class="merch-name td-link" onclick="openSheet('${m.id}')">${m.name}</div>
+            <div class="merch-category">${m.category} · <span style="font-family:monospace;font-size:10.5px;color:var(--gray-8);">${m.id}</span></div>
+          </div>
+        </td>
+        <td><span class="badge ${sc.cls}">${sc.label}</span></td>
+        <td><span class="badge ${pc.cls}">${m.plan}</span></td>
+        <td><span style="font-weight:600;font-size:13px;">${gmv}</span></td>
+        <td><span style="font-size:13px;">${ord}</span></td>
+        <td>${stars}</td>
+        <td><span style="font-size:12px;color:var(--gray-9);">${m.joined}</span></td>
+        <td style="text-align:right;">
+          <div class="dd-wrap" style="justify-content:flex-end;">
+            <button class="btn btn-ghost btn-xs" style="padding:0 6px;" onclick="toggle('row-${m.id}',event)" aria-label="More actions">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+            </button>
+            <div class="dd-menu right" id="dd-row-${m.id}">
+              <button class="dd-item" onclick="openSheet('${m.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View Details</button>
+              <button class="dd-item" onclick="toast('Edit ${m.name}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit Merchant</button>
+              <button class="dd-item" onclick="toast('Viewing orders for ${m.name}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>View Orders</button>
+              <button class="dd-item" onclick="toast('Payout history')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Payout History</button>
+              <button class="dd-item" onclick="toast('Notification sent', 'success')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .84h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 15.92z"/></svg>Contact Merchant</button>
+              <div class="dd-sep"></div>
+              ${m.status === 'active' ?
+                `<button class="dd-item danger" onclick="toast('${m.name} suspended','danger')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>Suspend Account</button>` :
+              m.status === 'suspended' ?
+                `<button class="dd-item" onclick="toast('${m.name} reactivated','success')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>Reactivate Account</button>` :
+              m.status === 'pending' ?
+                `<button class="dd-item" onclick="toast('${m.name} approved','success')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>Approve Application</button>` : ''
+              }
+              <button class="dd-item danger" onclick="toast('Delete action requires confirmation','warning')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>Delete Merchant</button>
+            </div>
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+// ── DETAIL SHEET ──────────────────────────────────────────────
+function openSheet(id) {
+  closeAll();
+  const m = MERCHANTS.find(x => x.id === id);
+  if (!m) return;
+  currentMerchant = m;
+  const sc = STATUS_CFG[m.status] || STATUS_CFG.inactive;
+  const pc = PLAN_CFG[m.plan] || PLAN_CFG.Starter;
+  const gmvPct = Math.min(100, Math.round((m.gmv / 130000) * 100));
+  const ordPct = Math.min(100, Math.round((m.orders / 2500) * 100));
+
+  document.getElementById('sheet-body').innerHTML = `
+    <div class="merch-hero">
+      <div class="merch-hero-logo">${m.emoji}</div>
+      <div>
+        <div class="merch-hero-name">${m.name}</div>
+        <div class="merch-hero-cat">${m.category} · ${m.region}</div>
+        <div class="merch-hero-badges">
+          <span class="badge ${sc.cls}">${sc.label}</span>
+          <span class="badge ${pc.cls}">${m.plan}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-heading">Account Information</div>
+    <div class="info-grid">
+      <div class="info-item"><div class="lbl">Merchant ID</div><div class="val" style="font-family:monospace;font-size:12px;">${m.id}</div></div>
+      <div class="info-item"><div class="lbl">Member Since</div><div class="val">${m.joined}</div></div>
+      <div class="info-item"><div class="lbl">Category</div><div class="val">${m.category}</div></div>
+      <div class="info-item"><div class="lbl">Region</div><div class="val">${m.region}</div></div>
+      <div class="info-item"><div class="lbl">Plan</div><div class="val">${m.plan}</div></div>
+      <div class="info-item"><div class="lbl">Rating</div><div class="val">${m.rating > 0 ? '⭐ ' + m.rating + ' / 5.0' : '—'}</div></div>
+    </div>
+
+    <div style="height:1px;background:var(--gray-3);margin-bottom:20px;"></div>
+    <div class="section-heading">Performance (Last 30 Days)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+      <div style="padding:14px;background:var(--gray-1);border-radius:10px;">
+        <div style="font-size:11px;color:var(--gray-8);margin-bottom:4px;">Total GMV</div>
+        <div style="font-size:22px;font-weight:700;color:var(--gray-12);letter-spacing:-0.04em;">${m.gmv > 0 ? '$' + m.gmv.toLocaleString() : '—'}</div>
+        <div style="margin-top:8px;" class="prog"><div class="prog-val green" style="width:${gmvPct}%"></div></div>
+      </div>
+      <div style="padding:14px;background:var(--gray-1);border-radius:10px;">
+        <div style="font-size:11px;color:var(--gray-8);margin-bottom:4px;">Total Orders</div>
+        <div style="font-size:22px;font-weight:700;color:var(--gray-12);letter-spacing:-0.04em;">${m.orders > 0 ? m.orders.toLocaleString() : '—'}</div>
+        <div style="margin-top:8px;" class="prog"><div class="prog-val" style="width:${ordPct}%"></div></div>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--gray-3);margin-bottom:20px;"></div>
+    <div class="section-heading">Quick Actions</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <button class="btn btn-outline btn-sm" onclick="toast('Viewing orders')">View Orders</button>
+      <button class="btn btn-outline btn-sm" onclick="toast('Payout history')">Payout History</button>
+      <button class="btn btn-outline btn-sm" onclick="toast('Send message')">Contact</button>
+      <button class="btn btn-outline btn-sm" onclick="toast('Audit log')">Audit Log</button>
+    </div>
+  `;
+  document.getElementById('sheet-overlay').classList.add('open');
+  document.getElementById('detail-sheet').classList.add('open');
+}
+function closeSheet() {
+  document.getElementById('sheet-overlay').classList.remove('open');
+  document.getElementById('detail-sheet').classList.remove('open');
+}
+
+// ── TABS ──────────────────────────────────────────────────────
+function switchTab(btn, key) {
+  document.querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  currentTab = key;
+  selectedRows.clear();
+  renderTable();
+  updateBulkBar();
+}
+
+// ── SEARCH ───────────────────────────────────────────────────
+function searchMerchants(q) {
+  searchQuery = q;
+  renderTable();
+}
+
+// ── FILTERS ──────────────────────────────────────────────────
+function applyFilter(key, value, btn) {
+  activeFilters[key] = value;
+  // update checkmarks in dropdown
+  btn.closest('.dd-menu').querySelectorAll('.dd-item').forEach(i => {
+    const chk = i.querySelector('.dd-check');
+    if (chk) chk.style.display = 'none';
+  });
+  const chk = btn.querySelector('.dd-check');
+  if (chk) { chk.style.display = ''; }
+  closeAll();
+  renderChips();
+  renderTable();
+}
+
+function renderChips() {
+  const container = document.getElementById('filter-chips');
+  const active = Object.entries(activeFilters).filter(([k, v]) =>
+    v && !['All Categories','All Plans','All Regions'].includes(v)
+  );
+  if (active.length === 0) { container.style.display = 'none'; return; }
+  container.style.display = 'flex';
+  container.innerHTML = active.map(([k, v]) => `
+    <div class="filter-chip">
+      <span class="filter-chip-label">${k}:</span>${v}
+      <button class="chip-remove" onclick="removeFilter('${k}')">
+        <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  `).join('') + `<button class="clear-all" onclick="clearFilters()">Clear all</button>`;
+}
+
+function removeFilter(key) {
+  delete activeFilters[key];
+  renderChips();
+  renderTable();
+}
+function clearFilters() {
+  activeFilters = {};
+  renderChips();
+  renderTable();
+  document.querySelectorAll('.dd-check').forEach(c => c.style.display = 'none');
+  // restore "All" checks
+  document.querySelectorAll('.dd-item:first-of-type .dd-check').forEach(c => c.style.display = '');
+}
+
+// ── SORT ─────────────────────────────────────────────────────
+function setSort(label, btn) {
+  document.getElementById('sort-label').textContent = label;
+  btn.closest('.dd-menu').querySelectorAll('.dd-item').forEach(i => {
+    const chk = i.querySelector('.dd-check');
+    if (chk) chk.style.display = 'none';
+  });
+  const chk = btn.querySelector('.dd-check');
+  if (!chk) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('class','dd-check'); svg.setAttribute('width','12'); svg.setAttribute('height','12');
+    svg.setAttribute('viewBox','0 0 24 24'); svg.setAttribute('fill','none');
+    svg.setAttribute('stroke','currentColor'); svg.setAttribute('stroke-width','3');
+    svg.innerHTML='<polyline points="20 6 9 17 4 12"/>';
+    btn.appendChild(svg);
+  } else { chk.style.display = ''; }
+  closeAll();
+  toast(`Sorted by ${label}`);
+}
+
+function sortBy(col) { toast(`Sorted by ${col}`); }
+
+// ── SELECTION ────────────────────────────────────────────────
+function toggleRow(id, cb) {
+  if (cb.checked) selectedRows.add(id); else selectedRows.delete(id);
+  const row = document.getElementById('row-' + id);
+  if (row) row.classList.toggle('selected', cb.checked);
+  updateBulkBar();
+  updateCheckAll();
+}
+function toggleAll(master) {
+  const visible = getFiltered().map(m => m.id);
+  visible.forEach(id => {
+    if (master.checked) selectedRows.add(id); else selectedRows.delete(id);
+    const row = document.getElementById('row-' + id);
+    if (row) {
+      row.classList.toggle('selected', master.checked);
+      const cb = row.querySelector('.row-cb');
+      if (cb) cb.checked = master.checked;
+    }
+  });
+  updateBulkBar();
+}
+function updateCheckAll() {
+  const visible = getFiltered().map(m => m.id);
+  const allSel  = visible.length > 0 && visible.every(id => selectedRows.has(id));
+  document.getElementById('check-all').checked = allSel;
+  document.getElementById('check-all').indeterminate = !allSel && selectedRows.size > 0;
+}
+function updateBulkBar() {
+  const bar  = document.getElementById('bulk-bar');
+  const info = document.getElementById('bulk-info');
+  if (selectedRows.size > 0) {
+    bar.classList.add('show');
+    info.textContent = `${selectedRows.size} merchant${selectedRows.size > 1 ? 's' : ''} selected`;
+  } else {
+    bar.classList.remove('show');
+  }
+}
+function clearSelection() {
+  selectedRows.clear();
+  document.querySelectorAll('.row-cb').forEach(cb => cb.checked = false);
+  document.querySelectorAll('tbody tr.selected').forEach(r => r.classList.remove('selected'));
+  document.getElementById('check-all').checked = false;
+  document.getElementById('check-all').indeterminate = false;
+  updateBulkBar();
+}
+
+// ── CONFIRM DIALOG ───────────────────────────────────────────
+function openConfirm()  { document.getElementById('confirm-overlay').classList.add('open'); }
+function closeConfirm() { document.getElementById('confirm-overlay').classList.remove('open'); }
+
+// ── DROPDOWN ─────────────────────────────────────────────────
+let activeMenu = null;
+function toggle(id, e) {
+  e && e.stopPropagation();
+  const dd = document.getElementById('dd-' + id);
+  if (!dd) return;
+  if (activeMenu && activeMenu !== dd) {
+    activeMenu.classList.remove('open');
+    activeMenu = null;
+  }
+  const open = dd.classList.contains('open');
+  if (open) { dd.classList.remove('open'); activeMenu = null; document.getElementById('overlay').style.display = 'none'; }
+  else       { dd.classList.add('open');    activeMenu = dd;   document.getElementById('overlay').style.display = 'block'; }
+}
+function closeAll() {
+  if (activeMenu) { activeMenu.classList.remove('open'); activeMenu = null; }
+  document.getElementById('overlay').style.display = 'none';
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeAll(); closeSheet(); closeConfirm(); }
+});
+
+// ── TOAST ─────────────────────────────────────────────────────
+function toast(msg, type = 'default') {
+  closeAll();
+  const icons = {
+    default: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    success: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',
+    warning: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>',
+    danger:  '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+  };
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = icons[type] + `<span>${msg}</span>`;
+  document.getElementById('toast-wrap').appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transform='translateY(8px)'; el.style.transition='all 200ms'; setTimeout(()=>el.remove(),200); }, 2800);
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+renderTable();
+</script>
+</body>
+</html>
