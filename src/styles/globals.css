@@ -163,7 +163,7 @@
 
   /* ── Typography ──────────────────────────────────────────── */
   --font-sans: 'Plus Jakarta Sans', 'Noto Sans SC', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Roboto Mono', monospace;
+  --font-mono: 'Plus Jakarta Sans', 'Noto Sans SC', -apple-system, sans-serif;
 }
 
 /* ═══════════════════════════════════════════════════════════════
