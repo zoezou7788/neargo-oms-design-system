@@ -174,7 +174,7 @@ export function SidebarItem({ href, icon: Icon, label, badge, active, className 
         "transition-colors duration-100",
         active
           ? "bg-[var(--amber-2)] text-[var(--gray-12)] border-l-2 border-[var(--amber-9)] pl-[10px]"
-          : "text-[var(--gray-11)] hover:bg-[var(--gray-2)] hover:text-[var(--gray-12)]",
+          : "text-[var(--gray-12)] hover:bg-[var(--gray-2)]",
         className,
       )}
     >
@@ -216,7 +216,7 @@ export function SidebarSubGroup({ icon: Icon, label, defaultOpen = false, childr
     <div className="mx-2 mb-0.5">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-3 w-full px-3 h-9 rounded-[6px] text-[13px] font-medium text-[var(--gray-11)] hover:bg-[var(--gray-2)] hover:text-[var(--gray-12)] transition-colors"
+        className="flex items-center gap-3 w-full px-3 h-9 rounded-[6px] text-[13px] font-medium text-[var(--gray-12)] hover:bg-[var(--gray-2)] transition-colors"
       >
         {Icon && <Icon size={16} className="shrink-0" />}
         <span className="flex-1 text-left truncate">{label}</span>
@@ -244,7 +244,7 @@ export function SidebarSubItem({ href, label, active }: SidebarSubItemProps) {
         "flex items-center px-3 h-8 rounded-[6px] text-[13px] transition-colors",
         active
           ? "text-[var(--gray-12)] font-medium"
-          : "text-[var(--gray-10)] hover:text-[var(--gray-12)] hover:bg-[var(--gray-2)]",
+          : "text-[var(--gray-12)] hover:bg-[var(--gray-2)]",
       )}
     >
       {label}

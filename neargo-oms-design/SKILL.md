@@ -54,7 +54,7 @@ description: NearGo OMS 后台管理系统 UI 设计规范与代码生成。当�
 ### 字体
 
 ```css
-font-family: 'Inter', 'Noto Sans SC', sans-serif;  /* UI 文字 */
+font-family: 'Plus Jakarta Sans', 'Noto Sans SC', sans-serif;  /* UI 文字 */
 font-family: 'JetBrains Mono', monospace;           /* ID/时间戳/代码 */
 ```
 
@@ -251,7 +251,7 @@ font-family: 'JetBrains Mono', monospace;           /* ID/时间戳/代码 */
 
 ```tsx
 // Default
-<NavItem className="text-[#4a4846] hover:bg-[#f9f9f8] hover:text-[#1F1D1C]" />
+<NavItem className="text-[#1F1D1C] hover:bg-[#f9f9f8]" />
 
 // Active
 <NavItem className="bg-[#fff8d6] text-[#1F1D1C] font-medium border-l-2 border-[#FFA902]" />

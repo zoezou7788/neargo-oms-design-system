@@ -4,7 +4,7 @@
 
 本规范为 **NearGo OMS** 全产品的通用视觉与交互基线。v3.0 在 v2.2 基础上对标 shadcn/ui 目录结构，补全**开发集成层、缺失组件、组件 API、状态规范**，使前端工程师可**直接落地**，不依赖口头说明。
 
-**标签：** 全站 OMS · Radix Color Scale · Inter + JetBrains Mono · 1440px 视口 · WCAG AA+ · shadcn/ui 结构
+**标签：** 全站 OMS · Radix Color Scale · Plus Jakarta Sans + JetBrains Mono · 1440px 视口 · WCAG AA+ · shadcn/ui 结构
 
 ---
 
@@ -82,7 +82,7 @@
 # 安装 shadcn/ui（推荐）
 npx shadcn@latest init
 
-# 字体（Inter + JetBrains Mono）
+# 字体（Plus Jakarta Sans + JetBrains Mono）
 npm install @fontsource/inter @fontsource/jetbrains-mono
 ```
 
@@ -92,7 +92,7 @@ npm install @fontsource/inter @fontsource/jetbrains-mono
 /* globals.css — NearGo OMS Design Tokens v3.0 */
 
 /* 引入字体 */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap');
 
 :root {
   /* ── Amber Scale (Brand: step-9 = #FFA902) ── */
@@ -213,7 +213,7 @@ npm install @fontsource/inter @fontsource/jetbrains-mono
   --z-tooltip: 700;
 
   /* ── Typography ── */
-  --font-sans: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', 'Noto Sans SC', -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Roboto Mono', monospace;
 }
 
@@ -352,7 +352,7 @@ export default config;
 
 | 角色 | 字体 | 用途 |
 |------|------|------|
-| Sans（主） | Inter | 全部 UI 文字 |
+| Sans（主） | Plus Jakarta Sans | 全部 UI 文字 |
 | CJK | Noto Sans SC | 中文内容 |
 | Mono | JetBrains Mono | 订单号、时间戳、ID、IP |
 

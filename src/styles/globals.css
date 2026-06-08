@@ -12,7 +12,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap');
 
 /* ═══════════════════════════════════════════════════════════════
    DESIGN TOKENS (Light Mode)
@@ -128,7 +128,7 @@
   --shadow-5: 0 8px 24px rgba(0,0,0,.07), 0 3px 8px rgba(0,0,0,.04);
   --shadow-6: 0 16px 40px rgba(0,0,0,.10), 0 6px 16px rgba(0,0,0,.05);
   /* Semantic aliases */
-  --shadow-card:  var(--shadow-1);   /* cards — barely visible */
+  --shadow-card:  none;              /* cards — no shadow */
   --shadow-popup: var(--shadow-4);   /* dropdowns, popovers */
   --shadow-modal: var(--shadow-5);   /* dialogs, sheets */
   --shadow-toast: var(--shadow-3);   /* notifications */
@@ -162,7 +162,7 @@
   --z-tooltip:  700;
 
   /* ── Typography ──────────────────────────────────────────── */
-  --font-sans: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', 'Noto Sans SC', -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Roboto Mono', monospace;
 }
 

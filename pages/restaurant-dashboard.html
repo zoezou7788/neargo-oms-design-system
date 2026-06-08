@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Restaurant Management System — Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--gray-12); line-height: 1.5; min-height: 100vh; }
+body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: var(--bg); color: var(--gray-12); line-height: 1.5; min-height: 100vh; }
 
 :root {
   --amber-2:#fff8d6; --amber-3:#ffeea8; --amber-9:#FFA902; --amber-10:#f09a00; --amber-11:#8c5c00;
@@ -195,7 +195,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .kpi-card {
   background:var(--surface); border-radius:12px;
   padding:20px; transition:box-shadow 200ms, transform 200ms;
-  box-shadow:0 1px 4px rgba(0,0,0,.06);
+  
   cursor:default;
 }
 .kpi-card:hover { box-shadow:0 4px 12px rgba(0,0,0,.07); transform:translateY(-1px); }
@@ -228,7 +228,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 ══════════════════════════════════════ */
 .card {
   background:var(--surface); border-radius:12px; overflow:hidden;
-  box-shadow:0 1px 4px rgba(0,0,0,.06);
+  
 }
 .card-header {
   display:flex; align-items:center; justify-content:space-between;
@@ -283,8 +283,7 @@ tbody td { padding:12px 16px; font-size:13px; color:var(--gray-11); vertical-ali
   font-size:11px; font-weight:600; white-space:nowrap;
 }
 .badge::before { content:''; width:5px; height:5px; border-radius:50%; flex-shrink:0; }
-.badge-green { background:var(--green-bg); color:var(--green-text); }
-.badge-green::before { background:var(--green-solid); }
+.badge-green  { background:transparent; color:var(--gray-10); border:1px solid var(--gray-4); } .badge-green::before  { background:var(--green-solid); }
 .badge-red { background:var(--red-bg); color:var(--red-text); }
 .badge-red::before { background:var(--red-solid); }
 .badge-amber { background:var(--amber-2); color:var(--amber-11); }
