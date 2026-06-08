@@ -6,7 +6,7 @@
 
 基于 Radix UI 色阶方法论与 NearGo 品牌识别构建。v2.1 起吸收 **Soft Dashboard** 类参考在**留白、纵向节奏、仪表板栅格**上的排版范式；**v2.2** 将原文中偏单场景的示例**泛化为全站语言**，避免读者误以为规范仅服务某一功能。
 
-**标签：** 全站 OMS · Radix Color Scale · Plus Jakarta Sans + JetBrains Mono · 1440px 视口 · WCAG AA+ · Soft UI（仪表板）
+**标签：** 全站 OMS · Radix Color Scale · Plus Jakarta Sans · 1440px 视口 · WCAG AA+ · Soft UI（仪表板）
 
 ### 适用范围（必读）
 
@@ -169,7 +169,7 @@
 
 ### Typography
 
-拉丁文使用 Plus Jakarta Sans，代码与 ID 使用 JetBrains Mono，中文使用 Noto Sans SC。每个字号 token 包含字号 + 行高 + 字间距，与 Radix 比例尺一致。
+拉丁文使用 Plus Jakarta Sans，代码与 ID 使用 Plus Jakarta Sans，中文使用 Noto Sans SC。每个字号 token 包含字号 + 行高 + 字间距，与 Radix 比例尺一致。
 
 ### Font Families
 
@@ -177,7 +177,7 @@
 |------|------|----------|------|
 | Sans（主） | Plus Jakarta Sans | 300–800 | 全部 UI 文字、标签、按钮、标题 |
 | CJK | Noto Sans SC | 400, 500, 700 | 中文内容，与 Plus Jakarta Sans 同屏加载 |
-| Mono | JetBrains Mono | 400, 500 | **业务主键**（订单号、批次号、配置 ID）、时间戳、IP、代码片段 |
+| Mono | Plus Jakarta Sans | 300–700 | **业务主键**（订单号、批次号、配置 ID）、时间戳、IP、代码片段 |
 
 ### Type Scale（9 级）
 
@@ -529,7 +529,7 @@
 | 仅用 placeholder 当标签 | 始终在输入上方保留持久 `field-label` |
 | 所有卡片统一用大圆角「像参考图」 | **数据区卡片默认 radius-4**；仅 **仪表板全宽重点卡、欢迎容器** 使用 **radius-5**；模态仍用 radius-5 |
 | 页面级卡片使用 shadow-5 / -6 | 卡片用 shadow-2；shadow-4+ 预留给 Popover 与浮动面板 |
-| 同页混用 Plus Jakarta Sans 与 Roboto | 全 UI 用 Plus Jakarta Sans；仅 ID、时间戳、代码用 JetBrains Mono |
+| 同页混用 Plus Jakarta Sans 与 Roboto | 全 UI 用 Plus Jakarta Sans；全 UI 统一使用 Plus Jakarta Sans |
 
 ### CSS Variables Quick Reference
 

@@ -4,7 +4,7 @@
 
 本规范为 **NearGo OMS** 全产品的通用视觉与交互基线。v3.0 在 v2.2 基础上对标 shadcn/ui 目录结构，补全**开发集成层、缺失组件、组件 API、状态规范**，使前端工程师可**直接落地**，不依赖口头说明。
 
-**标签：** 全站 OMS · Radix Color Scale · Plus Jakarta Sans + JetBrains Mono · 1440px 视口 · WCAG AA+ · shadcn/ui 结构
+**标签：** 全站 OMS · Radix Color Scale · Plus Jakarta Sans · 1440px 视口 · WCAG AA+ · shadcn/ui 结构
 
 ---
 
@@ -82,8 +82,8 @@
 # 安装 shadcn/ui（推荐）
 npx shadcn@latest init
 
-# 字体（Plus Jakarta Sans + JetBrains Mono）
-npm install @fontsource/inter @fontsource/jetbrains-mono
+# 字体（Plus Jakarta Sans）
+npm install @fontsource/plus-jakarta-sans
 ```
 
 ### CSS 变量（全量粘贴到 globals.css）
@@ -92,7 +92,7 @@ npm install @fontsource/inter @fontsource/jetbrains-mono
 /* globals.css — NearGo OMS Design Tokens v3.0 */
 
 /* 引入字体 */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap');
 
 :root {
   /* ── Amber Scale (Brand: step-9 = #FFA902) ── */
@@ -214,7 +214,7 @@ npm install @fontsource/inter @fontsource/jetbrains-mono
 
   /* ── Typography ── */
   --font-sans: 'Plus Jakarta Sans', 'Noto Sans SC', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Roboto Mono', monospace;
+  --font-mono: 'Plus Jakarta Sans', 'Noto Sans SC', -apple-system, sans-serif;
 }
 
 /* Dark Mode */
@@ -354,7 +354,7 @@ export default config;
 |------|------|------|
 | Sans（主） | Plus Jakarta Sans | 全部 UI 文字 |
 | CJK | Noto Sans SC | 中文内容 |
-| Mono | JetBrains Mono | 订单号、时间戳、ID、IP |
+| Mono | Plus Jakarta Sans | 订单号、时间戳、ID、IP |
 
 ### 字号规范（Type Scale）
 
@@ -2608,4 +2608,4 @@ _同 v2.2 [16 设计原则]，此处合并为精简版 + 扩展前端可量化�
 ---
 
 *NearGo OMS Design System v3.0 — 全站通用 · 对标 shadcn/ui 目录结构补全 · 2026-05-15*
-*Radix UI color scale methodology · Inter + JetBrains Mono · 1440px viewport · WCAG AA+*
+*Radix UI color scale methodology · Plus Jakarta Sans · 1440px viewport · WCAG AA+*
