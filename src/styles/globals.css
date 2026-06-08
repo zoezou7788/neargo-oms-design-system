@@ -424,3 +424,26 @@ body {
 .mb-6 { margin-bottom: var(--space-6); }
 .gap-4 { gap: var(--space-4); }
 .gap-5 { gap: var(--space-5); }
+
+/* ═══════════════════════════════════════════════════════════════
+   ID / TIMESTAMP / ORDER NUMBER / IP
+   订单号、时间戳、ID、IP 一律使用 Plus Jakarta Sans。
+   不再使用等宽字体，保持全局字体统一。
+════════════════════════════════════════════════════════════════ */
+
+/* Tailwind font-mono 覆盖 — 确保 font-mono class 使用 Plus Jakarta Sans */
+.font-mono {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans SC', -apple-system, sans-serif !important;
+  letter-spacing: 0;
+}
+
+/* 语义化 utility classes（订单号/ID/时间戳/IP 推荐使用这些 class） */
+.text-order-id,
+.text-id,
+.text-timestamp,
+.text-ip {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans SC', -apple-system, sans-serif;
+  font-size: 12px;
+  color: var(--gray-9);
+  letter-spacing: 0;
+}
